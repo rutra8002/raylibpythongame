@@ -14,7 +14,7 @@ def run_game():
     player = Player(50, 50, 100, 100, pyray.RED)
     blocks = [Block(50, 500, 100, 600, pyray.BLUE), Block(50, 500, 800, 600, pyray.BLUE), Block(500, 50, 500, 0, pyray.BLUE)]
 
-    camera = Camera(WIDTH, HEIGHT, player.x + player.width / 2, player.y + player.height / 2)
+    camera = Camera(WIDTH, HEIGHT, player.x + player.width / 2, player.y + player.height / 2, 0.05)
 
     while not pyray.window_should_close():
         delta_time = pyray.get_frame_time()
