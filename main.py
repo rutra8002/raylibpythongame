@@ -1,6 +1,6 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QLabel, QSlider, QComboBox, QCheckBox
-from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox
+from PyQt6.QtGui import QFont
 import game
 
 class GameLauncher(QMainWindow):
@@ -10,7 +10,7 @@ class GameLauncher(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('Game Launcher')
-        self.setGeometry(100, 100, 400, 300)
+        self.setGeometry(100, 100, 300, 300)
 
         # Create tab widget
         self.tabs = QTabWidget()
@@ -28,9 +28,27 @@ class GameLauncher(QMainWindow):
 
     def init_start_game_tab(self):
         layout = QVBoxLayout()
+
+        # Add large label
+        game_label = QLabel('GAME', self)
+        font = QFont()
+        font.setPointSize(30)  # Set font size to 30
+        game_label.setFont(font)
+
+        # Center the label horizontally
+        hbox = QHBoxLayout()
+        hbox.addStretch(1)
+        hbox.addWidget(game_label)
+        hbox.addStretch(1)
+
+        layout.addLayout(hbox)
+
+        # Add start button
         start_button = QPushButton('Start Game', self)
+        start_button.setFixedSize(300, 150)  # Set button size to 300x150
         start_button.clicked.connect(self.start_game)
         layout.addWidget(start_button)
+
         self.start_game_tab.setLayout(layout)
 
     def init_options_tab(self):
