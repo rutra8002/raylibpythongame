@@ -10,7 +10,7 @@ class Player:
         self.vy = 0
         self.vx = 0
         self.gravity = 9.81
-        self.speed = 200
+        self.speed = 250
         self.jump = 400
         self.mass = mass
 
