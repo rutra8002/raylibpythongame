@@ -12,7 +12,12 @@ def run_game():
     pyray.init_window(WIDTH, HEIGHT, "gmae")
 
     player = Player(50, 50, 100, 100, pyray.RED)
-    blocks = [Block(50, 500, 100, 600, pyray.BLUE), Block(50, 500, 800, 600, pyray.BLUE), Block(500, 50, 500, 0, pyray.BLUE)]
+    blocks = [Block(50, 500, 100, 600, pyray.BLUE),
+              Block(50, 500, 800, 600, pyray.BLUE),
+              Block(50, 500, 1500, 600, pyray.BLUE),
+              Block(50, 100, 650, 450, pyray.BLUE),
+              Block(500, 50, 500, 0, pyray.BLUE),
+              Block(500, 50, 800, 0, pyray.BLUE)]
 
     camera = Camera(WIDTH, HEIGHT, player.x + player.width / 2, player.y + player.height / 2, 0.05)
 
