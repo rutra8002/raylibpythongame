@@ -3,15 +3,17 @@ import json
 from player import Player
 from block import Block
 from camera import Camera
+from ai import AI
 
 
 WIDTH = 1366
 HEIGHT = 768
 
 def run_game():
-    pyray.init_window(WIDTH, HEIGHT, "gmae")
+    pyray.init_window(WIDTH, HEIGHT, "game")
 
     player = Player(50, 50, 100, 100, pyray.RED)
+    ai = AI(50, 50, 200, 200, pyray.GREEN)
     blocks = [Block(50, 500, 100, 600, pyray.BLUE),
               Block(50, 500, 800, 600, pyray.BLUE),
               Block(50, 500, 1500, 600, pyray.BLUE),
@@ -33,6 +35,9 @@ def run_game():
 
         player.movement(delta_time, blocks)
         player.draw()
+
+        ai.update(delta_time, player, blocks)
+        ai.draw()
 
         for block in blocks:
             block.draw()
