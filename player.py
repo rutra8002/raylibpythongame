@@ -27,7 +27,7 @@ class Player:
                         self.vy = 0
             elif block.check_vertical_collision(self) == "bottom":
                 if self.vy < 0:
-                    self.vy = 0
+                    self.vy = -self.vy /2
             if block.check_horizontal_collision(self) == "left":
                 if self.vx > 0:
                     self.vx = 0
