@@ -46,6 +46,15 @@ def run_game():
 
         pyray.draw_fps(10, 10)
 
+        for parameter in player.__dict__:
+            pyray.draw_text(parameter + ": " + str(player.__dict__[parameter]), 10, 30 + 10 * list(player.__dict__.keys()).index(parameter), 10, pyray.BLACK)
+
+        for i, block in enumerate(blocks):
+            pyray.draw_text("Block "+ str(i), 200 * i + 200, 20, 10,
+                            pyray.BLACK)
+            for parameter in block.__dict__:
+                pyray.draw_text(parameter + ": " + str(block.__dict__[parameter]), 200*i+200, 30 + 10 * list(block.__dict__.keys()).index(parameter), 10, pyray.BLACK)
+
         pyray.end_drawing()
 
     pyray.close_window()
