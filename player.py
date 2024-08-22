@@ -43,9 +43,9 @@ class Player:
         self.x += self.vx * delta_time
 
         if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
-            self.vx = self.speed
+            self.vx += 0.1*self.speed
         if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
-            self.vx = -self.speed
+            self.vx += 0.1*-self.speed
 
 
 
