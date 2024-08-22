@@ -3,13 +3,20 @@ import json
 from player import Player
 from block import Block
 from camera import Camera
+from pypresence import Presence
 from ai import AI
+import time
 
 
 WIDTH = 1366
 HEIGHT = 768
 
 def run_game():
+    client_id = '1276258242720436296'
+    rpc = Presence(client_id)
+    rpc.connect()
+    rpc.update(state="In Gmae", start=time.time())
+
     pyray.init_window(WIDTH, HEIGHT, "game")
 
     player = Player(50, 50, 100, 100, pyray.RED)
