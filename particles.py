@@ -1,5 +1,4 @@
 import pyray
-import random
 
 class Particle:
     def __init__(self, x, y, vx, vy, speed, lifespan, size, color, shape):
@@ -27,7 +26,8 @@ class Particle:
 
     def draw(self):
         if self.alpha > 0:
-            color = pyray.Color(self.color.r, self.color.g, self.color.b, self.alpha)
+            r, g, b, _ = self.color  # Unpack the color tuple
+            color = pyray.Color(r, g, b, self.alpha)
             if self.shape == 'circle':
                 pyray.draw_circle(int(self.x), int(self.y), self.size, color)
             elif self.shape == 'square':
