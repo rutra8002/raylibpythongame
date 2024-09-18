@@ -1,12 +1,19 @@
+import os
 import random
 import logging
+import datetime
 import pyray
 from player import Player
 from block import Block
 from camera import Camera
 from particles import ParticleSystem
 
-logging.basicConfig(filename='game_errors.log', level=logging.ERROR,
+log_folder = 'logs'
+if not os.path.exists(log_folder):
+    os.makedirs(log_folder)
+
+log_filename = os.path.join(log_folder, datetime.datetime.now().strftime('%Y-%m-%d') + '.log')
+logging.basicConfig(filename=log_filename, level=logging.ERROR,
                     format='%(asctime)s:%(levelname)s:%(message)s')
 
 class Game:
@@ -41,7 +48,7 @@ class Game:
             mouse_x, mouse_y = pyray.get_mouse_x(), pyray.get_mouse_y()
             for _ in range(10):
                 vx, vy = random.uniform(-1, 1), random.uniform(-1, 1)
-                self.pparticle_system.add_particle(mouse_x, mouse_y, vx, vy, 100, 2, 5, (255, 0, 0, 255), 'circle')
+                self.particle_system.add_particle(mouse_x, mouse_y, vx, vy, 100, 2, 5, (255, 0, 0, 255), 'circle')
         self.particle_system.update(delta_time)
 
     def render(self):
