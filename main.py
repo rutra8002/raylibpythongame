@@ -123,6 +123,7 @@ class GameLauncher(QMainWindow):
             game_instance.run()
         except Exception as e:
             logging.error("An error occurred in the game loop", exc_info=True)
+            logging.error(f"Error message: {e}")
 
         if self.hide_launcher_checkbox.isChecked():
             self.show()
