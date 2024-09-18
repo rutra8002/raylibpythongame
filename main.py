@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox, QLineEdit
 from PyQt6.QtGui import QFont
 import game
 
@@ -58,12 +58,27 @@ class GameLauncher(QMainWindow):
         self.hide_launcher_checkbox = QCheckBox('Hide launcher when running game')
         layout.addWidget(self.hide_launcher_checkbox)
 
+        # Width input
+        self.width_input = QLineEdit(self)
+        self.width_input.setPlaceholderText("Width")
+        layout.addWidget(self.width_input)
+
+        # Height input
+        self.height_input = QLineEdit(self)
+        self.height_input.setPlaceholderText("Height")
+        layout.addWidget(self.height_input)
+
         self.options_tab.setLayout(layout)
 
     def start_game(self):
         if self.hide_launcher_checkbox.isChecked():
             self.hide()
-        game.run_game()
+
+        width = int(self.width_input.text()) if self.width_input.text() else 1366
+        height = int(self.height_input.text()) if self.height_input.text() else 768
+
+        game.run_game(width, height)
+
         if self.hide_launcher_checkbox.isChecked():
             self.show()
 

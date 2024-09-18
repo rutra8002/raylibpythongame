@@ -8,16 +8,8 @@ from ai import AI
 import time
 
 
-WIDTH = 1366
-HEIGHT = 768
-
-def run_game():
-    client_id = '1276258242720436296'
-    rpc = Presence(client_id)
-    rpc.connect()
-    rpc.update(state="In Gmae", start=time.time())
-
-    pyray.init_window(WIDTH, HEIGHT, "game")
+def run_game(width=1366, height=768):
+    pyray.init_window(width, height, "game")
 
     player = Player(50, 50, 100, 100, pyray.RED)
     ai = AI(50, 50, 200, 200, pyray.GREEN)
@@ -28,7 +20,7 @@ def run_game():
               Block(500, 50, 500, 0, pyray.BLUE),
               Block(500, 50, 800, 0, pyray.BLUE)]
 
-    camera = Camera(WIDTH, HEIGHT, player.x + player.width / 2, player.y + player.height / 2, 0.05)
+    camera = Camera(width, height, player.x + player.width / 2, player.y + player.height / 2, 0.05)
 
     while not pyray.window_should_close():
         delta_time = pyray.get_frame_time()
