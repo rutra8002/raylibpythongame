@@ -2,6 +2,7 @@ import pyray
 from player import Player
 from block import Block
 from camera import Camera
+from particles import ParticleSystem
 
 
 def run_game(width=1366, height=768):
@@ -29,9 +30,6 @@ def run_game(width=1366, height=768):
 
         player.movement(delta_time, blocks)
         player.draw()
-
-        ai.update(delta_time, player, blocks)
-        ai.draw()
 
         for block in blocks:
             block.draw()

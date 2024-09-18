@@ -6,9 +6,9 @@ class Player(GameObject):
         super().__init__(height, width, x, y, color)
         self.vy = 0
         self.vx = 0
-        self.gravity = 9.81
+        self.gravity = -9.81
         self.speed = 250
-        self.jump = 400
+        self.jump = -400
         self.mass = mass
         self.grounded = False
 
@@ -16,7 +16,7 @@ class Player(GameObject):
         for block in blocks:
             if block.check_vertical_collision(self) == "top":
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE):
-                    self.vy = -self.jump
+                    self.vy = self.jump
                     self.grounded = False
                 else:
                     self.grounded = True
@@ -31,7 +31,7 @@ class Player(GameObject):
                     self.vx = 0
 
         if not self.grounded:
-            self.vy += self.gravity * delta_time * self.mass
+            self.vy -= self.gravity * delta_time * self.mass
         else:
             self.vy = 0
         self.vx = self.vx * 0.9
