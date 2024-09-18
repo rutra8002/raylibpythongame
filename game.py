@@ -17,8 +17,9 @@ class Game:
                        Block(50, 100, 650, 500, pyray.BLUE),
                        Block(500, 50, 500, 0, pyray.BLUE),
                        Block(500, 200, 850, 0, pyray.BLUE)]
-        self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 0.05)
+        self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 1)
         self.particle_system = ParticleSystem()
+        self.particle_update_timer = 0
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
@@ -29,14 +30,30 @@ class Game:
         pyray.close_window()
 
     def update(self, delta_time):
-        self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2)
+        self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, delta_time)
         self.player.movement(delta_time, self.blocks)
-        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-            mouse_x, mouse_y = pyray.get_mouse_x(), pyray.get_mouse_y()
-            for _ in range(10):
-                vx, vy = random.uniform(-1, 1), random.uniform(-1, 1)
-                self.particle_system.add_particle(mouse_x, mouse_y, vx, vy, 100, 2, 5, (255, 0, 0, 255), 'circle')
+
+        # Update the timer
+        self.particle_update_timer += delta_time
+
+        # Add particles behind the player when moving, but only update once each second
+        if self.particle_update_timer >= 0.01:
+            if round(self.player.vx, 10) != 0 or self.player.vy != 0:
+                self.particle_system.add_particle(
+                    self.player.x + random.randint(0, self.player.width),  # x position
+                    self.player.y + random.randint(0, self.player.height),  # y position (behind the player)
+                    random.uniform(-1, 1),  # vx
+                    random.uniform(-1, 1),  # vy
+                    50,  # speed
+                    1,  # lifespan
+                    5,  # size
+                    (255, 0, 0, 100),  # color (red)
+                    'circle'  # shape
+                )
+            self.particle_update_timer = 0  # Reset the timer
+
         self.particle_system.update(delta_time)
+        self.particle_system.apply_force_to_all(0, 9.81*delta_time)
 
     def render(self):
         pyray.begin_drawing()

@@ -9,9 +9,9 @@ class Camera:
         self.camera.zoom = 1.0
         self.smooth_factor = smooth_factor
 
-    def update_target(self, target_x, target_y):
-        self.camera.target.x += (target_x - self.camera.target.x) * self.smooth_factor *0.01
-        self.camera.target.y += (target_y - self.camera.target.y) * self.smooth_factor *0.01
+    def update_target(self, target_x, target_y, delta_time):
+        self.camera.target.x += (target_x - self.camera.target.x) * self.smooth_factor * delta_time
+        self.camera.target.y += (target_y - self.camera.target.y) * self.smooth_factor * delta_time
 
     def begin_mode(self):
         pyray.begin_mode_2d(self.camera)

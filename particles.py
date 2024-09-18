@@ -21,13 +21,13 @@ class Particle:
         self.x += self.vx * self.speed * delta_time
         self.y += self.vy * self.speed * delta_time
         if self.alpha > 0 and self.lifespan > 0:
-            self.alpha -= int(255 / self.lifespan * delta_time)
+            self.alpha -= (255 / self.lifespan * delta_time)
             self.lifespan -= delta_time
 
     def draw(self):
         if self.alpha > 0:
             r, g, b, _ = self.color  # Unpack the color tuple
-            color = pyray.Color(r, g, b, self.alpha)
+            color = pyray.Color(r, g, b, round(self.alpha))
             if self.shape == 'circle':
                 pyray.draw_circle(int(self.x), int(self.y), self.size, color)
             elif self.shape == 'square':
