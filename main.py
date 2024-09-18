@@ -2,7 +2,8 @@ import sys
 import os
 import logging
 import datetime
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox, QLineEdit
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, \
+    QLabel, QCheckBox, QLineEdit, QTextEdit
 from PyQt6.QtGui import QFont
 from game import Game
 
@@ -36,6 +37,11 @@ class GameLauncher(QMainWindow):
         self.options_tab = QWidget()
         self.tabs.addTab(self.options_tab, "Options")
         self.init_options_tab()
+
+        # Create log viewer tab
+        self.log_viewer_tab = QWidget()
+        self.tabs.addTab(self.log_viewer_tab, "Log Viewer")
+        self.init_log_viewer_tab()
 
     def init_start_game_tab(self):
         layout = QVBoxLayout()
@@ -81,13 +87,36 @@ class GameLauncher(QMainWindow):
 
         self.options_tab.setLayout(layout)
 
+    def init_log_viewer_tab(self):
+        layout = QVBoxLayout()
+
+        # Add log viewer
+        self.log_viewer = QTextEdit(self)
+        self.log_viewer.setReadOnly(True)
+        layout.addWidget(self.log_viewer)
+
+        # Add refresh button
+        refresh_button = QPushButton('Refresh', self)
+        refresh_button.clicked.connect(self.load_log)
+        layout.addWidget(refresh_button)
+
+        self.log_viewer_tab.setLayout(layout)
+        self.load_log()
+
+    def load_log(self):
+        try:
+            with open(log_filename, 'r') as file:
+                log_content = file.read()
+                self.log_viewer.setPlainText(log_content)
+        except Exception as e:
+            self.log_viewer.setPlainText(f"Failed to load log file: {e}")
+
     def start_game(self):
         if self.hide_launcher_checkbox.isChecked():
             self.hide()
 
         width = int(self.width_input.text()) if self.width_input.text() else 1366
         height = int(self.height_input.text()) if self.height_input.text() else 768
-
 
         try:
             game_instance = Game(width, height)
