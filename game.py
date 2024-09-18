@@ -1,22 +1,17 @@
 import pyray
-import json
 from player import Player
 from block import Block
 from camera import Camera
-from pypresence import Presence
-from ai import AI
-import time
 
 
 def run_game(width=1366, height=768):
     pyray.init_window(width, height, "game")
 
     player = Player(50, 50, 100, 100, pyray.RED, 70)
-    ai = AI(50, 50, 200, 200, pyray.GREEN)
     blocks = [Block(50, 500, 100, 600, pyray.BLUE),
               Block(50, 500, 800, 600, pyray.BLUE),
               Block(50, 500, 1500, 600, pyray.BLUE),
-              Block(50, 100, 650, 450, pyray.BLUE),
+              Block(50, 100, 650, 500, pyray.BLUE),
               Block(500, 50, 500, 0, pyray.BLUE),
               Block(500, 200, 850, 0, pyray.BLUE)]
 
