@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox, QLineEdit
 from PyQt6.QtGui import QFont
-import game
+from game import Game
 
 class GameLauncher(QMainWindow):
     def __init__(self):
@@ -77,7 +77,8 @@ class GameLauncher(QMainWindow):
         width = int(self.width_input.text()) if self.width_input.text() else 1366
         height = int(self.height_input.text()) if self.height_input.text() else 768
 
-        game.run_game(width, height)
+        game_instance = Game(width, height)
+        game_instance.run()
 
         if self.hide_launcher_checkbox.isChecked():
             self.show()
