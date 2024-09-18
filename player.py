@@ -32,10 +32,10 @@ class Player(GameObject):
                 self.vy = -self.vy / 2
 
             if horizontal_collision == "left":
-                self.x = block.x - self.width + tolerance  #tolerance
+                self.x = block.x - self.width  #notolerance
                 self.vx = 0
             elif horizontal_collision == "right":
-                self.x = block.x + block.width - tolerance  #tolerance
+                self.x = block.x + block.width #notolerance
                 self.vx = 0
 
         if not self.grounded:
