@@ -88,8 +88,9 @@ class GameLauncher(QMainWindow):
         width = int(self.width_input.text()) if self.width_input.text() else 1366
         height = int(self.height_input.text()) if self.height_input.text() else 768
 
-        game_instance = Game(width, height)
+
         try:
+            game_instance = Game(width, height)
             game_instance.run()
         except Exception as e:
             logging.error("An error occurred in the game loop", exc_info=True)
