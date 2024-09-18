@@ -1,7 +1,18 @@
 import sys
+import os
+import logging
+import datetime
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QCheckBox, QLineEdit
 from PyQt6.QtGui import QFont
 from game import Game
+
+log_folder = 'logs'
+if not os.path.exists(log_folder):
+    os.makedirs(log_folder)
+
+log_filename = os.path.join(log_folder, datetime.datetime.now().strftime('%Y-%m-%d') + '.log')
+logging.basicConfig(filename=log_filename, level=logging.ERROR,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 class GameLauncher(QMainWindow):
     def __init__(self):
@@ -78,7 +89,10 @@ class GameLauncher(QMainWindow):
         height = int(self.height_input.text()) if self.height_input.text() else 768
 
         game_instance = Game(width, height)
-        game_instance.run()
+        try:
+            game_instance.run()
+        except Exception as e:
+            logging.error("An error occurred in the game loop", exc_info=True)
 
         if self.hide_launcher_checkbox.isChecked():
             self.show()

@@ -1,20 +1,10 @@
 import os
 import random
-import logging
-import datetime
 import pyray
 from player import Player
 from block import Block
 from camera import Camera
 from particles import ParticleSystem
-
-log_folder = 'logs'
-if not os.path.exists(log_folder):
-    os.makedirs(log_folder)
-
-log_filename = os.path.join(log_folder, datetime.datetime.now().strftime('%Y-%m-%d') + '.log')
-logging.basicConfig(filename=log_filename, level=logging.ERROR,
-                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 class Game:
     def __init__(self, width=1366, height=768):
@@ -31,15 +21,12 @@ class Game:
         self.particle_system = ParticleSystem()
 
     def run(self):
-        try:
-            pyray.init_window(self.width, self.height, "game")
-            while not pyray.window_should_close():
-                delta_time = pyray.get_frame_time()
-                self.update(delta_time)
-                self.render()
-            pyray.close_window()
-        except Exception as e:
-            logging.error("An error occurred in the game loop", exc_info=True)
+        pyray.init_window(self.width, self.height, "game")
+        while not pyray.window_should_close():
+            delta_time = pyray.get_frame_time()
+            self.update(delta_time)
+            self.render()
+        pyray.close_window()
 
     def update(self, delta_time):
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2)
