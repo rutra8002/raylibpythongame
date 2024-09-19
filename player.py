@@ -33,7 +33,7 @@ class Player(GameObject):
                     self.vx = 0
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE):
                     self.vy = -self.jump
-                    self.vx = -10*self.speed
+                    self.vx = -1*self.speed
                     self.grounded = False
 
             elif horizontal_collision == "right":
@@ -41,19 +41,24 @@ class Player(GameObject):
                     self.vx = 0
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE):
                     self.vy = -self.jump
-                    self.vx = 10*self.speed
+                    self.vx = 1*self.speed
                     self.grounded = False
 
         if not self.grounded:
             self.vy += self.gravity * delta_time * self.mass
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
+                self.vx += 0.0025 * self.speed
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
+                self.vx += 0.0025 * -self.speed
         else:
+            self.vx *= 0.9
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
+                self.vx += 0.1 * self.speed
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
+                self.vx += 0.1 * -self.speed
             self.vy = 0
 
-        self.vx *= 0.9  # Apply friction
+          # Apply friction
         self.y += self.vy * delta_time
         self.x += self.vx * delta_time
 
-        if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
-            self.vx += 0.1 * self.speed
-        if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
-            self.vx += 0.1 * -self.speed
