@@ -11,6 +11,7 @@ class Player(GameObject):
         self.jump = 400
         self.mass = mass
         self.grounded = False
+        self.sliding = False
 
     def movement(self, delta_time, blocks):
         self.grounded = False
@@ -63,11 +64,17 @@ class Player(GameObject):
                 self.vx += 0.001 * -self.speed
             self.vx *= 0.9991
         else:
-            self.vx *= 0.9
-            if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
-                self.vx += 0.1 * self.speed
-            if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
-                self.vx += 0.1 * -self.speed
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL):
+                self.sliding = True
+                self.vx *= 0.9999
+            else:
+                self.sliding = False
+                self.vx *= 0.9
+            if self.sliding == False:
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
+                    self.vx += 0.1 * self.speed
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
+                    self.vx += 0.1 * -self.speed
             self.vy = 0
 
           # Apply friction
