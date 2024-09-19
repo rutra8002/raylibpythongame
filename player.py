@@ -29,20 +29,25 @@ class Player(GameObject):
                     self.vy = -self.vy / 2
 
             if horizontal_collision == "left":
-                if self.vx > 0:
-                    self.vx = 0
+
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE):
                     self.vy = -self.jump
-                    self.vx = -1*self.speed
+                    self.vx = -1*self.vx
                     self.grounded = False
 
             elif horizontal_collision == "right":
-                if self.vx < 0:
-                    self.vx = 0
+
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE):
                     self.vy = -self.jump
-                    self.vx = 1*self.speed
+                    self.vx = -1*self.vx
                     self.grounded = False
+
+            if horizontal_collision == "left":
+                if self.vx > 0:
+                    self.vx = 0
+            elif horizontal_collision == "right":
+                if self.vx < 0:
+                    self.vx = 0
 
         if not self.grounded:
             self.vy += self.gravity * delta_time * self.mass
