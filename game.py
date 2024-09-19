@@ -23,10 +23,12 @@ class Game:
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
+        # pyray.set_target_fps(60)
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
             self.update(delta_time)
             self.render()
+
         pyray.close_window()
 
     def update(self, delta_time):

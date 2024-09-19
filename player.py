@@ -7,7 +7,7 @@ class Player(GameObject):
         self.vy = 0
         self.vx = 0
         self.gravity = 9.81
-        self.speed = 250
+        self.speed = 400
         self.jump = 400
         self.mass = mass
         self.grounded = False
