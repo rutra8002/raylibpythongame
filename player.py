@@ -58,9 +58,10 @@ class Player(GameObject):
         if not self.grounded:
             self.vy += self.gravity * delta_time * self.mass
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
-                self.vx += 0.0025 * self.speed
+                self.vx += 0.001 * self.speed
             if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
-                self.vx += 0.0025 * -self.speed
+                self.vx += 0.001 * -self.speed
+            self.vx *= 0.9991
         else:
             self.vx *= 0.9
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
