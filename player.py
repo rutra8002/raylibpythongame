@@ -80,7 +80,7 @@ class Player(GameObject):
             self.vy = 0
 
         # Grappling gun logic
-        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_G):
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
             mouse_position = pyray.get_mouse_position()
             world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
             mouse_x, mouse_y = world_position.x, world_position.y
