@@ -6,6 +6,7 @@ from block import Block
 from camera import Camera
 from particles import ParticleSystem
 from speedboostblock import SpeedBoostBlock
+from jumpboostblock import JumpBoostBlock
 
 class Game:
     def __init__(self, width=1366, height=768):
@@ -22,7 +23,8 @@ class Game:
             Block(500, 50, 500, 900, pyray.BLUE),
             Block(50, 550, 500, 1400, pyray.BLUE),
             Block(500, 50, 1000, 900, pyray.BLUE),
-            SpeedBoostBlock(50, 50, 1200, 600, pyray.GREEN, 2000)
+            SpeedBoostBlock(50, 50, 1200, 600, pyray.GREEN, 800),
+            JumpBoostBlock(50, 50, 1300, 600, pyray.YELLOW, 200)
         ]
         self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
         self.particle_system = ParticleSystem()
