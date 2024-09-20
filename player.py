@@ -84,7 +84,7 @@ class Player(GameObject):
             mouse_position = pyray.get_mouse_position()
             world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
             mouse_x, mouse_y = world_position.x, world_position.y
-            self.grappling_gun.shoot(mouse_x, mouse_y)
+            self.grappling_gun.shoot(mouse_x, mouse_y, blocks)
 
         self.x, self.y, reached_target = self.grappling_gun.update_position(self.x, self.y, delta_time)
         if reached_target:
