@@ -15,7 +15,7 @@ class Game:
         self.player = Player(50, 50, 100, 100, pyray.RED, 70)
         self.blocks = [
             Block(50, 500, 100, 600, pyray.BLUE),
-            Block(50, 500, 800, 600, pyray.BLUE),
+            Block(50, 450, 800, 600, pyray.BLUE),
             Block(50, 50000, 1500, 600, pyray.BLUE),
             Block(50, 100, 650, 500, pyray.BLUE),
             Block(500, 50, 500, 0, pyray.BLUE),
@@ -23,8 +23,8 @@ class Game:
             Block(500, 50, 500, 900, pyray.BLUE),
             Block(50, 550, 500, 1400, pyray.BLUE),
             Block(500, 50, 1000, 900, pyray.BLUE),
-            SpeedBoostBlock(50, 50, 1200, 600, pyray.GREEN, 800),
-            JumpBoostBlock(50, 50, 1300, 600, pyray.YELLOW, 200)
+            SpeedBoostBlock(50, 50, 1200, 550, pyray.GREEN, 800),
+            JumpBoostBlock(50, 50, 1300, 600, pyray.YELLOW, 2000)
         ]
         self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
         self.particle_system = ParticleSystem()

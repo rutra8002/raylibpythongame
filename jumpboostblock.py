@@ -5,8 +5,9 @@ class JumpBoostBlock(Block):
         super().__init__(height, width, x, y, color)
         self.jump_boost = jump_boost
 
-    def check_horizontal_collision(self, other):
+    def check_vertical_collision(self, other):
         collision_side = super().check_vertical_collision(other)
         if collision_side:
-            other.vy += -self.jump_boost
+            other.grounded = False
+            other.vy = -self.jump_boost
         return collision_side
