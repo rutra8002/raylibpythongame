@@ -70,7 +70,7 @@ class Game:
 
     def render(self):
         pyray.begin_drawing()
-        pyray.clear_background(pyray.WHITE)
+        pyray.clear_background(pyray.BLACK)
         self.camera.begin_mode()
         self.player.draw()
         for block in self.blocks:
@@ -78,12 +78,13 @@ class Game:
         self.particle_system.draw()
         self.camera.end_mode()
         pyray.draw_fps(10, 10)
+        pyray.draw_text("Player", 10, 30, 10, pyray.RED)
         for parameter in self.player.__dict__:
             pyray.draw_text(parameter + ": " + str(self.player.__dict__[parameter]), 10,
-                            30 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.BLACK)
+                            40 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.WHITE)
         for i, block in enumerate(self.blocks):
-            pyray.draw_text("Block " + str(i), 200 * i + 200, 20, 10, pyray.BLACK)
+            pyray.draw_text("Block " + str(i), 200 * i + 200, 20, 10, pyray.BLUE)
             for parameter in block.__dict__:
                 pyray.draw_text(parameter + ": " + str(block.__dict__[parameter]), 200 * i + 200,
-                                30 + 10 * list(block.__dict__.keys()).index(parameter), 10, pyray.BLACK)
+                                30 + 10 * list(block.__dict__.keys()).index(parameter), 10, pyray.WHITE)
         pyray.end_drawing()
