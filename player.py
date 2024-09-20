@@ -56,10 +56,10 @@ class Player(GameObject):
             self.vy += self.gravity * delta_time * self.mass
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                    self.vx += 0.001 * self.speed
+                    self.vx += 0.00025 * self.speed
             if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx += 0.001 * -self.speed
+                    self.vx += 0.00025 * -self.speed
             self.vx *= 0.9991
         else:
             if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL):
