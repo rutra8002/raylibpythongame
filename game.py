@@ -38,23 +38,25 @@ class Game:
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, delta_time)
         self.player.movement(delta_time, self.blocks)
 
-        # Update the timer
+        # # Update the timer
         self.particle_update_timer += delta_time
-
-        # Add particles behind the player when moving, but only update once each second
+        #
+        # # Add particles behind the player when moving, but only update once each second
         if self.particle_update_timer >= 0.01:
-            if round(self.player.vx, 10) != 0 or self.player.vy != 0:
-                self.particle_system.add_particle(
-                    self.player.x + random.randint(0, self.player.width),  # x position
-                    self.player.y + random.randint(0, self.player.height),  # y position (behind the player)
-                    random.uniform(-1, 1),  # vx
-                    random.uniform(-1, 1),  # vy
-                    50,  # speed
-                    1,  # lifespan
-                    5,  # size
-                    (255, 0, 0, 100),  # color (red)
-                    'circle'  # shape
-                )
+            if self.player.sliding == True:
+                self.particle_system.add_particle(self.player.x + random.randint(0, self.player.width), self.player.y+ self.player.height, -self.player.vx*0.0001, random.uniform(-1, -3), 100, 5, random.randint(1, 5),(0, 0, 255, 100), 'circle')
+        #     if round(self.player.vx, 10) != 0 or self.player.vy != 0:
+        #         self.particle_system.add_particle(
+        #             self.player.x + random.randint(0, self.player.width),  # x position
+        #             self.player.y + random.randint(0, self.player.height),  # y position (behind the player)
+        #             random.uniform(-1, 1),  # vx
+        #             random.uniform(-1, 1),  # vy
+        #             50,  # speed
+        #             1,  # lifespan
+        #             5,  # size
+        #             (255, 0, 0, 100),  # color (red)
+        #             'circle'  # shape
+        #         )
             self.particle_update_timer = 0  # Reset the timer
 
         self.particle_system.update(delta_time)
