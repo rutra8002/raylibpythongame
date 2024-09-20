@@ -42,7 +42,7 @@ class Game:
 
     def update(self, delta_time):
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, delta_time)
-        self.player.movement(delta_time, self.blocks)
+        self.player.movement(delta_time, self.blocks, self.camera)
 
         # # Update the timer
         self.particle_update_timer += delta_time

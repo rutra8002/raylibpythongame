@@ -1,6 +1,7 @@
 import pyray
 from gameobject import GameObject
 from jumpboostblock import JumpBoostBlock
+from grapplinggun import GrapplingGun
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, mass=50):
@@ -14,8 +15,9 @@ class Player(GameObject):
         self.grounded = False
         self.sliding = False
         self.can_jump = True
+        self.grappling_gun = GrapplingGun(range=500, speed=1000)
 
-    def movement(self, delta_time, blocks):
+    def movement(self, delta_time, blocks, camera):
         self.grounded = False
 
         for block in blocks:
@@ -77,6 +79,29 @@ class Player(GameObject):
                         self.vx += 0.1 * -self.speed
             self.vy = 0
 
+        # Grappling gun logic
+        if pyray.is_key_pressed(pyray.KeyboardKey.KEY_G):
+            mouse_position = pyray.get_mouse_position()
+            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+            mouse_x, mouse_y = world_position.x, world_position.y
+            self.grappling_gun.shoot(mouse_x, mouse_y)
+
+        if self.grappling_gun.is_grappling:
+            direction_x = self.grappling_gun.target_x - self.x
+            direction_y = self.grappling_gun.target_y - self.y
+            distance = (direction_x ** 2 + direction_y ** 2) ** 0.5
+            if distance < self.grappling_gun.speed * delta_time:
+                self.x = self.grappling_gun.target_x
+                self.y = self.grappling_gun.target_y
+                self.grappling_gun.reset()
+            else:
+                self.x += direction_x / distance * self.grappling_gun.speed * delta_time
+                self.y += direction_y / distance * self.grappling_gun.speed * delta_time
+
         # Apply friction
         self.y += self.vy * delta_time
         self.x += self.vx * delta_time
+
+    def draw(self):
+        super().draw()
+        self.grappling_gun.draw(self.x, self.y)
