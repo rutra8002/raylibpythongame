@@ -1,5 +1,6 @@
 import pyray
 from gameobject import GameObject
+from jumpboostblock import JumpBoostBlock
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, mass=50):
@@ -22,12 +23,15 @@ class Player(GameObject):
             horizontal_collision = block.check_horizontal_collision(self)
 
             if vertical_collision == "top":
-                self.grounded = True
-                self.can_jump = True
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
-                    self.vy = -self.jump
-                    self.can_jump = False
+                if isinstance(block, JumpBoostBlock):
                     self.grounded = False
+                else:
+                    self.grounded = True
+                    self.can_jump = True
+                    if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
+                        self.vy = -self.jump
+                        self.can_jump = False
+                        self.grounded = False
             elif vertical_collision == "bottom":
                 if self.vy < 0:
                     self.vy += -2 * self.vy

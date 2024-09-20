@@ -7,7 +7,7 @@ class JumpBoostBlock(Block):
 
     def check_vertical_collision(self, other):
         collision_side = super().check_vertical_collision(other)
-        if collision_side:
+        if collision_side == "top":
             other.grounded = False
             other.vy = -self.jump_boost
         return collision_side
