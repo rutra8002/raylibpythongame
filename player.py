@@ -60,7 +60,7 @@ class Player(GameObject):
             if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
                     self.vx += 0.00025 * -self.speed
-            self.vx *= 0.9991
+            self.vx *= 0.99977
         else:
             if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL):
                 self.sliding = True
