@@ -15,21 +15,31 @@ class GrapplingGun:
             self.target_x, self.target_y = nearest_edge
 
     def find_nearest_edge(self, target_x, target_y, blocks):
-        nearest_edge = None
+        def closest_point_on_segment(px, py, ax, ay, bx, by):
+            abx, aby = bx - ax, by - ay
+            apx, apy = px - ax, py - ay
+            ab_ap_product = abx * apx + aby * apy
+            ab_ab_product = abx * abx + aby * aby
+            t = ab_ap_product / ab_ab_product
+            t = max(0, min(1, t))
+            return ax + t * abx, ay + t * aby
+
+        nearest_point = None
         min_distance = float('inf')
         for block in blocks:
             edges = [
-                (block.x, block.y),  # top-left
-                (block.x + block.width, block.y),  # top-right
-                (block.x, block.y + block.height),  # bottom-left
-                (block.x + block.width, block.y + block.height)  # bottom-right
+                (block.x, block.y, block.x + block.width, block.y),  # top edge
+                (block.x, block.y, block.x, block.y + block.height),  # left edge
+                (block.x + block.width, block.y, block.x + block.width, block.y + block.height),  # right edge
+                (block.x, block.y + block.height, block.x + block.width, block.y + block.height)  # bottom edge
             ]
-            for edge_x, edge_y in edges:
-                distance = ((target_x - edge_x) ** 2 + (target_y - edge_y) ** 2) ** 0.5
+            for ax, ay, bx, by in edges:
+                closest_x, closest_y = closest_point_on_segment(target_x, target_y, ax, ay, bx, by)
+                distance = ((target_x - closest_x) ** 2 + (target_y - closest_y) ** 2) ** 0.5
                 if distance < min_distance:
                     min_distance = distance
-                    nearest_edge = (edge_x, edge_y)
-        return nearest_edge
+                    nearest_point = (closest_x, closest_y)
+        return nearest_point
 
     def reset(self):
         self.is_grappling = False
