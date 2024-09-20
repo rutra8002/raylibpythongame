@@ -86,17 +86,9 @@ class Player(GameObject):
             mouse_x, mouse_y = world_position.x, world_position.y
             self.grappling_gun.shoot(mouse_x, mouse_y)
 
-        if self.grappling_gun.is_grappling:
-            direction_x = self.grappling_gun.target_x - self.x
-            direction_y = self.grappling_gun.target_y - self.y
-            distance = (direction_x ** 2 + direction_y ** 2) ** 0.5
-            if distance < self.grappling_gun.speed * delta_time:
-                self.x = self.grappling_gun.target_x
-                self.y = self.grappling_gun.target_y
-                self.grappling_gun.reset()
-            else:
-                self.x += direction_x / distance * self.grappling_gun.speed * delta_time
-                self.y += direction_y / distance * self.grappling_gun.speed * delta_time
+        self.x, self.y, reached_target = self.grappling_gun.update_position(self.x, self.y, delta_time)
+        if reached_target:
+            self.grappling_gun.reset()
 
         # Apply friction
         self.y += self.vy * delta_time
