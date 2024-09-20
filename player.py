@@ -23,7 +23,8 @@ class Player(GameObject):
             if vertical_collision == "top":
                 self.grounded = True
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE):
-                    self.vy += -self.jump
+                    if self.vy > -self.jump:
+                        self.vy += -self.jump
                     self.grounded = False
             elif vertical_collision == "bottom":
                 if self.vy < 0:
