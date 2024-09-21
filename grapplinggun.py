@@ -9,10 +9,13 @@ class GrapplingGun:
         self.target_y = None
 
     def shoot(self, target_x, target_y, blocks):
-        self.is_grappling = True
-        nearest_edge = self.find_nearest_edge(target_x, target_y, blocks)
-        if nearest_edge:
-            self.target_x, self.target_y = nearest_edge
+        if self.is_grappling:
+            self.reset()
+        else:
+            self.is_grappling = True
+            nearest_edge = self.find_nearest_edge(target_x, target_y, blocks)
+            if nearest_edge:
+                self.target_x, self.target_y = nearest_edge
 
     def find_nearest_edge(self, target_x, target_y, blocks):
         def closest_point_on_segment(px, py, ax, ay, bx, by):
