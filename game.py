@@ -26,13 +26,13 @@ class Game:
             SpeedBoostBlock(50, 50, 1200, 550, pyray.GREEN, 800),
             JumpBoostBlock(50, 50, 1300, 600, pyray.YELLOW, 800),
             #stairs
-            Block(50, 50, 1200, 350, pyray.BLUE),
-            Block(50, 50, 1250, 300, pyray.BLUE),
-            Block(50, 50, 1300, 250, pyray.BLUE),
-            Block(50, 50, 1350, 200, pyray.BLUE),
-            Block(50, 50, 1400, 150, pyray.BLUE),
-            Block(50, 50, 1450, 100, pyray.BLUE),
-            Block(50, 50, 1500, 50, pyray.BLUE),
+            Block(50, 100, 1200, 350, pyray.BLUE),
+            Block(50, 100, 1250, 300, pyray.BLUE),
+            Block(50, 100, 1300, 250, pyray.BLUE),
+            Block(50, 100, 1350, 200, pyray.BLUE),
+            Block(50, 100, 1400, 150, pyray.BLUE),
+            Block(50, 100, 1450, 100, pyray.BLUE),
+            Block(50, 100, 1500, 50, pyray.BLUE),
         ]
         self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
         self.particle_system = ParticleSystem()
