@@ -15,7 +15,7 @@ class Player(GameObject):
         self.grounded = False
         self.sliding = False
         self.can_jump = True
-        self.grappling_gun = GrapplingGun(range=500, speed=1000)
+        self.grappling_gun = GrapplingGun(range=500, speed=300)
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
@@ -86,9 +86,13 @@ class Player(GameObject):
             mouse_x, mouse_y = world_position.x, world_position.y
             self.grappling_gun.shoot(mouse_x, mouse_y, blocks)
 
-        self.x, self.y, reached_target = self.grappling_gun.update_position(self.x, self.y, delta_time)
-        if reached_target:
-            self.grappling_gun.reset()
+        if self.grappling_gun.target_x is not None and self.grappling_gun.target_y is not None:
+            self.x, self.y, reached_target, new_vx, new_vy = self.grappling_gun.update_position(self.x, self.y, delta_time)
+            if reached_target:
+                self.grappling_gun.reset()
+            else:
+                self.vx = new_vx
+                self.vy = new_vy
 
         # Apply friction
         self.y += self.vy * delta_time
