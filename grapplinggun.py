@@ -8,6 +8,9 @@ class GrapplingGun:
         self.target_x = None
         self.target_y = None
 
+    def __str__(self):
+        return f"range={self.range}, speed={self.speed}"
+
     def shoot(self, target_x, target_y, blocks):
         if self.is_grappling:
             self.reset()
