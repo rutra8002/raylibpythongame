@@ -1,9 +1,9 @@
 import json
+import os
 import pyray
 from block import Block
 from speedboostblock import SpeedBoostBlock
 from jumpboostblock import JumpBoostBlock
-
 
 def load_map(file_path):
     with open(file_path, 'r') as file:
@@ -28,3 +28,6 @@ def load_map(file_path):
             blocks.append(JumpBoostBlock(width, height, x, y, color, jump))
 
     return blocks
+
+def list_maps(directory):
+    return [f for f in os.listdir(directory) if f.endswith('.json')]

@@ -16,7 +16,7 @@ def snap_to_grid(x, y, grid_size=50):
 
 def main():
     # Load the map
-    blocks = load_map('map.json')
+    blocks = load_map('maps/map.json')
 
     # Initialize the window
     width, height = 1366, 768

@@ -5,18 +5,19 @@ from player import Player
 from camera import Camera
 from particles import ParticleSystem
 from main_menu import MainMenu
-from map_loader import load_map
+from map_loader import load_map, list_maps
 
 class Game:
     def __init__(self, width=1366, height=768):
         self.width = width
         self.height = height
         self.player = Player(50, 50, 100, 100, pyray.RED, 70)
-        self.blocks = load_map('map.json')
+        self.blocks = []
         self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
         self.particle_system = ParticleSystem()
         self.particle_update_timer = 0
         self.main_menu = MainMenu(width, height)
+        self.main_menu.load_maps('maps')
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
@@ -25,6 +26,8 @@ class Game:
             if self.main_menu.show_menu:
                 self.main_menu.render()
             else:
+                if not self.blocks and self.main_menu.selected_map:
+                    self.blocks = load_map(os.path.join('maps', self.main_menu.selected_map))
                 self.update(delta_time)
                 self.render()
         pyray.close_window()
