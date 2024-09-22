@@ -73,7 +73,7 @@ def text_input_dialog(title, message):
     input_text = ""
     while not pyray.window_should_close():
         pyray.begin_drawing()
-        pyray.clear_background(pyray.RAYWHITE)
+        pyray.draw_rectangle(0, 0, 400, 100, pyray.LIGHTGRAY)
         pyray.draw_text(title, 10, 10, 20, pyray.DARKGRAY)
         pyray.draw_text(message, 10, 40, 20, pyray.DARKGRAY)
         pyray.draw_text(input_text, 10, 70, 20, pyray.DARKGRAY)
@@ -92,7 +92,7 @@ def edit_block_dialog(block):
     height_input = str(block.height)
     while not pyray.window_should_close():
         pyray.begin_drawing()
-        pyray.clear_background(pyray.RAYWHITE)
+        pyray.draw_rectangle(0, 0, 200, 100, pyray.LIGHTGRAY)
         pyray.draw_text("Edit Block", 10, 10, 20, pyray.DARKGRAY)
         pyray.draw_text("Width:", 10, 40, 20, pyray.DARKGRAY)
         pyray.draw_text(width_input, 100, 40, 20, pyray.DARKGRAY)
