@@ -21,6 +21,11 @@ def save_map(file_path, blocks):
         "blocks": []
     }
     for block in blocks:
+        if isinstance(block.color, tuple):
+            color = block.color
+        else:
+            color = (block.color.r, block.color.g, block.color.b, block.color.a)
+
         block_data = {
             "type": block.__class__.__name__,
             "width": block.width,
@@ -28,10 +33,10 @@ def save_map(file_path, blocks):
             "x": block.x,
             "y": block.y,
             "color": {
-                "r": block.color[0],
-                "g": block.color[1],
-                "b": block.color[2],
-                "a": block.color[3]
+                "r": color[0],
+                "g": color[1],
+                "b": color[2],
+                "a": color[3]
             }
         }
         if isinstance(block, SpeedBoostBlock):
@@ -121,11 +126,13 @@ def main():
 
                 # Handle save shortcuts
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
-                    if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_SHIFT):
+                    if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_SHIFT) or selected_map is None or creating_new_map:
                         # Save As
                         new_map_name = text_input_dialog("Save As", "Enter new map name:")
                         if new_map_name:
                             save_map(os.path.join('maps', new_map_name + '.json'), blocks)
+                            selected_map = new_map_name + '.json'
+                            creating_new_map = False
                     else:
                         # Save
                         save_map(os.path.join('maps', selected_map), blocks)
