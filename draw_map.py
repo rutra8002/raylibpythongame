@@ -5,20 +5,34 @@ from map_loader import load_map, list_maps
 from block import Block
 from speedboostblock import SpeedBoostBlock
 from jumpboostblock import JumpBoostBlock
+from player import Player
 
 # Define block types
 BLOCK_TYPES = {
     "Block": Block,
     "SpeedBoostBlock": SpeedBoostBlock,
-    "JumpBoostBlock": JumpBoostBlock
+    "JumpBoostBlock": JumpBoostBlock,
+    "Player": Player
 }
 
 def snap_to_grid(x, y, grid_size=50):
     return (x // grid_size) * grid_size, (y // grid_size) * grid_size
 
-def save_map(file_path, blocks):
+def save_map(file_path, blocks, player):
     data = {
-        "blocks": []
+        "blocks": [],
+        "player": {
+            "x": player.x,
+            "y": player.y,
+            "width": player.width,
+            "height": player.height,
+            "color": {
+                "r": player.color[0],
+                "g": player.color[1],
+                "b": player.color[2],
+                "a": player.color[3]
+            }
+        }
     }
     for block in blocks:
         if isinstance(block.color, tuple):
@@ -94,8 +108,12 @@ def main():
         else:
             if creating_new_map:
                 blocks = []
+                player = None
             else:
-                blocks = load_map(os.path.join('maps', selected_map))
+                map_data = load_map(os.path.join('maps', selected_map))
+                blocks = map_data['blocks']
+                player_data = map_data['player']
+                player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']))
 
             # Current block type to place
             current_block_type = "Block"
@@ -108,6 +126,8 @@ def main():
                     current_block_type = "SpeedBoostBlock"
                 elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_THREE):
                     current_block_type = "JumpBoostBlock"
+                elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_FOUR):
+                    current_block_type = "Player"
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
                     mouse_position = pyray.get_mouse_position()
@@ -118,11 +138,15 @@ def main():
                         blocks.append(SpeedBoostBlock(50, 50, x, y, pyray.GREEN, 800))
                     elif current_block_type == "JumpBoostBlock":
                         blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
+                    elif current_block_type == "Player":
+                        player = Player(50, 50, x, y, pyray.RED)
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
                     mouse_position = pyray.get_mouse_position()
                     x, y = snap_to_grid(mouse_position.x, mouse_position.y)
                     blocks = [block for block in blocks if not (block.x == x and block.y == y)]
+                    if player and player.x == x and player.y == y:
+                        player = None
 
                 # Handle save shortcuts
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
@@ -130,12 +154,12 @@ def main():
                         # Save As
                         new_map_name = text_input_dialog("Save As", "Enter new map name:")
                         if new_map_name:
-                            save_map(os.path.join('maps', new_map_name + '.json'), blocks)
+                            save_map(os.path.join('maps', new_map_name + '.json'), blocks, player)
                             selected_map = new_map_name + '.json'
                             creating_new_map = False
                     else:
                         # Save
-                        save_map(os.path.join('maps', selected_map), blocks)
+                        save_map(os.path.join('maps', selected_map), blocks, player)
 
                 # Start drawing
                 pyray.begin_drawing()
@@ -151,8 +175,12 @@ def main():
                 for block in blocks:
                     block.draw()
 
+                # Draw player
+                if player:
+                    player.draw()
+
                 # Draw UI
-                pyray.draw_text("Press 1 for Block, 2 for SpeedBoostBlock, 3 for JumpBoostBlock", 10, 10, 20, pyray.DARKGRAY)
+                pyray.draw_text("Press 1 for Block, 2 for SpeedBoostBlock, 3 for JumpBoostBlock, 4 for Player", 10, 10, 20, pyray.DARKGRAY)
                 pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 40, 20, pyray.DARKGRAY)
 
                 # End drawing

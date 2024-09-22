@@ -28,6 +28,12 @@ def load_map(file_path):
             jump = item['jump']
             blocks.append(JumpBoostBlock(width, height, x, y, color, jump))
 
-    return blocks
+    player_data = data['player']
+
+    return {
+        'blocks': blocks,
+        'player': player_data
+    }
+
 def list_maps(directory):
     return [f for f in os.listdir(directory) if f.endswith('.json')]

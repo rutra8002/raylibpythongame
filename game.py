@@ -11,9 +11,9 @@ class Game:
     def __init__(self, width=1366, height=768):
         self.width = width
         self.height = height
-        self.player = Player(50, 50, 100, 100, pyray.RED, 70)
+        self.player = None
         self.blocks = []
-        self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
+        self.camera = None
         self.particle_system = ParticleSystem()
         self.particle_update_timer = 0
         self.main_menu = MainMenu(width, height)
@@ -27,7 +27,11 @@ class Game:
                 self.main_menu.render()
             else:
                 if not self.blocks and self.main_menu.selected_map:
-                    self.blocks = load_map(os.path.join('maps', self.main_menu.selected_map))
+                    map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
+                    self.blocks = map_data['blocks']
+                    player_data = map_data['player']
+                    self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']))
+                    self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
                 self.update(delta_time)
                 self.render()
         pyray.close_window()
