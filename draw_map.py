@@ -19,6 +19,11 @@ def snap_to_grid(x, y, grid_size=50):
     return (x // grid_size) * grid_size, (y // grid_size) * grid_size
 
 def save_map(file_path, blocks, player):
+    if isinstance(player.color, tuple):
+        player_color = player.color
+    else:
+        player_color = (player.color.r, player.color.g, player.color.b, player.color.a)
+
     data = {
         "blocks": [],
         "player": {
@@ -27,10 +32,10 @@ def save_map(file_path, blocks, player):
             "width": player.width,
             "height": player.height,
             "color": {
-                "r": player.color[0],
-                "g": player.color[1],
-                "b": player.color[2],
-                "a": player.color[3]
+                "r": player_color[0],
+                "g": player_color[1],
+                "b": player_color[2],
+                "a": player_color[3]
             }
         }
     }
@@ -61,6 +66,8 @@ def save_map(file_path, blocks, player):
 
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
+
+    return True
 
 def text_input_dialog(title, message):
     input_text = ""
@@ -93,6 +100,10 @@ def main():
     maps = list_maps('maps')
     selected_map = None
     creating_new_map = False
+
+    # Variable to track popup display time
+    popup_display_time = 0
+    popup_message = ""
 
     while not pyray.window_should_close():
         if selected_map is None and not creating_new_map:
@@ -160,9 +171,13 @@ def main():
                             save_map(os.path.join('maps', new_map_name + '.json'), blocks, player)
                             selected_map = new_map_name + '.json'
                             creating_new_map = False
+                            popup_message = "Map saved successfully!"
+                            popup_display_time = 2  # Display for 2 seconds
                     else:
                         # Save
                         save_map(os.path.join('maps', selected_map), blocks, player)
+                        popup_message = "Map saved successfully!"
+                        popup_display_time = 2  # Display for 2 seconds
 
                 # Update camera position
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_RIGHT):
@@ -204,6 +219,11 @@ def main():
                 # Draw UI
                 pyray.draw_text("Press 1 for Block, 2 for SpeedBoostBlock, 3 for JumpBoostBlock, 4 for Player", 10, 10, 20, pyray.DARKGRAY)
                 pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 40, 20, pyray.DARKGRAY)
+
+                # Display popup message if needed
+                if popup_display_time > 0:
+                    pyray.draw_text(popup_message, width // 2 - 100, height // 2, 20, pyray.GREEN)
+                    popup_display_time -= pyray.get_frame_time()
 
                 # End drawing
                 pyray.end_drawing()
