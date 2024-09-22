@@ -20,6 +20,19 @@ class Player(GameObject):
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
 
+        # Grappling gun logic
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+            mouse_position = pyray.get_mouse_position()
+            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+            mouse_x, mouse_y = world_position.x, world_position.y
+            self.grappling_gun.shoot(mouse_x, mouse_y, blocks)
+
+        if self.grappling_gun.target_x is not None and self.grappling_gun.target_y is not None:
+            self.x, self.y, reached_target, self.vx, self.vy = self.grappling_gun.update_position(self.x, self.y, self.vx, self.vy, delta_time)
+            if reached_target:
+                self.grappling_gun.reset()
+
+
         for block in blocks:
             vertical_collision = block.check_vertical_collision(self)
             horizontal_collision = block.check_horizontal_collision(self)
@@ -88,18 +101,6 @@ class Player(GameObject):
                     if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
                         self.vx += 0.1 * -self.speed
             self.vy = 0
-
-        # Grappling gun logic
-        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-            mouse_position = pyray.get_mouse_position()
-            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-            mouse_x, mouse_y = world_position.x, world_position.y
-            self.grappling_gun.shoot(mouse_x, mouse_y, blocks)
-
-        if self.grappling_gun.target_x is not None and self.grappling_gun.target_y is not None:
-            self.x, self.y, reached_target, self.vx, self.vy = self.grappling_gun.update_position(self.x, self.y, self.vx, self.vy, delta_time)
-            if reached_target:
-                self.grappling_gun.reset()
 
         # Apply friction
         self.y += self.vy * delta_time
