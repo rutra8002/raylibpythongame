@@ -16,7 +16,6 @@ class Player(GameObject):
         self.sliding = False
         self.can_jump = True
         self.grappling_gun = GrapplingGun(range=500, speed=200)
-        self.previous_speed = 0
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
@@ -58,6 +57,7 @@ class Player(GameObject):
                     self.x += 0.05 * self.speed if horizontal_collision == "left" else -0.05 * self.speed
                     self.y = block.y - self.height
 
+
             if horizontal_collision == "left" and self.vx > 0:
                 self.vx = 0
             elif horizontal_collision == "right" and self.vx < 0:
@@ -87,11 +87,6 @@ class Player(GameObject):
                     if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
                         self.vx += 0.1 * -self.speed
             self.vy = 0
-
-        # Trigger camera shake if player stops after high speed
-        if self.previous_speed > 400 and abs(self.vx) < 10:
-            camera.apply_shake(0.25, 50)
-        self.previous_speed = abs(self.vx)
 
         # Grappling gun logic
         if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
