@@ -87,6 +87,35 @@ def text_input_dialog(title, message):
         elif key >= 32 and key <= 126:
             input_text += chr(key)
 
+def edit_block_dialog(block):
+    width_input = str(block.width)
+    height_input = str(block.height)
+    while not pyray.window_should_close():
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.RAYWHITE)
+        pyray.draw_text("Edit Block", 10, 10, 20, pyray.DARKGRAY)
+        pyray.draw_text("Width:", 10, 40, 20, pyray.DARKGRAY)
+        pyray.draw_text(width_input, 100, 40, 20, pyray.DARKGRAY)
+        pyray.draw_text("Height:", 10, 70, 20, pyray.DARKGRAY)
+        pyray.draw_text(height_input, 100, 70, 20, pyray.DARKGRAY)
+        pyray.end_drawing()
+
+        key = pyray.get_key_pressed()
+        if key == pyray.KeyboardKey.KEY_ENTER:
+            block.width = int(width_input)
+            block.height = int(height_input)
+            return
+        elif key == pyray.KeyboardKey.KEY_BACKSPACE:
+            if pyray.get_mouse_y() < 60:
+                width_input = width_input[:-1]
+            else:
+                height_input = height_input[:-1]
+        elif key >= 32 and key <= 126:
+            if pyray.get_mouse_y() < 60:
+                width_input += chr(key)
+            else:
+                height_input += chr(key)
+
 def main():
     # Initialize the window
     width, height = 1366, 768
@@ -161,6 +190,14 @@ def main():
                     blocks = [block for block in blocks if not (block.x == x and block.y == y)]
                     if player and player.x == x and player.y == y:
                         player = None
+
+                if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
+                    mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
+                    x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                    for block in blocks:
+                        if block.x == x and block.y == y:
+                            edit_block_dialog(block)
+                            break
 
                 # Handle save shortcuts
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
