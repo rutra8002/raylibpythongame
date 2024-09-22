@@ -68,6 +68,11 @@ def main():
                     elif current_block_type == "JumpBoostBlock":
                         blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
 
+                if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
+                    mouse_position = pyray.get_mouse_position()
+                    x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                    blocks = [block for block in blocks if not (block.x == x and block.y == y)]
+
                 # Start drawing
                 pyray.begin_drawing()
                 pyray.clear_background(pyray.RAYWHITE)
