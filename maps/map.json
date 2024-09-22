@@ -1,8 +1,0 @@
-{
-  "blocks": [
-    {"type": "Block", "width": 50, "height": 500, "x": 100, "y": 600, "color": "BLUE"},
-    {"type": "Block", "width": 50, "height": 450, "x": 800, "y": 600, "color": "BLUE"},
-    {"type": "SpeedBoostBlock", "width": 50, "height": 50, "x": 1200, "y": 550, "color": "GREEN", "speed": 800},
-    {"type": "JumpBoostBlock", "width": 50, "height": 50, "x": 1300, "y": 600, "color": "YELLOW", "jump": 800}
-  ]
-}

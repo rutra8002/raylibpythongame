@@ -16,7 +16,8 @@ def load_map(file_path):
         height = item['height']
         x = item['x']
         y = item['y']
-        color = getattr(pyray, item['color'])
+        color_data = item['color']
+        color = pyray.Color(color_data['r'], color_data['g'], color_data['b'], color_data['a'])
 
         if block_type == 'Block':
             blocks.append(Block(width, height, x, y, color))
@@ -28,6 +29,5 @@ def load_map(file_path):
             blocks.append(JumpBoostBlock(width, height, x, y, color, jump))
 
     return blocks
-
 def list_maps(directory):
     return [f for f in os.listdir(directory) if f.endswith('.json')]

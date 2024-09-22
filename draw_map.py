@@ -1,5 +1,6 @@
 import pyray
 import os
+import json
 from map_loader import load_map, list_maps
 from block import Block
 from speedboostblock import SpeedBoostBlock
@@ -14,6 +15,51 @@ BLOCK_TYPES = {
 
 def snap_to_grid(x, y, grid_size=50):
     return (x // grid_size) * grid_size, (y // grid_size) * grid_size
+
+def save_map(file_path, blocks):
+    data = {
+        "blocks": []
+    }
+    for block in blocks:
+        block_data = {
+            "type": block.__class__.__name__,
+            "width": block.width,
+            "height": block.height,
+            "x": block.x,
+            "y": block.y,
+            "color": {
+                "r": block.color[0],
+                "g": block.color[1],
+                "b": block.color[2],
+                "a": block.color[3]
+            }
+        }
+        if isinstance(block, SpeedBoostBlock):
+            block_data["speed"] = block.speed_boost
+        elif isinstance(block, JumpBoostBlock):
+            block_data["jump"] = block.jump_boost
+        data["blocks"].append(block_data)
+
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
+def text_input_dialog(title, message):
+    input_text = ""
+    while not pyray.window_should_close():
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.RAYWHITE)
+        pyray.draw_text(title, 10, 10, 20, pyray.DARKGRAY)
+        pyray.draw_text(message, 10, 40, 20, pyray.DARKGRAY)
+        pyray.draw_text(input_text, 10, 70, 20, pyray.DARKGRAY)
+        pyray.end_drawing()
+
+        key = pyray.get_key_pressed()
+        if key == pyray.KeyboardKey.KEY_ENTER:
+            return input_text
+        elif key == pyray.KeyboardKey.KEY_BACKSPACE:
+            input_text = input_text[:-1]
+        elif key >= 32 and key <= 126:
+            input_text += chr(key)
 
 def main():
     # Initialize the window
@@ -72,6 +118,17 @@ def main():
                     mouse_position = pyray.get_mouse_position()
                     x, y = snap_to_grid(mouse_position.x, mouse_position.y)
                     blocks = [block for block in blocks if not (block.x == x and block.y == y)]
+
+                # Handle save shortcuts
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
+                    if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_SHIFT):
+                        # Save As
+                        new_map_name = text_input_dialog("Save As", "Enter new map name:")
+                        if new_map_name:
+                            save_map(os.path.join('maps', new_map_name + '.json'), blocks)
+                    else:
+                        # Save
+                        save_map(os.path.join('maps', selected_map), blocks)
 
                 # Start drawing
                 pyray.begin_drawing()
