@@ -7,6 +7,7 @@ from camera import Camera
 from particles import ParticleSystem
 from speedboostblock import SpeedBoostBlock
 from jumpboostblock import JumpBoostBlock
+from main_menu import MainMenu
 
 class Game:
     def __init__(self, width=1366, height=768):
@@ -37,15 +38,18 @@ class Game:
         self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
         self.particle_system = ParticleSystem()
         self.particle_update_timer = 0
+        self.main_menu = MainMenu(width, height)
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
         # pyray.set_target_fps(60)
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
-            self.update(delta_time)
-            self.render()
-
+            if self.main_menu.show_menu:
+                self.main_menu.render()
+            else:
+                self.update(delta_time)
+                self.render()
         pyray.close_window()
 
     def update(self, delta_time):
@@ -58,24 +62,12 @@ class Game:
         #
         # # Add particles behind the player when moving, but only update once each second
         if self.particle_update_timer >= 0.01:
-            if self.player.sliding == True:
-                self.particle_system.add_particle(self.player.x + random.randint(0, self.player.width), self.player.y+ self.player.height, -self.player.vx*0.0001, random.uniform(-1, -3), 100, 5, random.randint(1, 5),(0, 0, 255, 100), 'circle')
-        #     if round(self.player.vx, 10) != 0 or self.player.vy != 0:
-        #         self.particle_system.add_particle(
-        #             self.player.x + random.randint(0, self.player.width),  # x position
-        #             self.player.y + random.randint(0, self.player.height),  # y position (behind the player)
-        #             random.uniform(-1, 1),  # vx
-        #             random.uniform(-1, 1),  # vy
-        #             50,  # speed
-        #             1,  # lifespan
-        #             5,  # size
-        #             (255, 0, 0, 100),  # color (red)
-        #             'circle'  # shape
-        #         )
-            self.particle_update_timer = 0  # Reset the timer
+            if self.player.sliding:
+                self.particle_system.add_particle(self.player.x + random.randint(0, self.player.width), self.player.y + self.player.height, -self.player.vx * 0.0001, random.uniform(-1, -3), 100, 5, random.randint(1, 5), (0, 0, 255, 100), 'circle')
+            self.particle_update_timer = 0
 
         self.particle_system.update(delta_time)
-        self.particle_system.apply_force_to_all(0, 9.81*delta_time)
+        self.particle_system.apply_force_to_all(0, 9.81 * delta_time)
 
     def render(self):
         pyray.begin_drawing()
