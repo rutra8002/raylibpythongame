@@ -64,6 +64,7 @@ class Player(GameObject):
                 self.vx = 0
 
         if not self.grounded:
+            self.sliding = False
             self.vy += self.gravity * delta_time * self.mass
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
