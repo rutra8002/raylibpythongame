@@ -2,39 +2,17 @@ import os
 import random
 import pyray
 from player import Player
-from block import Block
 from camera import Camera
 from particles import ParticleSystem
-from speedboostblock import SpeedBoostBlock
-from jumpboostblock import JumpBoostBlock
 from main_menu import MainMenu
+from map_loader import load_map
 
 class Game:
     def __init__(self, width=1366, height=768):
         self.width = width
         self.height = height
         self.player = Player(50, 50, 100, 100, pyray.RED, 70)
-        self.blocks = [
-            Block(50, 500, 100, 600, pyray.BLUE),
-            Block(50, 450, 800, 600, pyray.BLUE),
-            Block(50, 50000, 1500, 600, pyray.BLUE),
-            Block(50, 100, 650, 500, pyray.BLUE),
-            Block(500, 50, 500, 0, pyray.BLUE),
-            Block(500, 200, 850, 0, pyray.BLUE),
-            Block(500, 50, 500, 900, pyray.BLUE),
-            Block(50, 550, 500, 1400, pyray.BLUE),
-            Block(500, 50, 1000, 900, pyray.BLUE),
-            SpeedBoostBlock(50, 50, 1200, 550, pyray.GREEN, 800),
-            JumpBoostBlock(50, 50, 1300, 600, pyray.YELLOW, 800),
-            #stairs
-            Block(50, 100, 1200, 350, pyray.BLUE),
-            Block(50, 100, 1250, 300, pyray.BLUE),
-            Block(50, 100, 1300, 250, pyray.BLUE),
-            Block(50, 100, 1350, 200, pyray.BLUE),
-            Block(50, 100, 1400, 150, pyray.BLUE),
-            Block(50, 100, 1450, 100, pyray.BLUE),
-            Block(50, 100, 1500, 50, pyray.BLUE),
-        ]
+        self.blocks = load_map('map.json')
         self.camera = Camera(width, height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
         self.particle_system = ParticleSystem()
         self.particle_update_timer = 0
@@ -42,7 +20,6 @@ class Game:
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
-        # pyray.set_target_fps(60)
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
             if self.main_menu.show_menu:
@@ -57,10 +34,7 @@ class Game:
         self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
 
-        # # Update the timer
         self.particle_update_timer += delta_time
-        #
-        # # Add particles behind the player when moving, but only update once each second
         if self.particle_update_timer >= 0.01:
             if self.player.sliding:
                 self.particle_system.add_particle(self.player.x + random.randint(0, self.player.width), self.player.y + self.player.height, -self.player.vx * 0.0001, random.uniform(-1, -3), 100, 5, random.randint(1, 5), (0, 0, 255, 100), 'circle')
