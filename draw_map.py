@@ -86,6 +86,9 @@ def main():
     pyray.init_window(width, height, "Map Drawer")
     pyray.set_target_fps(60)
 
+    # Initialize the camera
+    camera = pyray.Camera2D(pyray.Vector2(0, 0), pyray.Vector2(0, 0), 0.0, 1.0)
+
     # Menu to choose between loading an existing map or creating a new one
     maps = list_maps('maps')
     selected_map = None
@@ -130,7 +133,7 @@ def main():
                     current_block_type = "Player"
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-                    mouse_position = pyray.get_mouse_position()
+                    mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
                     x, y = snap_to_grid(mouse_position.x, mouse_position.y)
                     if current_block_type == "Block":
                         blocks.append(Block(50, 50, x, y, pyray.BLUE))
@@ -142,7 +145,7 @@ def main():
                         player = Player(50, 50, x, y, pyray.RED)
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
-                    mouse_position = pyray.get_mouse_position()
+                    mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
                     x, y = snap_to_grid(mouse_position.x, mouse_position.y)
                     blocks = [block for block in blocks if not (block.x == x and block.y == y)]
                     if player and player.x == x and player.y == y:
@@ -161,15 +164,32 @@ def main():
                         # Save
                         save_map(os.path.join('maps', selected_map), blocks, player)
 
+                # Update camera position
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_RIGHT):
+                    camera.target.x += 10
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT):
+                    camera.target.x -= 10
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_DOWN):
+                    camera.target.y += 10
+                if pyray.is_key_down(pyray.KeyboardKey.KEY_UP):
+                    camera.target.y -= 10
+
                 # Start drawing
                 pyray.begin_drawing()
                 pyray.clear_background(pyray.RAYWHITE)
 
+                pyray.begin_mode_2d(camera)
+
                 # Draw grid
-                for i in range(0, width, 50):
-                    pyray.draw_line(i, 0, i, height, pyray.LIGHTGRAY)
-                for j in range(0, height, 50):
-                    pyray.draw_line(0, j, width, j, pyray.LIGHTGRAY)
+                start_x = int(camera.target.x) // 50 * 50
+                end_x = int(camera.target.x + width+50) // 50 * 50
+                start_y = int(camera.target.y) // 50 * 50
+                end_y = int(camera.target.y + height+50) // 50 * 50
+
+                for i in range(start_x, end_x + 50, 50):
+                    pyray.draw_line(i, start_y, i, end_y, pyray.LIGHTGRAY)
+                for j in range(start_y, end_y + 50, 50):
+                    pyray.draw_line(start_x, j, end_x, j, pyray.LIGHTGRAY)
 
                 # Draw each block
                 for block in blocks:
@@ -178,6 +198,8 @@ def main():
                 # Draw player
                 if player:
                     player.draw()
+
+                pyray.end_mode_2d()
 
                 # Draw UI
                 pyray.draw_text("Press 1 for Block, 2 for SpeedBoostBlock, 3 for JumpBoostBlock, 4 for Player", 10, 10, 20, pyray.DARKGRAY)
