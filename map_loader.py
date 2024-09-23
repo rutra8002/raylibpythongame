@@ -4,7 +4,6 @@ import pyray
 from block import Block
 from speedboostblock import SpeedBoostBlock
 from jumpboostblock import JumpBoostBlock
-from lavablock import LavaBlock
 
 def load_map(file_path):
     with open(file_path, 'r') as file:
@@ -28,8 +27,6 @@ def load_map(file_path):
         elif block_type == 'JumpBoostBlock':
             jump = item['jump']
             blocks.append(JumpBoostBlock(height, width, x, y, color, jump))
-        elif block_type == 'LavaBlock':
-            blocks.append(LavaBlock(height, width, x, y, color))
 
     player_data = data['player']
 

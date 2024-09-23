@@ -5,7 +5,6 @@ from map_loader import load_map, list_maps
 from block import Block
 from speedboostblock import SpeedBoostBlock
 from jumpboostblock import JumpBoostBlock
-from lavablock import LavaBlock
 from player import Player
 
 # Define block types
@@ -13,7 +12,6 @@ BLOCK_TYPES = {
     "Block": Block,
     "SpeedBoostBlock": SpeedBoostBlock,
     "JumpBoostBlock": JumpBoostBlock,
-    "LavaBlock": LavaBlock,
     "Player": Player
 }
 
@@ -173,8 +171,6 @@ def main():
                     current_block_type = "JumpBoostBlock"
                 elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_FOUR):
                     current_block_type = "Player"
-                elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_FIVE):
-                    current_block_type = "LavaBlock"
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
                     mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
@@ -187,8 +183,6 @@ def main():
                         blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
                     elif current_block_type == "Player":
                         player = Player(50, 50, x, y, pyray.RED)
-                    elif current_block_type == "LavaBlock":
-                        blocks.append(LavaBlock(50, 500, x, y, pyray.ORANGE))
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
                     mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
