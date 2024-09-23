@@ -2,6 +2,7 @@ import pyray
 from gameobject import GameObject
 from jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
+import math
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, mass=50):
@@ -110,7 +111,13 @@ class Player(GameObject):
         self.x += self.vx * delta_time
 
     def draw(self):
-        for i in range(0, self.width, self.texture.width):
-            for j in range(0, self.height, self.texture.height):
-                pyray.draw_texture(self.texture, int(self.x + i), int(self.y + j), pyray.WHITE)
+        angle = 0
+        draw_x = self.x
+        source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
+        dest_rect = pyray.Rectangle(draw_x, self.y, self.width, self.height)
+
+        if self.vx < 0:
+            source_rect.width = -self.texture.width
+
+        pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
         self.grappling_gun.draw(self.x, self.y, self.width, self.height)
