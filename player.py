@@ -16,6 +16,9 @@ class Player(GameObject):
         self.sliding = False
         self.can_jump = True
         self.grappling_gun = GrapplingGun(range=500, speed=200)
+        self.texture = pyray.load_texture("images/player.png")
+        if self.texture.id == 0:
+            raise ValueError("Failed to load texture")
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
@@ -107,5 +110,7 @@ class Player(GameObject):
         self.x += self.vx * delta_time
 
     def draw(self):
-        super().draw()
+        for i in range(0, self.width, self.texture.width):
+            for j in range(0, self.height, self.texture.height):
+                pyray.draw_texture(self.texture, int(self.x + i), int(self.y + j), pyray.WHITE)
         self.grappling_gun.draw(self.x, self.y, self.width, self.height)
