@@ -1,4 +1,5 @@
 import pyray
+import images
 
 from block import Block
 
@@ -6,9 +7,7 @@ class JumpBoostBlock(Block):
     def __init__(self, height, width, x, y, color, jump_boost):
         super().__init__(height, width, x, y, color)
         self.jump_boost = jump_boost
-        self.texture = pyray.load_texture("images/jump.png")
-        if self.texture.id == 0:
-            raise ValueError("Failed to load texture")
+        self.texture = images.load_texture_with_error_check("images/jump.png")
 
     def check_vertical_collision(self, other):
         collision_side = super().check_vertical_collision(other)

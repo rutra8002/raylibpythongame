@@ -3,6 +3,8 @@ from gameobject import GameObject
 from jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
 import math
+import images
+
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, mass=50):
@@ -17,9 +19,7 @@ class Player(GameObject):
         self.sliding = False
         self.can_jump = True
         self.grappling_gun = GrapplingGun(range=500, speed=200)
-        self.texture = pyray.load_texture("images/player.png")
-        if self.texture.id == 0:
-            raise ValueError("Failed to load texture")
+        self.texture = images.load_texture_with_error_check("images/player.png")
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False

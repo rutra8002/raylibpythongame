@@ -1,14 +1,12 @@
 from block import Block
-
+import images
 import pyray
 
 class SpeedBoostBlock(Block):
     def __init__(self, height, width, x, y, color, speed_boost):
         super().__init__(height, width, x, y, color)
         self.speed_boost = speed_boost
-        self.texture = pyray.load_texture("images/speeed.png")
-        if self.texture.id == 0:
-            raise ValueError("Failed to load texture")
+        self.texture = images.load_texture_with_error_check("images/speeed.png")
 
 
     def check_vertical_collision(self, other):
