@@ -29,11 +29,11 @@ class MainMenu:
             pyray.draw_text("Select Map", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
 
             for i, map_name in enumerate(self.maps):
-                if pyray.gui_button(pyray.Rectangle(self.width / 2 - 100, self.height / 2 + 10 + i * 60, 200, 50), map_name):
+                if pyray.gui_button(pyray.Rectangle(self.width / 2 - 100, self.height / 2 - 50 + i * 60, 200, 50), map_name):
                     self.selected_map = map_name
                     self.show_map_selection = False
 
-            if pyray.gui_button(pyray.Rectangle(self.width / 2 - 100, self.height / 2 + 10 + len(self.maps) * 60, 200, 50), "Back"):
+            if pyray.gui_button(pyray.Rectangle(self.width / 2 - 100, self.height / 2 - 50 + len(self.maps) * 60, 200, 50), "Back"):
                 self.show_map_selection = False
                 self.show_menu = True
 
