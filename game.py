@@ -64,11 +64,11 @@ class Game:
         for parameter in self.player.__dict__:
             pyray.draw_text(parameter + ": " + str(self.player.__dict__[parameter]), 10,
                             40 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.WHITE)
-        for i, block in enumerate(self.blocks):
-            pyray.draw_text("Block " + str(i), 200 * i + 200, 20, 10, pyray.BLUE)
-            for parameter in block.__dict__:
-                pyray.draw_text(parameter + ": " + str(block.__dict__[parameter]), 200 * i + 200,
-                                30 + 10 * list(block.__dict__.keys()).index(parameter), 10, pyray.WHITE)
+        # for i, block in enumerate(self.blocks):
+        #     pyray.draw_text("Block " + str(i), 200 * i + 200, 20, 10, pyray.BLUE)
+        #     for parameter in block.__dict__:
+        #         pyray.draw_text(parameter + ": " + str(block.__dict__[parameter]), 200 * i + 200,
+        #                         30 + 10 * list(block.__dict__.keys()).index(parameter), 10, pyray.WHITE)
         pyray.end_drawing()
 
 if __name__ == "__main__":
