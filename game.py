@@ -70,3 +70,7 @@ class Game:
                 pyray.draw_text(parameter + ": " + str(block.__dict__[parameter]), 200 * i + 200,
                                 30 + 10 * list(block.__dict__.keys()).index(parameter), 10, pyray.WHITE)
         pyray.end_drawing()
+
+if __name__ == "__main__":
+    game = Game()
+    game.run()
