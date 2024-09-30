@@ -21,7 +21,7 @@ class Game:
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
-        pyray.set_target_fps(60)
+        # pyray.set_target_fps(60)
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
             if self.main_menu.show_menu or self.main_menu.show_map_selection:

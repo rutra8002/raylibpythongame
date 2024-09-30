@@ -62,11 +62,11 @@ class GrapplingGun:
             direction_y = self.target_y - player_y
             distance = (direction_x ** 2 + direction_y ** 2) ** 0.5
             if distance < self.speed * delta_time:
-                return self.target_x, self.target_y, True, vx, vy
+                return vx, vy, True
             else:
                 direction_x /= distance
                 direction_y /= distance
-                new_vx = vx/1.0015 + 4.5*direction_x * self.speed*0.002
-                new_vy = vy/1.0015 + 4.5*direction_y * self.speed*0.002
-                return player_x, player_y, False, new_vx, new_vy
-        return player_x, player_y, False, vx, vy
+                new_vx = vx + 10 * direction_x * self.speed * delta_time
+                new_vy = vy + 10 * direction_y * self.speed * delta_time
+                return new_vx, new_vy, False
+        return vx, vy, False

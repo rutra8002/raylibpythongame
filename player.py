@@ -32,7 +32,7 @@ class Player(GameObject):
             self.grappling_gun.shoot(mouse_x, mouse_y, blocks)
 
         if self.grappling_gun.target_x is not None and self.grappling_gun.target_y is not None:
-            self.x, self.y, reached_target, self.vx, self.vy = self.grappling_gun.update_position(self.x, self.y, self.vx, self.vy, delta_time)
+            self.vx, self.vy, reached_target = self.grappling_gun.update_position(self.x, self.y, self.vx, self.vy, delta_time)
             if reached_target:
                 self.grappling_gun.reset()
 
