@@ -8,9 +8,10 @@ from main_menu import MainMenu
 from map_loader import load_map
 
 class Game:
-    def __init__(self, width=1366, height=768):
+    def __init__(self, width=1366, height=768, fps=60):
         self.width = width
         self.height = height
+        self.fps = fps
         self.player = None
         self.blocks = []
         self.camera = None
@@ -21,7 +22,8 @@ class Game:
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
-        # pyray.set_target_fps(60)
+        if self.fps is not None:
+            pyray.set_target_fps(self.fps)
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
             if self.main_menu.show_menu or self.main_menu.show_map_selection:

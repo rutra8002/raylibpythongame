@@ -83,6 +83,11 @@ class GameLauncher(QMainWindow):
         self.height_input.setPlaceholderText("Height")
         layout.addWidget(self.height_input)
 
+        # FPS input
+        self.fps_input = QLineEdit(self)
+        self.fps_input.setPlaceholderText("FPS")
+        layout.addWidget(self.fps_input)
+
         self.options_tab.setLayout(layout)
 
     def init_log_viewer_tab(self):
@@ -115,9 +120,10 @@ class GameLauncher(QMainWindow):
 
         width = int(self.width_input.text()) if self.width_input.text() else 1366
         height = int(self.height_input.text()) if self.height_input.text() else 768
+        fps = int(self.fps_input.text()) if self.fps_input.text() else None
 
         try:
-            game_instance = Game(width, height)
+            game_instance = Game(width, height, fps)
             game_instance.run()
         except Exception as e:
             logging.error("An error occurred in the game loop", exc_info=True)
