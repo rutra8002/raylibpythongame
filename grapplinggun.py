@@ -1,4 +1,6 @@
 import pyray
+import images
+import math
 
 class GrapplingGun:
     def __init__(self, range, speed, ammo=10, name="Grappling Gun"):
@@ -9,16 +11,20 @@ class GrapplingGun:
         self.target_x = None
         self.target_y = None
         self.name = name
+        self.texture = images.load_texture_with_error_check("images/grappling_gun.png")
 
     def __str__(self):
         return f"range={self.range}, speed={self.speed}, ammo={self.ammo}"
 
     def shoot(self, target_x, target_y, blocks):
-        if self.ammo <= 0:
-            return  # No ammo left
+
         if self.is_grappling:
             self.reset()
+            if self.ammo <= 0:
+                return
         else:
+            if self.ammo <= 0:
+                return
             self.is_grappling = True
             nearest_edge = self.find_nearest_edge(target_x, target_y, blocks)
             if nearest_edge:
@@ -57,9 +63,25 @@ class GrapplingGun:
         self.target_x = None
         self.target_y = None
 
-    def draw(self, player_x, player_y, player_width, player_height):
+    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx):
         if self.is_grappling and self.target_x is not None and self.target_y is not None:
-            pyray.draw_line(int(player_x + player_width/2), int(player_y + player_height/2), int(self.target_x), int(self.target_y), pyray.RED)
+            pyray.draw_line(int(player_x), int(player_y), int(self.target_x),
+                            int(self.target_y), pyray.RED)
+
+        # Calculate the angle based on the player's position and the target position
+        if self.target_x is not None and self.target_y is not None:
+            angle = math.degrees(math.atan2(self.target_y - player_y, self.target_x - player_x))
+        else:
+            angle = player_angle
+
+        self.source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
+        dest_rect = pyray.Rectangle(player_x, player_y, player_width, player_height)
+
+        if player_vx < 0 and angle == player_angle:
+            self.source_rect.width = -self.texture.width
+
+        pyray.draw_texture_pro(self.texture, self.source_rect, dest_rect, pyray.Vector2(player_width / 2, player_height / 2),
+                               angle, pyray.WHITE)
 
     def update_position(self, player_x, player_y, vx, vy, delta_time):
         if self.is_grappling and self.target_x is not None and self.target_y is not None:

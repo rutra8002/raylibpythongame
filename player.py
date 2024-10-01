@@ -1,12 +1,11 @@
 import pyray
+import math
 from gameobject import GameObject
 from jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
 from gun import Gun
 from inventory import Inventory
-import math
 import images
-
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, mass=50):
@@ -35,7 +34,6 @@ class Player(GameObject):
             self.inventory.select_previous_item()
 
         selected_item = self.inventory.get_selected_item()
-
 
         if isinstance(selected_item, GrapplingGun):
             if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
@@ -87,7 +85,7 @@ class Player(GameObject):
                     self.grounded = False
 
                 if self.grounded:
-                    if self.y - (self.height//4)< block.y:
+                    if self.y - (self.height // 4) < block.y:
                         self.x += 0.05 * self.speed if horizontal_collision == "left" else -0.05 * self.speed
                         self.y = block.y - self.height
 
@@ -139,4 +137,4 @@ class Player(GameObject):
 
         selected_item = self.inventory.get_selected_item()
         if selected_item and hasattr(selected_item, 'draw'):
-            selected_item.draw(self.x, self.y, self.width, self.height)
+            selected_item.draw(draw_x+self.width//2, self.y+self.height//2, self.width, self.height, angle, self.vx)
