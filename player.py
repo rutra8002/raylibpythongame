@@ -137,5 +137,5 @@ class Player(GameObject):
 
         selected_item = self.inventory.get_selected_item()
         if selected_item and hasattr(selected_item, 'draw'):
-            selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width, self.height, angle,
+            selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width//1.5, self.height//1.5, angle,
                                self.vx, camera)
