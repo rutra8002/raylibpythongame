@@ -66,7 +66,7 @@ class GrapplingGun:
             else:
                 direction_x /= distance
                 direction_y /= distance
-                new_vx = vx + 10 * direction_x * self.speed * delta_time
-                new_vy = vy + 10 * direction_y * self.speed * delta_time
+                new_vx = vx + 8 * direction_x * self.speed * delta_time
+                new_vy = vy + 8 * direction_y * self.speed * delta_time
                 return new_vx, new_vy, False
         return vx, vy, False
