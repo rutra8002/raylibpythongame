@@ -1,12 +1,13 @@
 import pyray
 
 class GrapplingGun:
-    def __init__(self, range, speed):
+    def __init__(self, range, speed, name="Grappling Gun"):
         self.range = range
         self.speed = speed
         self.is_grappling = False
         self.target_x = None
         self.target_y = None
+        self.name = name
 
     def __str__(self):
         return f"range={self.range}, speed={self.speed}"
