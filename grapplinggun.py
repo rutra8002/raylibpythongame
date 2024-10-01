@@ -1,18 +1,21 @@
 import pyray
 
 class GrapplingGun:
-    def __init__(self, range, speed, name="Grappling Gun"):
+    def __init__(self, range, speed, ammo=10, name="Grappling Gun"):
         self.range = range
         self.speed = speed
+        self.ammo = ammo
         self.is_grappling = False
         self.target_x = None
         self.target_y = None
         self.name = name
 
     def __str__(self):
-        return f"range={self.range}, speed={self.speed}"
+        return f"range={self.range}, speed={self.speed}, ammo={self.ammo}"
 
     def shoot(self, target_x, target_y, blocks):
+        if self.ammo <= 0:
+            return  # No ammo left
         if self.is_grappling:
             self.reset()
         else:
@@ -20,6 +23,7 @@ class GrapplingGun:
             nearest_edge = self.find_nearest_edge(target_x, target_y, blocks)
             if nearest_edge:
                 self.target_x, self.target_y = nearest_edge
+                self.ammo -= 1  # Decrease ammo
 
     def find_nearest_edge(self, target_x, target_y, blocks):
         def closest_point_on_segment(px, py, ax, ay, bx, by):

@@ -36,6 +36,8 @@ class Inventory:
             pyray.draw_rectangle(item_x, item_y, item_width, hotbar_height, color)
             pyray.draw_text(item.name, item_x + 10, item_y + 10, 20, pyray.WHITE)
 
-            # Highlight the selected item
+            if hasattr(item, 'ammo'):
+                pyray.draw_text(f"Ammo: {item.ammo}", item_x + 10, item_y + 30, 20, pyray.RED)
+
             if i == self.selected_index:
                 pyray.draw_rectangle_lines(item_x, item_y, item_width, hotbar_height, pyray.YELLOW)
