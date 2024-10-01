@@ -4,7 +4,6 @@ from jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
 from gun import Gun
 from inventory import Inventory
-from hotbar import Hotbar
 import math
 import images
 
@@ -26,7 +25,6 @@ class Player(GameObject):
         self.inventory = Inventory()
         self.inventory.add_item(self.grappling_gun)
         self.inventory.add_item(Gun("Pistol", 10, 300, 15))
-        self.hotbar = Hotbar(self.inventory.items)
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
@@ -34,10 +32,8 @@ class Player(GameObject):
         # Switch items
         if pyray.is_key_pressed(pyray.KeyboardKey.KEY_E):
             self.inventory.select_next_item()
-            self.hotbar.selected_index = self.inventory.selected_index
         if pyray.is_key_pressed(pyray.KeyboardKey.KEY_Q):
             self.inventory.select_previous_item()
-            self.hotbar.selected_index = self.inventory.selected_index
 
         selected_item = self.inventory.get_selected_item()
 

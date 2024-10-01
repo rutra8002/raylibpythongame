@@ -67,7 +67,7 @@ class Game:
         for parameter in self.player.__dict__:
             pyray.draw_text(parameter + ": " + str(self.player.__dict__[parameter]), 10,
                             40 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.WHITE)
-        self.player.hotbar.render(self.width, self.height)
+        self.player.inventory.render(self.width, self.height)
         pyray.end_drawing()
 
 
