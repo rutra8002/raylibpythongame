@@ -124,7 +124,7 @@ class Player(GameObject):
         self.y += self.vy * delta_time
         self.x += self.vx * delta_time
 
-    def draw(self):
+    def draw(self, camera):
         angle = 0
         draw_x = self.x
         source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
@@ -137,4 +137,5 @@ class Player(GameObject):
 
         selected_item = self.inventory.get_selected_item()
         if selected_item and hasattr(selected_item, 'draw'):
-            selected_item.draw(draw_x+self.width//2, self.y+self.height//2, self.width, self.height, angle, self.vx)
+            selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width, self.height, angle,
+                               self.vx, camera)

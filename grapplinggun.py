@@ -17,7 +17,6 @@ class GrapplingGun:
         return f"range={self.range}, speed={self.speed}, ammo={self.ammo}"
 
     def shoot(self, target_x, target_y, blocks):
-
         if self.is_grappling:
             self.reset()
             if self.ammo <= 0:
@@ -63,16 +62,17 @@ class GrapplingGun:
         self.target_x = None
         self.target_y = None
 
-    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx):
+    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx, camera):
         if self.is_grappling and self.target_x is not None and self.target_y is not None:
             pyray.draw_line(int(player_x), int(player_y), int(self.target_x),
                             int(self.target_y), pyray.RED)
 
-        # Calculate the angle based on the player's position and the target position
-        if self.target_x is not None and self.target_y is not None:
+        if self.is_grappling and self.target_x is not None and self.target_y is not None:
             angle = math.degrees(math.atan2(self.target_y - player_y, self.target_x - player_x))
         else:
-            angle = player_angle
+            mouse_position = pyray.get_mouse_position()
+            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+            angle = math.degrees(math.atan2(world_position.y - player_y, world_position.x - player_x))
 
         self.source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
         dest_rect = pyray.Rectangle(player_x, player_y, player_width, player_height)

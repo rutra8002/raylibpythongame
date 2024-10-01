@@ -57,7 +57,7 @@ class Game:
         pyray.begin_drawing()
         pyray.clear_background(pyray.BLACK)
         self.camera.begin_mode()
-        self.player.draw()
+        self.player.draw(self.camera)
         for block in self.blocks:
             block.draw()
         self.particle_system.draw()
