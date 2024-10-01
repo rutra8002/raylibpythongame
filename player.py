@@ -20,10 +20,9 @@ class Player(GameObject):
         self.grounded = False
         self.sliding = False
         self.can_jump = True
-        self.grappling_gun = GrapplingGun(range=500, speed=200)
         self.texture = images.load_texture_with_error_check("images/player.png")
         self.inventory = Inventory()
-        self.inventory.add_item(self.grappling_gun)
+        self.inventory.add_item(GrapplingGun(500, 100, 10))
         self.inventory.add_item(Gun("Pistol", 10, 300, 15))
 
     def movement(self, delta_time, blocks, camera):
@@ -73,12 +72,8 @@ class Player(GameObject):
                         self.can_jump = False
                         self.grounded = False
             elif vertical_collision == "bottom":
-                if not self.grappling_gun.is_grappling:
-                    if self.vy < 0:
-                        self.vy += -2 * self.vy
-                else:
-                    if self.vy < 0:
-                        self.vy = 0
+                if self.vy < 0:
+                    self.vy += -2 * self.vy
 
             if horizontal_collision == "left" or horizontal_collision == "right":
                 self.can_jump = True
@@ -141,4 +136,3 @@ class Player(GameObject):
             source_rect.width = -self.texture.width
 
         pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
-        self.grappling_gun.draw(self.x, self.y, self.width, self.height)
