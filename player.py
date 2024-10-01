@@ -136,3 +136,7 @@ class Player(GameObject):
             source_rect.width = -self.texture.width
 
         pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
+
+        selected_item = self.inventory.get_selected_item()
+        if selected_item and hasattr(selected_item, 'draw'):
+            selected_item.draw(self.x, self.y, self.width, self.height)
