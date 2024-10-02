@@ -77,8 +77,8 @@ class GrapplingGun:
         self.source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
         dest_rect = pyray.Rectangle(player_x, player_y, player_width, player_height)
 
-        if player_vx < 0 and angle == player_angle:
-            self.source_rect.width = -self.texture.width
+        if player_vx < 0 and angle == player_angle or angle < -90 or angle > 90:
+            self.source_rect.height = -self.texture.height
 
         pyray.draw_texture_pro(self.texture, self.source_rect, dest_rect, pyray.Vector2(player_width / 2, player_height / 2),
                                angle, pyray.WHITE)
