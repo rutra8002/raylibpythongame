@@ -23,6 +23,7 @@ class Player(GameObject):
         self.inventory = Inventory()
         self.inventory.add_item(GrapplingGun(500, 100, 10))
         self.inventory.add_item(Gun("Pistol", 10, 300, 15))
+        self.health = 100
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
@@ -139,3 +140,13 @@ class Player(GameObject):
         if selected_item and hasattr(selected_item, 'draw'):
             selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width//1.5, self.height//1.5, angle,
                                self.vx, camera)
+
+        self.draw_health_bar()
+
+    def draw_health_bar(self):
+        bar_width = self.width
+        bar_height = 10
+        health_percentage = self.health / 100
+        health_bar_width = bar_width * health_percentage
+        pyray.draw_rectangle(int(self.x), int(self.y) - 20, bar_width, bar_height, pyray.RED)
+        pyray.draw_rectangle(int(self.x), int(self.y) - 20, int(health_bar_width), bar_height, pyray.GREEN)
