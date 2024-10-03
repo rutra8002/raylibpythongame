@@ -145,6 +145,7 @@ class Player(GameObject):
             self.draw_health_bar()
         else:
             pyray.draw_rectangle(int(self.x), int(self.y), self.width, self.height, self.color)
+            self.draw_health_bar()
     def draw_health_bar(self):
         bar_width = self.width
         bar_height = 10
