@@ -126,23 +126,25 @@ class Player(GameObject):
         self.x += self.vx * delta_time
 
     def draw(self, camera):
-        angle = 0
-        draw_x = self.x
-        source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
-        dest_rect = pyray.Rectangle(draw_x, self.y, self.width, self.height)
+        if camera != None:
+            angle = 0
+            draw_x = self.x
+            source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
+            dest_rect = pyray.Rectangle(draw_x, self.y, self.width, self.height)
 
-        if self.vx < 0:
-            source_rect.width = -self.texture.width
+            if self.vx < 0:
+                source_rect.width = -self.texture.width
 
-        pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
+            pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
 
-        selected_item = self.inventory.get_selected_item()
-        if selected_item and hasattr(selected_item, 'draw'):
-            selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width//1.5, self.height//1.5, angle,
-                               self.vx, camera)
+            selected_item = self.inventory.get_selected_item()
+            if selected_item and hasattr(selected_item, 'draw'):
+                selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width//1.5, self.height//1.5, angle,
+                                   self.vx, camera)
 
-        self.draw_health_bar()
-
+            self.draw_health_bar()
+        else:
+            pyray.draw_rectangle(int(self.x), int(self.y), self.width, self.height, self.color)
     def draw_health_bar(self):
         bar_width = self.width
         bar_height = 10

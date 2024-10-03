@@ -249,7 +249,7 @@ def main():
 
                 # Draw player
                 if player:
-                    player.draw()
+                    player.draw(None)
 
                 pyray.end_mode_2d()
 
