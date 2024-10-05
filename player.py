@@ -8,7 +8,7 @@ from inventory import Inventory
 import images
 
 class Player(GameObject):
-    def __init__(self, height, width, x, y, color, mass=50):
+    def __init__(self, height, width, x, y, color, particle_system, mass=50):
         super().__init__(height, width, x, y, color)
         self.vy = 0
         self.vx = 0
@@ -24,6 +24,7 @@ class Player(GameObject):
         self.inventory.add_item(GrapplingGun(500, 100, 10))
         self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15))
         self.health = 100
+        self.particle_system = particle_system
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
@@ -61,8 +62,13 @@ class Player(GameObject):
     def handle_gun(self, selected_item):
         if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
             if selected_item.shoot():
-                # Implement shooting logic here
-                pass
+                # Get the position to shoot the particle from
+                particle_x = self.x + self.width // 2
+                particle_y = self.y + self.height // 2
+                # Add a particle to the particle system
+                self.particle_system.add_particle(
+                    particle_x, particle_y, 1, 0, 500, 1, 5, (255, 255, 0, 255), 'circle'
+                )
 
     def handle_collisions(self, blocks):
         for block in blocks:
