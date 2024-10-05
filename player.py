@@ -45,7 +45,7 @@ class Player(GameObject):
         if isinstance(selected_item, GrapplingGun):
             self.handle_grappling_gun(selected_item, camera, blocks, delta_time)
         elif isinstance(selected_item, Gun):
-            self.handle_gun(selected_item)
+            self.handle_gun(selected_item, camera)
 
     def handle_grappling_gun(self, selected_item, camera, blocks, delta_time):
         if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
@@ -59,15 +59,24 @@ class Player(GameObject):
             if reached_target:
                 selected_item.reset()
 
-    def handle_gun(self, selected_item):
+    def handle_gun(self, selected_item, camera):
         if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
             if selected_item.shoot():
-                # Get the position to shoot the particle from
                 particle_x = self.x + self.width // 2
                 particle_y = self.y + self.height // 2
-                # Add a particle to the particle system
+
+                mouse_position = pyray.get_mouse_position()
+                world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+                mouse_x, mouse_y = world_position.x, world_position.y
+
+                direction_x = mouse_x - particle_x
+                direction_y = mouse_y - particle_y
+                length = math.sqrt(direction_x ** 2 + direction_y ** 2)
+                direction_x /= length
+                direction_y /= length
+
                 self.particle_system.add_particle(
-                    particle_x, particle_y, 1, 0, 500, 1, 5, (255, 255, 0, 255), 'circle'
+                    particle_x, particle_y, direction_x, direction_y, 1000, 1, 5, (255, 255, 0, 255), 'circle'
                 )
 
     def handle_collisions(self, blocks):

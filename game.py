@@ -1,5 +1,4 @@
 import os
-import random
 import pyray
 from player import Player
 from camera import Camera
@@ -16,7 +15,6 @@ class Game:
         self.blocks = []
         self.camera = None
         self.particle_system = ParticleSystem()
-        self.particle_update_timer = 0
         self.main_menu = MainMenu(width, height)
         self.main_menu.load_maps('maps')
 
@@ -44,14 +42,8 @@ class Game:
         self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
 
-        self.particle_update_timer += delta_time
-        if self.particle_update_timer >= 0.01:
-            if self.player.sliding:
-                self.particle_system.add_particle(self.player.x + random.randint(0, self.player.width), self.player.y + self.player.height, -self.player.vx * 0.0001, random.uniform(-1, -3), 100, 5, random.randint(1, 5), (0, 0, 255, 100), 'circle')
-            self.particle_update_timer = 0
 
         self.particle_system.update(delta_time)
-        self.particle_system.apply_force_to_all(0, 9.81 * delta_time)
 
     def render(self):
         pyray.begin_drawing()
