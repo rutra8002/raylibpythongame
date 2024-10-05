@@ -22,7 +22,7 @@ class Player(GameObject):
         self.texture = images.load_texture_with_error_check("images/player.png")
         self.inventory = Inventory()
         self.inventory.add_item(GrapplingGun(500, 100, 10))
-        self.inventory.add_item(Gun("Pistol", 10, 300, 15))
+        self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15))
         self.health = 100
 
     def movement(self, delta_time, blocks, camera):
