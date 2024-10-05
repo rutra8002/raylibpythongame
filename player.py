@@ -27,74 +27,93 @@ class Player(GameObject):
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
+        self.handle_item_switching()
+        selected_item = self.inventory.get_selected_item()
+        self.handle_item_usage(selected_item, camera, blocks, delta_time)
+        self.handle_collisions(blocks)
+        self.apply_gravity_and_friction(delta_time, blocks)
+        self.apply_movement(delta_time)
 
-        # Switch items
+    def handle_item_switching(self):
         if pyray.is_key_pressed(pyray.KeyboardKey.KEY_E):
             self.inventory.select_next_item()
         if pyray.is_key_pressed(pyray.KeyboardKey.KEY_Q):
             self.inventory.select_previous_item()
 
-        selected_item = self.inventory.get_selected_item()
-
+    def handle_item_usage(self, selected_item, camera, blocks, delta_time):
         if isinstance(selected_item, GrapplingGun):
-            if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-                mouse_position = pyray.get_mouse_position()
-                world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-                mouse_x, mouse_y = world_position.x, world_position.y
-                selected_item.shoot(mouse_x, mouse_y, blocks)
-
-            if selected_item.target_x is not None and selected_item.target_y is not None:
-                self.vx, self.vy, reached_target = selected_item.update_position(self.x, self.y, self.vx, self.vy, delta_time)
-                if reached_target:
-                    selected_item.reset()
-
-        # Gun logic
+            self.handle_grappling_gun(selected_item, camera, blocks, delta_time)
         elif isinstance(selected_item, Gun):
-            if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-                if selected_item.shoot():
-                    # Implement shooting logic here
-                    pass
+            self.handle_gun(selected_item)
 
-        # Existing movement and collision logic
+    def handle_grappling_gun(self, selected_item, camera, blocks, delta_time):
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+            mouse_position = pyray.get_mouse_position()
+            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+            mouse_x, mouse_y = world_position.x, world_position.y
+            selected_item.shoot(mouse_x, mouse_y, blocks)
+
+        if selected_item.target_x is not None and selected_item.target_y is not None:
+            self.vx, self.vy, reached_target = selected_item.update_position(self.x, self.y, self.vx, self.vy, delta_time)
+            if reached_target:
+                selected_item.reset()
+
+    def handle_gun(self, selected_item):
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+            if selected_item.shoot():
+                # Implement shooting logic here
+                pass
+
+    def handle_collisions(self, blocks):
         for block in blocks:
             vertical_collision = block.check_vertical_collision(self)
             horizontal_collision = block.check_horizontal_collision(self)
 
             if vertical_collision == "top":
-                if isinstance(block, JumpBoostBlock):
-                    self.grounded = False
-                else:
-                    self.grounded = True
-                    self.can_jump = True
-                    if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
-                        self.vy = -self.jump
-                        self.can_jump = False
-                        self.grounded = False
+                self.handle_top_collision(block)
             elif vertical_collision == "bottom":
-                if self.vy < 0:
-                    self.vy += -2 * self.vy
+                self.handle_bottom_collision()
 
             if horizontal_collision == "left" or horizontal_collision == "right":
-                self.can_jump = True
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
-                    self.vy = -self.jump
-                    self.can_jump = False
-                    if abs(self.vx) > self.speed:
-                        self.vx = -self.vx
-                    else:
-                        self.vx = -self.speed if horizontal_collision == "left" else self.speed
-                    self.grounded = False
+                self.handle_side_collision(block, horizontal_collision)
 
-                if self.grounded:
-                    if self.y - (self.height // 4) < block.y:
-                        self.x += 0.05 * self.speed if horizontal_collision == "left" else -0.05 * self.speed
-                        self.y = block.y - self.height
+    def handle_top_collision(self, block):
+        if isinstance(block, JumpBoostBlock):
+            self.grounded = False
+        else:
+            self.grounded = True
+            self.can_jump = True
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
+                self.vy = -self.jump
+                self.can_jump = False
+                self.grounded = False
 
-            if horizontal_collision == "left" and self.vx > 0:
-                self.vx = 0
-            elif horizontal_collision == "right" and self.vx < 0:
-                self.vx = 0
+    def handle_bottom_collision(self):
+        if self.vy < 0:
+            self.vy += -2 * self.vy
 
+    def handle_side_collision(self, block, horizontal_collision):
+        self.can_jump = True
+        if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
+            self.vy = -self.jump
+            self.can_jump = False
+            if abs(self.vx) > self.speed:
+                self.vx = -self.vx
+            else:
+                self.vx = -self.speed if horizontal_collision == "left" else self.speed
+            self.grounded = False
+
+        if self.grounded:
+            if self.y - (self.height // 4) < block.y:
+                self.x += 0.05 * self.speed if horizontal_collision == "left" else -0.05 * self.speed
+                self.y = block.y - self.height
+
+        if horizontal_collision == "left" and self.vx > 0:
+            self.vx = 0
+        elif horizontal_collision == "right" and self.vx < 0:
+            self.vx = 0
+
+    def apply_gravity_and_friction(self, delta_time, blocks):
         if not self.grounded:
             self.sliding = False
             self.vy += self.gravity * delta_time * self.mass
@@ -121,7 +140,7 @@ class Player(GameObject):
                         self.vx += 0.1 * -self.speed
             self.vy = 0
 
-        # Apply friction
+    def apply_movement(self, delta_time):
         self.y += self.vy * delta_time
         self.x += self.vx * delta_time
 
@@ -146,6 +165,7 @@ class Player(GameObject):
         else:
             pyray.draw_rectangle(int(self.x), int(self.y), self.width, self.height, self.color)
             self.draw_health_bar()
+
     def draw_health_bar(self):
         bar_width = self.width
         bar_height = 10
