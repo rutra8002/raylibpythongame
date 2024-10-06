@@ -90,31 +90,47 @@ def text_input_dialog(title, message):
 def edit_block_dialog(block):
     width_input = str(block.width)
     height_input = str(block.height)
+    x_input = str(int(block.x))
+    y_input = str(int(block.y))
     while not pyray.window_should_close():
         pyray.begin_drawing()
-        pyray.draw_rectangle(0, 0, 200, 100, pyray.LIGHTGRAY)
+        pyray.draw_rectangle(0, 0, 200, 150, pyray.LIGHTGRAY)
         pyray.draw_text("Edit Block", 10, 10, 20, pyray.DARKGRAY)
         pyray.draw_text("Width:", 10, 40, 20, pyray.DARKGRAY)
         pyray.draw_text(width_input, 100, 40, 20, pyray.DARKGRAY)
         pyray.draw_text("Height:", 10, 70, 20, pyray.DARKGRAY)
         pyray.draw_text(height_input, 100, 70, 20, pyray.DARKGRAY)
+        pyray.draw_text("X:", 10, 100, 20, pyray.DARKGRAY)
+        pyray.draw_text(x_input, 100, 100, 20, pyray.DARKGRAY)
+        pyray.draw_text("Y:", 10, 130, 20, pyray.DARKGRAY)
+        pyray.draw_text(y_input, 100, 130, 20, pyray.DARKGRAY)
         pyray.end_drawing()
 
         key = pyray.get_key_pressed()
         if key == pyray.KeyboardKey.KEY_ENTER:
-            block.width = int(width_input)
-            block.height = int(height_input)
+            block.width = int(float(width_input))
+            block.height = int(float(height_input))
+            block.x = int(float(x_input))
+            block.y = int(float(y_input))
             return
         elif key == pyray.KeyboardKey.KEY_BACKSPACE:
             if pyray.get_mouse_y() < 60:
                 width_input = width_input[:-1]
-            else:
+            elif pyray.get_mouse_y() < 90:
                 height_input = height_input[:-1]
+            elif pyray.get_mouse_y() < 120:
+                x_input = x_input[:-1]
+            else:
+                y_input = y_input[:-1]
         elif key >= 32 and key <= 126:
             if pyray.get_mouse_y() < 60:
                 width_input += chr(key)
-            else:
+            elif pyray.get_mouse_y() < 90:
                 height_input += chr(key)
+            elif pyray.get_mouse_y() < 120:
+                x_input += chr(key)
+            else:
+                y_input += chr(key)
 
 def main():
     # Initialize the window
