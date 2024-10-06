@@ -69,11 +69,7 @@ class GameLauncher(QMainWindow):
     def init_options_tab(self):
         layout = QVBoxLayout()
 
-        # Hide launcher checkbox
-        self.hide_launcher_checkbox = QCheckBox('Hide launcher when running game')
-        layout.addWidget(self.hide_launcher_checkbox)
-
-        # Width input
+       # Width input
         self.width_input = QLineEdit(self)
         self.width_input.setPlaceholderText("Width")
         layout.addWidget(self.width_input)
@@ -115,8 +111,7 @@ class GameLauncher(QMainWindow):
             self.log_viewer.setPlainText(f"Failed to load log file: {e}")
 
     def start_game(self):
-        if self.hide_launcher_checkbox.isChecked():
-            self.hide()
+        self.hide()
 
         width = int(self.width_input.text()) if self.width_input.text() else 1366
         height = int(self.height_input.text()) if self.height_input.text() else 768
@@ -128,9 +123,6 @@ class GameLauncher(QMainWindow):
         except Exception as e:
             logging.error("An error occurred in the game loop", exc_info=True)
             logging.error(f"Error message: {e}")
-
-        if self.hide_launcher_checkbox.isChecked():
-            self.show()
 
 def main():
     app = QApplication(sys.argv)

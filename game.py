@@ -1,4 +1,6 @@
 import os
+import sys
+
 import pyray
 import raylib
 from player import Player
@@ -55,6 +57,7 @@ class Game:
                 self.update(delta_time)
                 self.render()
         pyray.close_window()
+        sys.exit()
 
     def update(self, delta_time):
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, delta_time)

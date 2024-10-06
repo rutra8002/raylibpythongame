@@ -1,3 +1,5 @@
+import sys
+
 import pyray
 import os
 from button import Button
@@ -56,6 +58,7 @@ class MainMenu:
             self.exit_button.draw()
             if self.exit_button.is_clicked:
                 pyray.close_window()
+                sys.exit()
         elif self.show_map_selection:
             pyray.draw_text("Select Map", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
 
