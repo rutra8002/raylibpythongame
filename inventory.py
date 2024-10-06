@@ -23,8 +23,8 @@ class Inventory:
         return None
 
     def render(self, screen_width, screen_height):
-        hotbar_width = 400
-        hotbar_height = 50
+        hotbar_width = screen_width//2
+        hotbar_height = screen_height//15
         item_width = hotbar_width // len(self.items)
         hotbar_x = (screen_width - hotbar_width) // 2
         hotbar_y = screen_height - hotbar_height - 10
