@@ -156,7 +156,7 @@ def main():
                 map_data = load_map(os.path.join('maps', selected_map))
                 blocks = map_data['blocks']
                 player_data = map_data['player']
-                player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']))
+                player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), None)
 
             # Current block type to place
             current_block_type = "Block"
@@ -195,7 +195,7 @@ def main():
                     mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
                     x, y = snap_to_grid(mouse_position.x, mouse_position.y)
                     for block in blocks:
-                        if block.x == x and block.y == y:
+                        if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
                             edit_block_dialog(block)
                             break
 
