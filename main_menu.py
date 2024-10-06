@@ -59,16 +59,26 @@ class MainMenu:
         elif self.show_map_selection:
             pyray.draw_text("Select Map", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
 
+            columns = 3
+            button_width = 200
+            button_height = 50
+            padding = 10
+            start_x = (self.width - (columns * (button_width + padding) - padding)) / 2
+            start_y = 200
+
             for i, map_name in enumerate(self.maps):
-                map_button = Button(self.width / 2 - 100, self.height / 2 - 50 + i * 60, 200, 50, map_name, 20,
-                                    pyray.WHITE, pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
+                col = i % columns
+                row = i // columns
+                x = start_x + col * (button_width + padding)
+                y = start_y + row * (button_height + padding)
+                map_button = Button(x, y, button_width, button_height, map_name, 20, pyray.WHITE, pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
                 map_button.update()
                 map_button.draw()
                 if map_button.is_clicked:
                     self.selected_map = map_name
                     self.show_map_selection = False
 
-            back_button = Button(self.width / 2 - 100, self.height / 2 - 50 + len(self.maps) * 60, 200, 50, "Back", 20,
+            back_button = Button(self.width / 2 - 100, start_y + (len(self.maps) // columns + 1) * (button_height + padding), 200, 50, "Back", 20,
                                  pyray.WHITE, pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
             back_button.update()
             back_button.draw()

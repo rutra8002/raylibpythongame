@@ -198,7 +198,7 @@ def main():
                     elif current_block_type == "JumpBoostBlock":
                         blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
                     elif current_block_type == "Player":
-                        player = Player(50, 50, x, y, pyray.RED)
+                        player = Player(50, 50, x, y, pyray.RED, None)
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
                     mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
