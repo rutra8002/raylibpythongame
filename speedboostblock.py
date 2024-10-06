@@ -6,7 +6,7 @@ class SpeedBoostBlock(Block):
     def __init__(self, height, width, x, y, color, speed_boost):
         super().__init__(height, width, x, y, color)
         self.speed_boost = speed_boost
-        self.texture = images.load_texture_with_error_check("images/speeed.png")
+        self.texture = images.load_texture_with_error_check(b"images/speeed.png")
 
 
     def check_vertical_collision(self, other):

@@ -19,7 +19,7 @@ class Player(GameObject):
         self.grounded = False
         self.sliding = False
         self.can_jump = True
-        self.texture = images.load_texture_with_error_check("images/player.png")
+        self.texture = images.load_texture_with_error_check(b"images/player.png")
         self.inventory = Inventory()
         self.inventory.add_item(GrapplingGun(500, 100, 10))
         self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15))

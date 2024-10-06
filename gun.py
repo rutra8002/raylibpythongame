@@ -8,7 +8,7 @@ class Gun:
         self.damage = damage
         self.range = range
         self.ammo = ammo
-        self.texture = images.load_texture_with_error_check("images/deagle.png")
+        self.texture = images.load_texture_with_error_check(b"images/deagle.png")
 
     def shoot(self):
         if self.ammo > 0:

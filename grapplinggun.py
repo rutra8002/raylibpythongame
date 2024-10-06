@@ -11,7 +11,7 @@ class GrapplingGun:
         self.target_x = None
         self.target_y = None
         self.name = name
-        self.texture = images.load_texture_with_error_check("images/grappling_gun.png")
+        self.texture = images.load_texture_with_error_check(b"images/grappling_gun.png")
 
     def __str__(self):
         return f"range={self.range}, speed={self.speed}, ammo={self.ammo}"

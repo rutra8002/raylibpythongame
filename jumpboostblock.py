@@ -7,7 +7,7 @@ class JumpBoostBlock(Block):
     def __init__(self, height, width, x, y, color, jump_boost):
         super().__init__(height, width, x, y, color)
         self.jump_boost = jump_boost
-        self.texture = images.load_texture_with_error_check("images/jump.png")
+        self.texture = images.load_texture_with_error_check(b"images/jump.png")
 
     def check_vertical_collision(self, other):
         collision_side = super().check_vertical_collision(other)
