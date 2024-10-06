@@ -1,6 +1,6 @@
 import os
 import pyray
-
+import raylib
 from player import Player
 from camera import Camera
 from particles import ParticleSystem
@@ -71,11 +71,11 @@ class Game:
             block.draw()
         self.weapon_particle_system.draw()
         self.camera.end_mode()
-        pyray.draw_fps(10, 10)
-        pyray.draw_text("Player", 10, 30, 10, pyray.RED)
+        raylib.DrawFPS(10, 10)
+        raylib.DrawText(b"Player", 10, 30, 10, raylib.RED)
         for parameter in self.player.__dict__:
-            pyray.draw_text(parameter + ": " + str(self.player.__dict__[parameter]), 10,
-                            40 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.WHITE)
+            text = f"{parameter}: {self.player.__dict__[parameter]}".encode('utf-8')
+            raylib.DrawText(text, 10, 40 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.WHITE)
         self.player.inventory.render(self.width, self.height)
         pyray.end_drawing()
 
