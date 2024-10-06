@@ -14,7 +14,7 @@ class Game:
         self.player = None
         self.blocks = []
         self.camera = None
-        self.particle_system = ParticleSystem()
+        self.weapon_particle_system = ParticleSystem()
         self.main_menu = MainMenu(width, height)
         self.main_menu.load_maps('maps')
 
@@ -31,7 +31,7 @@ class Game:
                     map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
                     self.blocks = map_data['blocks']
                     player_data = map_data['player']
-                    self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), self.particle_system)
+                    self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), self.weapon_particle_system)
                     self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
                 self.update(delta_time)
                 self.render()
@@ -43,7 +43,7 @@ class Game:
         self.player.movement(delta_time, self.blocks, self.camera)
 
 
-        self.particle_system.update(delta_time)
+        self.weapon_particle_system.update(delta_time)
 
     def render(self):
         pyray.begin_drawing()
@@ -52,7 +52,7 @@ class Game:
         self.player.draw(self.camera)
         for block in self.blocks:
             block.draw()
-        self.particle_system.draw()
+        self.weapon_particle_system.draw()
         self.camera.end_mode()
         pyray.draw_fps(10, 10)
         pyray.draw_text("Player", 10, 30, 10, pyray.RED)
