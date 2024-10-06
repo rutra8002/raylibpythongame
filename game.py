@@ -20,6 +20,12 @@ class Game:
         self.main_menu = MainMenu(width, height)
         self.pause_menu = PauseMenu(width, height)
         self.main_menu.load_maps('maps')
+        self.pause_menu.toggle_callback = self.on_pause_toggle
+
+    def on_pause_toggle(self, is_paused):
+        if is_paused:
+            self.blocks = []
+            self.player = None
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
@@ -54,8 +60,6 @@ class Game:
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, delta_time)
         self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
-
-
         self.weapon_particle_system.update(delta_time)
 
     def render(self):
