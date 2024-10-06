@@ -1,5 +1,6 @@
 import os
 import pyray
+
 from player import Player
 from camera import Camera
 from particles import ParticleSystem
@@ -22,6 +23,7 @@ class Game:
         pyray.init_window(self.width, self.height, "game")
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
+        pyray.set_exit_key(pyray.KeyboardKey.KEY_NULL)
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
             if self.main_menu.show_menu or self.main_menu.show_map_selection:
