@@ -10,7 +10,7 @@ class Particle:
         self.lifespan = lifespan
         self.size = size
         self.color = color
-        self.alpha = 255
+        self.alpha = self.color[-1]
         self.shape = shape
 
     def apply_force(self, fx, fy):
