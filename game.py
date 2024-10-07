@@ -22,13 +22,7 @@ class Game:
         self.main_menu = MainMenu(width, height)
         self.pause_menu = PauseMenu(width, height)
         self.main_menu.load_maps('maps')
-        self.pause_menu.toggle_callback = self.on_pause_toggle
         self.intro_zooming = True
-
-    def on_pause_toggle(self, is_paused):
-        if is_paused:
-            self.blocks = []
-            self.player = None
 
     def run(self):
         pyray.init_window(self.width, self.height, "game")
@@ -46,6 +40,8 @@ class Game:
                 if self.pause_menu.resume_button.is_clicked:
                     self.pause_menu.toggle()
                 if self.pause_menu.main_menu_button.is_clicked:
+                    self.blocks = []
+                    self.player = None
                     self.pause_menu.toggle()
                     self.main_menu.show_menu = True
             else:
