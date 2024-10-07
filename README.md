@@ -1,1 +1,1 @@
-more of a prototype than game
+more of a prototype of game than a game
