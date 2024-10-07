@@ -23,6 +23,7 @@ class Game:
         self.pause_menu = PauseMenu(width, height)
         self.main_menu.load_maps('maps')
         self.pause_menu.toggle_callback = self.on_pause_toggle
+        self.intro_zooming = True
 
     def on_pause_toggle(self, is_paused):
         if is_paused:
@@ -53,7 +54,8 @@ class Game:
                     self.blocks = map_data['blocks']
                     player_data = map_data['player']
                     self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), self.weapon_particle_system)
-                    self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3)
+                    self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
+                    self.intro_zooming = True
                 self.update(delta_time)
                 self.render()
         pyray.close_window()
@@ -61,7 +63,12 @@ class Game:
 
     def update(self, delta_time):
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, delta_time)
-        self.camera.adjust_zoom(self.player.vx, delta_time)
+        if self.intro_zooming:
+            self.camera.zoom_intro(delta_time)
+            if abs(self.camera.camera.zoom - self.camera.target_zoom) < 0.01:
+                self.intro_zooming = False
+        else:
+            self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
         self.weapon_particle_system.update(delta_time)
 
