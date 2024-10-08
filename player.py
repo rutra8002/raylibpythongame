@@ -1,3 +1,5 @@
+# player.py
+
 import pyray
 import math
 from gameobject import GameObject
@@ -6,6 +8,7 @@ from grapplinggun import GrapplingGun
 from gun import Gun
 from inventory import Inventory
 import images
+from lavablock import LavaBlock
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, particle_system, mass=50):
@@ -25,13 +28,14 @@ class Player(GameObject):
         self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15))
         self.health = 100
         self.particle_system = particle_system
+        self.time_since_last_damage = 0
 
     def movement(self, delta_time, blocks, camera):
         self.grounded = False
         self.handle_item_switching()
         selected_item = self.inventory.get_selected_item()
         self.handle_item_usage(selected_item, camera, blocks, delta_time)
-        self.handle_collisions(blocks)
+        self.handle_collisions(blocks, delta_time)
         self.apply_gravity_and_friction(delta_time, blocks)
         self.apply_movement(delta_time)
 
@@ -79,7 +83,8 @@ class Player(GameObject):
                     particle_x, particle_y, direction_x, direction_y, 1000, 1, 5, (255, 255, 0, 255), 'circle'
                 )
 
-    def handle_collisions(self, blocks):
+    def handle_collisions(self, blocks, delta_time):
+        self.time_since_last_damage += delta_time
         for block in blocks:
             vertical_collision = block.check_vertical_collision(self)
             horizontal_collision = block.check_horizontal_collision(self)
@@ -91,6 +96,17 @@ class Player(GameObject):
 
             if horizontal_collision == "left" or horizontal_collision == "right":
                 self.handle_side_collision(block, horizontal_collision)
+
+            if horizontal_collision or vertical_collision:
+                if isinstance(block, LavaBlock):
+                    if self.time_since_last_damage >= 0.5:
+                        self.take_damage(10)
+                        self.time_since_last_damage = 0
+
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
 
     def handle_top_collision(self, block):
         if isinstance(block, JumpBoostBlock):
