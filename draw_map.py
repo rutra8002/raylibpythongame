@@ -7,6 +7,7 @@ from speedboostblock import SpeedBoostBlock
 from jumpboostblock import JumpBoostBlock
 from lavablock import LavaBlock  # Import LavaBlock
 from player import Player
+from button import Button
 
 # Define block types
 BLOCK_TYPES = {
@@ -152,6 +153,15 @@ def main():
     popup_display_time = 0
     popup_message = ""
 
+    # Create buttons for each type of GameObject
+    block_button = Button(10, 10, 150, 40, "Block", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    speedboost_button = Button(10, 60, 150, 40, "SpeedBoostBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    jumpboost_button = Button(10, 110, 150, 40, "JumpBoostBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    player_button = Button(10, 160, 150, 40, "Player", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    lavablock_button = Button(10, 210, 150, 40, "LavaBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+
+    current_block_type = "Block"
+
     while not pyray.window_should_close():
         if selected_map is None and not creating_new_map:
             pyray.begin_drawing()
@@ -176,35 +186,41 @@ def main():
                 player_data = map_data['player']
                 player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), None)
 
-            # Current block type to place
-            current_block_type = "Block"
-
             while not pyray.window_should_close():
-                # Handle input
-                if pyray.is_key_pressed(pyray.KeyboardKey.KEY_ONE):
+                # Update buttons
+                block_button.update()
+                speedboost_button.update()
+                jumpboost_button.update()
+                player_button.update()
+                lavablock_button.update()
+
+                # Handle button clicks
+                if block_button.is_clicked:
                     current_block_type = "Block"
-                elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_TWO):
+                elif speedboost_button.is_clicked:
                     current_block_type = "SpeedBoostBlock"
-                elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_THREE):
+                elif jumpboost_button.is_clicked:
                     current_block_type = "JumpBoostBlock"
-                elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_FOUR):
+                elif player_button.is_clicked:
                     current_block_type = "Player"
-                elif pyray.is_key_pressed(pyray.KeyboardKey.KEY_FIVE):
+                elif lavablock_button.is_clicked:
                     current_block_type = "LavaBlock"
 
-                if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-                    mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                    x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                    if current_block_type == "Block":
-                        blocks.append(Block(50, 50, x, y, pyray.BLUE))
-                    elif current_block_type == "SpeedBoostBlock":
-                        blocks.append(SpeedBoostBlock(50, 50, x, y, pyray.GREEN, 800))
-                    elif current_block_type == "JumpBoostBlock":
-                        blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
-                    elif current_block_type == "Player":
-                        player = Player(50, 50, x, y, pyray.RED, None)
-                    elif current_block_type == "LavaBlock":
-                        blocks.append(LavaBlock(50, 50, x, y, pyray.ORANGE))
+                else:
+
+                    if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+                        mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
+                        x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                        if current_block_type == "Block":
+                            blocks.append(Block(50, 50, x, y, pyray.BLUE))
+                        elif current_block_type == "SpeedBoostBlock":
+                            blocks.append(SpeedBoostBlock(50, 50, x, y, pyray.GREEN, 800))
+                        elif current_block_type == "JumpBoostBlock":
+                            blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
+                        elif current_block_type == "Player":
+                            player = Player(50, 50, x, y, pyray.RED, None)
+                        elif current_block_type == "LavaBlock":
+                            blocks.append(LavaBlock(50, 50, x, y, pyray.ORANGE))
 
                 if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
                     mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
@@ -276,8 +292,13 @@ def main():
                 pyray.end_mode_2d()
 
                 # Draw UI
-                pyray.draw_text("Press 1 for Block, 2 for SpeedBoostBlock, 3 for JumpBoostBlock, 4 for Player, 5 for LavaBlock", 10, 10, 20, pyray.DARKGRAY)
-                pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 40, 20, pyray.DARKGRAY)
+                block_button.draw()
+                speedboost_button.draw()
+                jumpboost_button.draw()
+                player_button.draw()
+                lavablock_button.draw()
+
+                pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 260, 20, pyray.DARKGRAY)
 
                 # Display popup message if needed
                 if popup_display_time > 0:
