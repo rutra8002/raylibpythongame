@@ -3,12 +3,12 @@
 import pyray
 import math
 from gameobject import GameObject
-from jumpboostblock import JumpBoostBlock
+from blocks.jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
 from gun import Gun
 from inventory import Inventory
 import images
-from lavablock import LavaBlock
+from blocks.lavablock import LavaBlock
 
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, particle_system, mass=50):

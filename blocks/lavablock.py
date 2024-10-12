@@ -1,5 +1,6 @@
+import os
 import pyray
-from block import Block
+from blocks.block import Block
 
 class LavaBlock(Block):
     def __init__(self, height, width, x, y, color):

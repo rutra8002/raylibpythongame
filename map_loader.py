@@ -1,10 +1,10 @@
 import json
 import os
 import pyray
-from block import Block
-from speedboostblock import SpeedBoostBlock
-from jumpboostblock import JumpBoostBlock
-from lavablock import LavaBlock  # Import LavaBlock
+from blocks.block import Block
+from blocks.speedboostblock import SpeedBoostBlock
+from blocks.jumpboostblock import JumpBoostBlock
+from blocks.lavablock import LavaBlock  # Import LavaBlock
 
 def load_map(file_path):
     with open(file_path, 'r') as file:

@@ -2,10 +2,10 @@ import pyray
 import os
 import json
 from map_loader import load_map, list_maps
-from block import Block
-from speedboostblock import SpeedBoostBlock
-from jumpboostblock import JumpBoostBlock
-from lavablock import LavaBlock  # Import LavaBlock
+from blocks.block import Block
+from blocks.speedboostblock import SpeedBoostBlock
+from blocks.jumpboostblock import JumpBoostBlock
+from blocks.lavablock import LavaBlock  # Import LavaBlock
 from player import Player
 from button import Button
 
