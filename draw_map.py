@@ -5,8 +5,9 @@ from map_loader import load_map, list_maps
 from blocks.block import Block
 from blocks.speedboostblock import SpeedBoostBlock
 from blocks.jumpboostblock import JumpBoostBlock
-from blocks.lavablock import LavaBlock  # Import LavaBlock
+from blocks.lavablock import LavaBlock
 from player import Player
+from enemy import Enemy  # Import Enemy
 from button import Button
 
 # Define block types
@@ -14,14 +15,15 @@ BLOCK_TYPES = {
     "Block": Block,
     "SpeedBoostBlock": SpeedBoostBlock,
     "JumpBoostBlock": JumpBoostBlock,
-    "LavaBlock": LavaBlock,  # Add LavaBlock to BLOCK_TYPES
-    "Player": Player
+    "LavaBlock": LavaBlock,
+    "Player": Player,
+    "Enemy": Enemy
 }
 
 def snap_to_grid(x, y, grid_size=50):
     return (x // grid_size) * grid_size, (y // grid_size) * grid_size
 
-def save_map(file_path, blocks, player):
+def save_map(file_path, blocks, player, enemies):  # Add enemies parameter
     if isinstance(player.color, tuple):
         player_color = player.color
     else:
@@ -29,6 +31,7 @@ def save_map(file_path, blocks, player):
 
     data = {
         "blocks": [],
+        "enemies": [],  # Initialize enemies list
         "player": {
             "x": player.x,
             "y": player.y,
@@ -66,6 +69,27 @@ def save_map(file_path, blocks, player):
         elif isinstance(block, JumpBoostBlock):
             block_data["jump"] = block.jump_boost
         data["blocks"].append(block_data)
+
+    for enemy in enemies:  # Save enemies
+        if isinstance(enemy.color, tuple):
+            color = enemy.color
+        else:
+            color = (enemy.color.r, enemy.color.g, enemy.color.b, enemy.color.a)
+
+        enemy_data = {
+            "height": enemy.height,
+            "width": enemy.width,
+            "x": enemy.x,
+            "y": enemy.y,
+            "color": {
+                "r": color[0],
+                "g": color[1],
+                "b": color[2],
+                "a": color[3]
+            },
+            "health": enemy.health
+        }
+        data["enemies"].append(enemy_data)
 
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
@@ -159,6 +183,7 @@ def main():
     jumpboost_button = Button(10, 110, 150, 40, "JumpBoostBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     player_button = Button(10, 160, 150, 40, "Player", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     lavablock_button = Button(10, 210, 150, 40, "LavaBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    enemy_button = Button(10, 260, 150, 40, "Enemy", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)  # Add Enemy button
 
     current_block_type = "Block"
 
@@ -185,10 +210,12 @@ def main():
         else:
             if creating_new_map:
                 blocks = []
+                enemies = []  # Initialize enemies list
                 player = None
             else:
                 map_data = load_map(os.path.join('maps', selected_map))
                 blocks = map_data['blocks']
+                enemies = map_data['enemies']  # Load enemies
                 player_data = map_data['player']
                 player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), None)
 
@@ -199,6 +226,7 @@ def main():
                 jumpboost_button.update()
                 player_button.update()
                 lavablock_button.update()
+                enemy_button.update()
 
                 # Handle button clicks
                 if block_button.is_clicked:
@@ -211,7 +239,8 @@ def main():
                     current_block_type = "Player"
                 elif lavablock_button.is_clicked:
                     current_block_type = "LavaBlock"
-
+                elif enemy_button.is_clicked:  # Handle Enemy button click
+                    current_block_type = "Enemy"
                 else:
 
                     if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
@@ -227,23 +256,24 @@ def main():
                             player = Player(50, 50, x, y, pyray.RED, None)
                         elif current_block_type == "LavaBlock":
                             blocks.append(LavaBlock(50, 50, x, y, pyray.ORANGE))
+                        elif current_block_type == "Enemy":
+                            enemies.append(Enemy(50, 50, x, y, pyray.RED, 100))
 
-                    else:
+                    if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
+                        mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
+                        x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                        blocks = [block for block in blocks if not (block.x == x and block.y == y)]
+                        enemies = [enemy for enemy in enemies if not (enemy.x == x and enemy.y == y)]  # Remove enemies
+                        if player and player.x == x and player.y == y:
+                            player = None
 
-                        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
-                            mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                            x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                            blocks = [block for block in blocks if not (block.x == x and block.y == y)]
-                            if player and player.x == x and player.y == y:
-                                player = None
-
-                        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
-                            mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                            x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                            for block in blocks:
-                                if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
-                                    edit_block_dialog(block)
-                                    break
+                    if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
+                        mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
+                        x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                        for block in blocks:
+                            if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
+                                edit_block_dialog(block)
+                                break
 
                 # Handle save shortcuts
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
@@ -251,14 +281,14 @@ def main():
                         # Save As
                         new_map_name = text_input_dialog("Save As", "Enter new map name:")
                         if new_map_name:
-                            save_map(os.path.join('maps', new_map_name + '.json'), blocks, player)
+                            save_map(os.path.join('maps', new_map_name + '.json'), blocks, player, enemies)  # Save enemies
                             selected_map = new_map_name + '.json'
                             creating_new_map = False
                             popup_message = "Map saved successfully!"
                             popup_display_time = 2  # Display for 2 seconds
                     else:
                         # Save
-                        save_map(os.path.join('maps', selected_map), blocks, player)
+                        save_map(os.path.join('maps', selected_map), blocks, player, enemies)  # Save enemies
                         popup_message = "Map saved successfully!"
                         popup_display_time = 2  # Display for 2 seconds
 
@@ -293,6 +323,10 @@ def main():
                 for block in blocks:
                     block.draw()
 
+                # Draw each enemy
+                for enemy in enemies:
+                    enemy.draw()
+
                 # Draw player
                 if player:
                     player.draw(None)
@@ -305,8 +339,9 @@ def main():
                 jumpboost_button.draw()
                 player_button.draw()
                 lavablock_button.draw()
+                enemy_button.draw()  # Draw Enemy button
 
-                pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 260, 20, pyray.DARKGRAY)
+                pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 310, 20, pyray.DARKGRAY)
 
                 # Display popup message if needed
                 if popup_display_time > 0:

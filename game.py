@@ -61,12 +61,11 @@ class Game:
                 if not self.blocks and self.main_menu.selected_map:
                     map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
                     self.blocks = map_data['blocks']
+                    self.enemies = map_data['enemies']
                     player_data = map_data['player']
                     self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), self.weapon_particle_system)
                     self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
                     self.intro_zooming = True
-                    self.enemies.append(Enemy(50, 50, 300, 300, pyray.RED, 100))
-                    self.enemies.append(Enemy(50, 50, 500, 500, pyray.RED, 100))
                 self.update(delta_time)
                 self.render()
         pyray.close_window()
@@ -110,6 +109,7 @@ class Game:
     def reset_game(self):
         map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
         self.blocks = map_data['blocks']
+        self.enemies = map_data['enemies']
         player_data = map_data['player']
         self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'],
                              pyray.Color(player_data['color']['r'], player_data['color']['g'],
