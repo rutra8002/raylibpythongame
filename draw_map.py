@@ -162,17 +162,23 @@ def main():
 
     current_block_type = "Block"
 
+    scroll_offset = 0
+
     while not pyray.window_should_close():
         if selected_map is None and not creating_new_map:
+            scroll_offset += pyray.get_mouse_wheel_move() * 20
+
             pyray.begin_drawing()
             pyray.clear_background(pyray.RAYWHITE)
             pyray.draw_text("Select Map or Create New", int(width / 2 - 150), 100, 40, pyray.DARKGRAY)
 
             for i, map_name in enumerate(maps):
-                if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + i * 60, 200, 50), map_name):
+                if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + i * 60 + scroll_offset, 200, 50),
+                                    map_name):
                     selected_map = map_name
 
-            if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + len(maps) * 60, 200, 50), "Create New Map"):
+            if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + len(maps) * 60 + scroll_offset, 200, 50),
+                                "Create New Map"):
                 creating_new_map = True
 
             pyray.end_drawing()
