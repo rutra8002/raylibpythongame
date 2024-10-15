@@ -8,6 +8,7 @@ from camera import Camera
 from particles import ParticleSystem
 from main_menu import MainMenu
 from pause_menu import PauseMenu
+from death_menu import DeathMenu
 from map_loader import load_map
 
 class Game:
@@ -21,6 +22,7 @@ class Game:
         self.weapon_particle_system = ParticleSystem()
         self.main_menu = MainMenu(width, height)
         self.pause_menu = PauseMenu(width, height)
+        self.death_menu = DeathMenu(width, height)
         self.main_menu.load_maps('maps')
         self.intro_zooming = True
 
@@ -43,6 +45,15 @@ class Game:
                     self.blocks = []
                     self.player = None
                     self.pause_menu.toggle()
+                    self.main_menu.show_menu = True
+            elif self.death_menu.is_visible:
+                self.death_menu.render()
+                if self.death_menu.retry_button.is_clicked:
+                    self.reset_game()
+                if self.death_menu.main_menu_button.is_clicked:
+                    self.blocks = []
+                    self.player = None
+                    self.death_menu.toggle()
                     self.main_menu.show_menu = True
             else:
                 if not self.blocks and self.main_menu.selected_map:
@@ -67,6 +78,7 @@ class Game:
             self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
         self.weapon_particle_system.update(delta_time)
+        self.check_player_health()
 
     def render(self):
         pyray.begin_drawing()
@@ -85,6 +97,23 @@ class Game:
         self.player.inventory.render(self.width, self.height)
         pyray.end_drawing()
 
+    def check_player_health(self):
+        if self.player.health <= 0:
+            self.death_menu.toggle()
+
+    def reset_game(self):
+        map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
+        self.blocks = map_data['blocks']
+        player_data = map_data['player']
+        self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'],
+                             pyray.Color(player_data['color']['r'], player_data['color']['g'],
+                                         player_data['color']['b'], player_data['color']['a']),
+                             self.weapon_particle_system)
+        self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2,
+                             self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
+        self.intro_zooming = True
+        self.main_menu.show_menu = False
+        self.death_menu.toggle()
 
 if __name__ == "__main__":
     game = Game()
