@@ -29,7 +29,7 @@ class MainMenu:
         pyray.clear_background(pyray.BLACK)
 
         # Update and draw particles
-        self.particle_system.update(pyray.get_frame_time())
+        self.particle_system.update(pyray.get_frame_time(), None, None)
         self.particle_system.draw()
 
         if random.randint(0, 10) > 8:
@@ -42,7 +42,8 @@ class MainMenu:
                 20,
                 3,
                 (random.randint(1, 150), random.randint(1, 150), random.randint(1, 150), random.randint(50, 200)),
-                'circle'
+                'circle',
+                None
             )
 
         if self.show_menu:

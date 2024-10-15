@@ -10,6 +10,7 @@ from main_menu import MainMenu
 from pause_menu import PauseMenu
 from death_menu import DeathMenu
 from map_loader import load_map
+from enemy import Enemy
 
 class Game:
     def __init__(self, width=1366, height=768, fps=60):
@@ -18,6 +19,7 @@ class Game:
         self.fps = fps
         self.player = None
         self.blocks = []
+        self.enemies = []
         self.camera = None
         self.weapon_particle_system = ParticleSystem()
         self.main_menu = MainMenu(width, height)
@@ -63,6 +65,8 @@ class Game:
                     self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), self.weapon_particle_system)
                     self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
                     self.intro_zooming = True
+                    self.enemies.append(Enemy(50, 50, 300, 300, pyray.RED, 100))
+                    self.enemies.append(Enemy(50, 50, 500, 500, pyray.RED, 100))
                 self.update(delta_time)
                 self.render()
         pyray.close_window()
@@ -77,7 +81,7 @@ class Game:
         else:
             self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
-        self.weapon_particle_system.update(delta_time)
+        self.weapon_particle_system.update(delta_time, self.player, self.enemies)
         self.check_player_health()
 
     def render(self):
@@ -87,6 +91,8 @@ class Game:
         self.player.draw(self.camera)
         for block in self.blocks:
             block.draw()
+        for enemy in self.enemies:
+            enemy.draw()
         self.weapon_particle_system.draw()
         self.camera.end_mode()
         raylib.DrawFPS(10, 10)

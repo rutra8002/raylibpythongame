@@ -3,16 +3,39 @@ import images
 import math
 
 class Gun:
-    def __init__(self, name, damage, range, ammo):
+    def __init__(self, name, damage, range, ammo, particle_system):
         self.name = name
         self.damage = damage
         self.range = range
         self.ammo = ammo
         self.texture = images.load_texture_with_error_check(b"images/deagle.png")
+        self.particle_system = particle_system
 
-    def shoot(self):
+    def shoot(self, player_x, player_y, player_width, player_height, camera):
         if self.ammo > 0:
             self.ammo -= 1
+
+            # Calculate the particle start position outside the player
+            particle_x = player_x + player_width // 2
+            particle_y = player_y + player_height // 2
+
+            mouse_position = pyray.get_mouse_position()
+            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+            mouse_x, mouse_y = world_position.x, world_position.y
+
+            direction_x = mouse_x - particle_x
+            direction_y = mouse_y - particle_y
+            length = math.sqrt(direction_x ** 2 + direction_y ** 2)
+            direction_x /= length
+            direction_y /= length
+
+            offset_distance = player_width
+            particle_x += direction_x * offset_distance
+            particle_y += direction_y * offset_distance
+
+            self.particle_system.add_particle(
+                particle_x, particle_y, direction_x, direction_y, 1000, 1, 5, (255, 255, 0, 255), 'circle', self.damage
+            )
             return True
         return False
 

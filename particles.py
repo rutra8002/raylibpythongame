@@ -1,7 +1,7 @@
 import pyray
 
 class Particle:
-    def __init__(self, x, y, vx, vy, speed, lifespan, size, color, shape):
+    def __init__(self, x, y, vx, vy, speed, lifespan, size, color, shape, damage):
         self.x = x
         self.y = y
         self.vx = vx
@@ -12,10 +12,7 @@ class Particle:
         self.color = color
         self.alpha = self.color[-1]
         self.shape = shape
-
-    def apply_force(self, fx, fy):
-        self.vx += fx
-        self.vy += fy
+        self.damage = damage
 
     def update(self, delta_time):
         self.x += self.vx * self.speed * delta_time
@@ -44,18 +41,30 @@ class ParticleSystem:
     def __init__(self):
         self.particles = []
 
-    def add_particle(self, x, y, vx, vy, speed, lifespan, size, color, shape):
-        self.particles.append(Particle(x, y, vx, vy, speed, lifespan, size, color, shape))
+    def add_particle(self, x, y, vx, vy, speed, lifespan, size, color, shape, damage):
+        self.particles.append(Particle(x, y, vx, vy, speed, lifespan, size, color, shape, damage))
 
-    def apply_force_to_all(self, fx, fy):
-        for particle in self.particles:
-            particle.apply_force(fx, fy)
-
-    def update(self, delta_time):
+    def update(self, delta_time, player, enemies):
         for particle in self.particles:
             particle.update(delta_time)
             if particle.lifespan <= 0:
                 self.particles.remove(particle)
+            else:
+                if player is not None:
+                    if self.check_collision(particle, player):
+                        player.take_damage(particle.damage)
+                        self.particles.remove(particle)
+                        continue
+                if enemies is not None:
+                    for enemy in enemies:
+                        if self.check_collision(particle, enemy):
+                            enemy.take_damage(particle.damage)
+                            self.particles.remove(particle)
+                            break
+
+    def check_collision(self, particle, game_object):
+        return (game_object.x < particle.x < game_object.x + game_object.width and
+                game_object.y < particle.y < game_object.y + game_object.height)
 
     def draw(self):
         for particle in self.particles:

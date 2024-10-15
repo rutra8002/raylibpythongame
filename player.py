@@ -25,7 +25,7 @@ class Player(GameObject):
         self.texture = images.load_texture_with_error_check(b"images/player.png")
         self.inventory = Inventory()
         self.inventory.add_item(GrapplingGun(500, 100, 10))
-        self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15))
+        self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15, particle_system))
         self.health = 100
         self.particle_system = particle_system
         self.time_since_last_damage = 0
@@ -65,23 +65,8 @@ class Player(GameObject):
 
     def handle_gun(self, selected_item, camera):
         if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-            if selected_item.shoot():
-                particle_x = self.x + self.width // 2
-                particle_y = self.y + self.height // 2
+            selected_item.shoot(self.x, self.y, self.width, self.height, camera)
 
-                mouse_position = pyray.get_mouse_position()
-                world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-                mouse_x, mouse_y = world_position.x, world_position.y
-
-                direction_x = mouse_x - particle_x
-                direction_y = mouse_y - particle_y
-                length = math.sqrt(direction_x ** 2 + direction_y ** 2)
-                direction_x /= length
-                direction_y /= length
-
-                self.particle_system.add_particle(
-                    particle_x, particle_y, direction_x, direction_y, 1000, 1, 5, (255, 255, 0, 255), 'circle'
-                )
 
     def handle_collisions(self, blocks, delta_time):
         self.time_since_last_damage += delta_time
