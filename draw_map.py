@@ -228,20 +228,22 @@ def main():
                         elif current_block_type == "LavaBlock":
                             blocks.append(LavaBlock(50, 50, x, y, pyray.ORANGE))
 
-                if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
-                    mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                    x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                    blocks = [block for block in blocks if not (block.x == x and block.y == y)]
-                    if player and player.x == x and player.y == y:
-                        player = None
+                    else:
 
-                if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
-                    mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                    x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                    for block in blocks:
-                        if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
-                            edit_block_dialog(block)
-                            break
+                        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
+                            mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
+                            x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                            blocks = [block for block in blocks if not (block.x == x and block.y == y)]
+                            if player and player.x == x and player.y == y:
+                                player = None
+
+                        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
+                            mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
+                            x, y = snap_to_grid(mouse_position.x, mouse_position.y)
+                            for block in blocks:
+                                if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
+                                    edit_block_dialog(block)
+                                    break
 
                 # Handle save shortcuts
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
