@@ -121,7 +121,7 @@ class Player(GameObject):
                 self.vx = -self.speed if horizontal_collision == "left" else self.speed
             self.grounded = False
 
-        if self.can_jump:
+        if self.grounded:
             if self.y - (self.height) < block.y:
                 self.x += 0.05 * -self.speed if horizontal_collision == "right" else 0.05 * self.speed
                 self.y = block.y - self.height
