@@ -10,7 +10,8 @@ class Enemy(GameObject):
         self.health -= damage
         if self.health <= 0:
             self.health = 0
-            # Handle enemy death (e.g., remove from game)
+            return True  # Enemy is ded
+        return False  # Enemy is still alive
 
     def draw(self):
         super().draw()
