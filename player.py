@@ -40,6 +40,8 @@ class Player(GameObject):
         self.apply_gravity_and_friction(delta_time, blocks)
         self.apply_movement(delta_time)
 
+        self.is_inside_lava(blocks)
+
     def handle_item_switching(self):
         if pyray.is_key_pressed(pyray.KeyboardKey.KEY_E):
             self.inventory.select_next_item()
@@ -69,6 +71,17 @@ class Player(GameObject):
             selected_item.shoot(self.x, self.y, self.width, self.height, camera)
 
 
+    def is_inside_lava(self, blocks):
+        for block in blocks:
+            if isinstance(block, LavaBlock):
+                if (self.x + self.width > block.x and self.x < block.x + block.width and
+                        self.y + self.height > block.y and self.y < block.y + block.height):
+                    if self.time_since_last_damage >= 0.5:
+                        self.take_damage(10)
+                        self.time_since_last_damage = 0
+                    return True
+        return False
+
     def handle_collisions(self, blocks, delta_time):
         self.time_since_last_damage += delta_time
         for block in blocks:
@@ -83,11 +96,6 @@ class Player(GameObject):
             if horizontal_collision == "left" or horizontal_collision == "right":
                 self.handle_side_collision(block, horizontal_collision)
 
-            if horizontal_collision or vertical_collision:
-                if isinstance(block, LavaBlock):
-                    if self.time_since_last_damage >= 0.5:
-                        self.take_damage(10)
-                        self.time_since_last_damage = 0
 
     def take_damage(self, damage):
         self.health -= damage
@@ -134,7 +142,11 @@ class Player(GameObject):
     def apply_gravity_and_friction(self, delta_time, blocks):
         if not self.grounded:
             self.sliding = False
-            self.vy += self.gravity * delta_time * self.mass
+            if self.is_inside_lava(blocks):
+                self.vy *= 0.995
+                self.vx *= 0.99
+            else:
+                self.vy += self.gravity * delta_time * self.mass
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
                     self.vx += 0.00025 * self.speed

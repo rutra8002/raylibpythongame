@@ -8,3 +8,9 @@ class LavaBlock(Block):
 
     def draw(self):
         pyray.draw_rectangle(int(self.x), int(self.y), self.width, self.height, self.color)
+
+    def check_horizontal_collision(self, other):
+        pass
+
+    def check_vertical_collision(self, other):
+        pass
