@@ -5,7 +5,7 @@ import math
 from gameobject import GameObject
 from blocks.jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
-from gun import Gun
+from gun import *
 from inventory import Inventory
 import images
 from blocks.lavablock import LavaBlock
@@ -25,7 +25,8 @@ class Player(GameObject):
         self.texture = images.load_texture_with_error_check(b"images/player.png")
         self.inventory = Inventory()
         self.inventory.add_item(GrapplingGun(500, 100, 10))
-        self.inventory.add_item(Gun("Desert Eagle", 10, 300, 15, particle_system))
+        self.inventory.add_item(Gun(10, 300, 15, particle_system))
+        self.inventory.add_item(DesertEagle(particle_system))
         self.health = 100
         self.particle_system = particle_system
         self.time_since_last_damage = 0
@@ -109,6 +110,7 @@ class Player(GameObject):
             self.vy += -2 * self.vy
 
     def handle_side_collision(self, block, horizontal_collision):
+        print(horizontal_collision)
         self.can_jump = True
         if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
             self.vy = -self.jump
@@ -119,10 +121,10 @@ class Player(GameObject):
                 self.vx = -self.speed if horizontal_collision == "left" else self.speed
             self.grounded = False
 
-        # if self.grounded:
-        if self.y - (self.height // 4) < block.y:
-            self.x += 0.05 * self.speed if horizontal_collision == "left" else -0.05 * self.speed
-            self.y = block.y - self.height
+        if self.can_jump:
+            if self.y - (self.height) < block.y:
+                self.x += 0.05 * -self.speed if horizontal_collision == "right" else 0.05 * self.speed
+                self.y = block.y - self.height
 
         if horizontal_collision == "left" and self.vx > 0:
             self.vx = 0

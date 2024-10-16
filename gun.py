@@ -3,8 +3,8 @@ import images
 import math
 
 class Gun:
-    def __init__(self, name, damage, range, ammo, particle_system):
-        self.name = name
+    def __init__(self, damage, range, ammo, particle_system):
+        self.name = self.__class__.__name__
         self.damage = damage
         self.range = range
         self.ammo = ammo
@@ -55,3 +55,13 @@ class Gun:
 
         pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(player_width / 2, player_height / 2),
                                angle, pyray.WHITE)
+
+class DesertEagle(Gun):
+    def __init__(self, particle_system):
+        super().__init__(
+            damage=50,
+            range=1000,
+            ammo=7,
+            particle_system=particle_system
+        )
+        self.texture = images.load_texture_with_error_check(b"images/deagle.png")
