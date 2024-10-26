@@ -11,7 +11,7 @@ import images
 from blocks.lavablock import LavaBlock
 
 class Player(GameObject):
-    def __init__(self, height, width, x, y, color, particle_system, mass=50):
+    def __init__(self, height, width, x, y, color, particle_system, inventory_data=None, mass=50):
         super().__init__(height, width, x, y, color)
         self.vy = 0
         self.vx = 0
@@ -24,9 +24,19 @@ class Player(GameObject):
         self.can_jump = True
         self.texture = images.load_texture_with_error_check(b"images/player.png")
         self.inventory = Inventory()
-        self.inventory.add_item(GrapplingGun(500, 100, 10))
-        self.inventory.add_item(Gun(10, 300, 15, particle_system))
-        self.inventory.add_item(DesertEagle(particle_system))
+        if inventory_data:
+            for item_data in inventory_data:
+                if item_data['type'] == 'GrapplingGun':
+                    self.inventory.add_item(GrapplingGun(item_data['range'], item_data['speed'], item_data['ammo']))
+                elif item_data['type'] == 'Gun':
+                    self.inventory.add_item(
+                        Gun(item_data['damage'], item_data['range'], item_data['ammo'], particle_system))
+                elif item_data['type'] == 'DesertEagle':
+                    self.inventory.add_item(DesertEagle(particle_system))
+        else:
+            self.inventory.add_item(GrapplingGun(500, 100, 10))
+            self.inventory.add_item(Gun(10, 300, 15, particle_system))
+            self.inventory.add_item(DesertEagle(particle_system))
         self.health = 100
         self.particle_system = particle_system
         self.time_since_last_damage = 0

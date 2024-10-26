@@ -44,6 +44,8 @@ def load_map(file_path):
         enemies.append(Enemy(height, width, x, y, color, health))
 
     player_data = data['player']
+    inventory_data = player_data.get('inventory', [])
+    player_data['inventory'] = inventory_data
 
     return {
         'blocks': blocks,

@@ -368,6 +368,12 @@
             "g": 41,
             "b": 55,
             "a": 255
-        }
+        },
+        "inventory": [
+            {"type": "GrapplingGun", "range": 500, "speed": 100, "ammo": 100},
+            {"type": "Gun", "damage": 10, "range": 300, "ammo": 150},
+            {"type": "DesertEagle"}
+        ]
+
     }
 }

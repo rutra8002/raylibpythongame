@@ -1,6 +1,9 @@
 import pyray
 import os
 import json
+
+from grapplinggun import GrapplingGun
+from gun import Gun, DesertEagle
 from map_loader import load_map, list_maps
 from blocks.block import Block
 from blocks.speedboostblock import SpeedBoostBlock
@@ -31,7 +34,7 @@ def save_map(file_path, blocks, player, enemies):  # Add enemies parameter
 
     data = {
         "blocks": [],
-        "enemies": [],  # Initialize enemies list
+        "enemies": [],
         "player": {
             "x": player.x,
             "y": player.y,
@@ -42,7 +45,13 @@ def save_map(file_path, blocks, player, enemies):  # Add enemies parameter
                 "g": player_color[1],
                 "b": player_color[2],
                 "a": player_color[3]
-            }
+            },
+            "inventory": [
+                {"type": item.__class__.__name__, "range": item.range, "speed": item.speed, "ammo": item.ammo} if isinstance(item, GrapplingGun) else
+                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo} if isinstance(item, Gun) else
+                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo} if isinstance(item, DesertEagle) else
+                {} for item in player.inventory.items
+            ]
         }
     }
     for block in blocks:

@@ -63,7 +63,12 @@ class Game:
                     self.blocks = map_data['blocks']
                     self.enemies = map_data['enemies']
                     player_data = map_data['player']
-                    self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), self.weapon_particle_system)
+                    self.player = Player(
+                        player_data['width'], player_data['height'], player_data['x'], player_data['y'],
+                        pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']),
+                        self.weapon_particle_system,
+                        inventory_data=player_data.get('inventory', [])
+                    )
                     self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2, self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
                     self.intro_zooming = True
                 self.update(delta_time)
