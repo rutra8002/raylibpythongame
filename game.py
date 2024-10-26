@@ -29,6 +29,7 @@ class Game:
         self.intro_zooming = True
 
     def run(self):
+        raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
         pyray.init_window(self.width, self.height, "game")
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
