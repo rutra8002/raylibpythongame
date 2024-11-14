@@ -34,9 +34,7 @@ class Player(GameObject):
                 elif item_data['type'] == 'DesertEagle':
                     self.inventory.add_item(DesertEagle(particle_system))
         else:
-            self.inventory.add_item(GrapplingGun(500, 100, 10))
-            self.inventory.add_item(Gun(10, 300, 15, particle_system))
-            self.inventory.add_item(DesertEagle(particle_system))
+            self.inventory.add_item(Gun(10, 300, 0, particle_system))
         self.health = 100
         self.particle_system = particle_system
         self.time_since_last_damage = 0

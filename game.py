@@ -86,6 +86,8 @@ class Game:
         else:
             self.camera.adjust_zoom(self.player.vx, delta_time)
         self.player.movement(delta_time, self.blocks, self.camera)
+        for enemy in self.enemies:
+            enemy.movement(delta_time, self.blocks)
         self.weapon_particle_system.update(delta_time, self.player, self.enemies)
         self.check_player_health()
         self.enemies = [enemy for enemy in self.enemies if not enemy.take_damage(0)]
@@ -121,7 +123,7 @@ class Game:
         self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'],
                              pyray.Color(player_data['color']['r'], player_data['color']['g'],
                                          player_data['color']['b'], player_data['color']['a']),
-                             self.weapon_particle_system)
+                             self.weapon_particle_system, inventory_data=player_data.get('inventory', []))
         self.camera = Camera(self.width, self.height, self.player.x + self.player.width / 2,
                              self.player.y + self.player.height / 2, 3, initial_zoom=2.0)
         self.intro_zooming = True

@@ -2,19 +2,78 @@ import pyray
 import images
 import raylib
 from gameobject import GameObject
+from blocks.jumpboostblock import JumpBoostBlock
+from blocks.lavablock import LavaBlock
 
 class Enemy(GameObject):
     def __init__(self, height, width, x, y, color, health):
         super().__init__(height, width, x, y, color)
         self.texture = images.load_texture_with_error_check(b"images/enemy.png")
         self.health = health
+        self.vx = 0
+        self.vy = 0
+        self.gravity = 9.81
+        self.speed = 200
+        self.jump = 300
+        self.mass = 50
+        self.grounded = False
+        self.time_since_last_damage = 0
 
     def take_damage(self, damage):
         self.health -= damage
         if self.health <= 0:
             self.health = 0
-            return True  # Enemy is ded
+            return True  # Enemy is dead
         return False  # Enemy is still alive
+
+    def movement(self, delta_time, blocks):
+        self.grounded = False
+        self.handle_collisions(blocks, delta_time)
+        self.apply_gravity_and_friction(delta_time, blocks)
+        self.apply_movement(delta_time)
+
+    def handle_collisions(self, blocks, delta_time):
+        self.time_since_last_damage += delta_time
+        for block in blocks:
+            vertical_collision = block.check_vertical_collision(self)
+            horizontal_collision = block.check_horizontal_collision(self)
+
+            if vertical_collision == "top":
+                self.handle_top_collision(block)
+            elif vertical_collision == "bottom":
+                self.handle_bottom_collision()
+
+            if horizontal_collision == "left" or horizontal_collision == "right":
+                self.handle_side_collision(block, horizontal_collision)
+
+    def handle_top_collision(self, block):
+        if isinstance(block, JumpBoostBlock):
+            self.grounded = False
+        else:
+            self.grounded = True
+            if self.vy > 0:
+                self.vy = 0
+
+    def handle_bottom_collision(self):
+        if self.vy < 0:
+            self.vy = 0
+
+    def handle_side_collision(self, block, horizontal_collision):
+        if horizontal_collision == "left" and self.vx > 0:
+            self.vx = 0
+        elif horizontal_collision == "right" and self.vx < 0:
+            self.vx = 0
+
+    def apply_gravity_and_friction(self, delta_time, blocks):
+        if not self.grounded:
+            self.vy += self.gravity * delta_time * self.mass
+            self.vx *= 0.99
+        else:
+            self.vx *= 0.9
+
+    def apply_movement(self, delta_time):
+        self.y += self.vy * delta_time
+        self.x += self.vx * delta_time
 
     def draw(self):
         for i in range(0, self.width, self.texture.width):
