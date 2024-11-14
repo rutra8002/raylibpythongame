@@ -168,201 +168,201 @@ def edit_block_dialog(block):
             else:
                 y_input += chr(key)
 
-def main():
-    # Initialize the window
-    width, height = 1366, 768
+def initialize_window(width, height):
     pyray.init_window(width, height, "Map Drawer")
     pyray.set_target_fps(60)
+    return pyray.Camera2D(pyray.Vector2(0, 0), pyray.Vector2(0, 0), 0.0, 1.0)
 
-    # Initialize the camera
-    camera = pyray.Camera2D(pyray.Vector2(0, 0), pyray.Vector2(0, 0), 0.0, 1.0)
-
-    # Menu to choose between loading an existing map or creating a new one
-    maps = list_maps('maps')
+def handle_main_menu(width, height, maps):
+    scroll_offset = 0
     selected_map = None
     creating_new_map = False
 
-    # Variable to track popup display time
-    popup_display_time = 0
-    popup_message = ""
+    while not pyray.window_should_close():
+        scroll_offset += pyray.get_mouse_wheel_move() * 20
 
-    # Create buttons for each type of GameObject
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.RAYWHITE)
+        pyray.draw_text("Select Map or Create New", int(width / 2 - 150), 100, 40, pyray.DARKGRAY)
+
+        for i, map_name in enumerate(maps):
+            if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + i * 60 + scroll_offset, 200, 50), map_name):
+                selected_map = map_name
+
+        if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + len(maps) * 60 + scroll_offset, 200, 50), "Create New Map"):
+            creating_new_map = True
+
+        pyray.end_drawing()
+
+        if selected_map or creating_new_map:
+            break
+
+    return selected_map, creating_new_map
+
+def load_or_create_map(selected_map, creating_new_map):
+    if creating_new_map:
+        blocks = []
+        enemies = []
+        player = None
+    else:
+        map_data = load_map(os.path.join('maps', selected_map))
+        blocks = map_data['blocks']
+        enemies = map_data['enemies']
+        player_data = map_data['player']
+        player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), None)
+    return blocks, enemies, player
+
+def handle_user_input(blocks, enemies, player, current_block_type, camera, buttons):
+    mouse_position = pyray.get_mouse_position()
+    mouse_over_button = any(button.is_hovered for button in buttons)
+
+    if not mouse_over_button:
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
+            world_mouse_position = pyray.get_screen_to_world_2d(mouse_position, camera)
+            x, y = snap_to_grid(world_mouse_position.x, world_mouse_position.y)
+            if current_block_type == "Block":
+                blocks.append(Block(50, 50, x, y, pyray.BLUE))
+            elif current_block_type == "SpeedBoostBlock":
+                blocks.append(SpeedBoostBlock(50, 50, x, y, pyray.GREEN, 800))
+            elif current_block_type == "JumpBoostBlock":
+                blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
+            elif current_block_type == "Player":
+                player = Player(50, 50, x, y, pyray.RED, None)
+            elif current_block_type == "LavaBlock":
+                blocks.append(LavaBlock(50, 50, x, y, pyray.ORANGE))
+            elif current_block_type == "Enemy":
+                enemies.append(Enemy(50, 50, x, y, pyray.RED, 100))
+
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
+            world_mouse_position = pyray.get_screen_to_world_2d(mouse_position, camera)
+            x, y = snap_to_grid(world_mouse_position.x, world_mouse_position.y)
+            blocks = [block for block in blocks if
+                      not (block.x <= x < block.x + block.width and block.y <= y < block.y + block.height)]
+            enemies = [enemy for enemy in enemies if
+                       not (enemy.x <= x < enemy.x + enemy.width and enemy.y <= y < enemy.y + enemy.height)]
+            if player and player.x <= x < player.x + player.width and player.y <= y < player.y + player.height:
+                player = None
+
+        if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
+            world_mouse_position = pyray.get_screen_to_world_2d(mouse_position, camera)
+            x, y = snap_to_grid(world_mouse_position.x, world_mouse_position.y)
+            for block in blocks:
+                if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
+                    edit_block_dialog(block)
+                    break
+
+    return blocks, enemies, player
+
+def update_camera(camera):
+    if pyray.is_key_down(pyray.KeyboardKey.KEY_RIGHT):
+        camera.target.x += 10
+    if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT):
+        camera.target.x -= 10
+    if pyray.is_key_down(pyray.KeyboardKey.KEY_DOWN):
+        camera.target.y += 10
+    if pyray.is_key_down(pyray.KeyboardKey.KEY_UP):
+        camera.target.y -= 10
+
+def draw_ui(block_button, speedboost_button, jumpboost_button, player_button, lavablock_button, enemy_button, current_block_type, width, height, popup_message, popup_display_time):
+    block_button.draw()
+    speedboost_button.draw()
+    jumpboost_button.draw()
+    player_button.draw()
+    lavablock_button.draw()
+    enemy_button.draw()
+    pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 310, 20, pyray.DARKGRAY)
+
+    if popup_display_time > 0:
+        pyray.draw_text(popup_message, width // 2 - 100, height // 2, 20, pyray.GREEN)
+        popup_display_time -= pyray.get_frame_time()
+
+def main():
+    width, height = 1366, 768
+    camera = initialize_window(width, height)
+    maps = list_maps('maps')
+    selected_map, creating_new_map = handle_main_menu(width, height, maps)
+    blocks, enemies, player = load_or_create_map(selected_map, creating_new_map)
+
     block_button = Button(10, 10, 150, 40, "Block", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     speedboost_button = Button(10, 60, 150, 40, "SpeedBoostBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     jumpboost_button = Button(10, 110, 150, 40, "JumpBoostBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     player_button = Button(10, 160, 150, 40, "Player", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     lavablock_button = Button(10, 210, 150, 40, "LavaBlock", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
-    enemy_button = Button(10, 260, 150, 40, "Enemy", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)  # Add Enemy button
+    enemy_button = Button(10, 260, 150, 40, "Enemy", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
 
     current_block_type = "Block"
-
-    scroll_offset = 0
+    popup_display_time = 0
+    popup_message = ""
 
     while not pyray.window_should_close():
-        if selected_map is None and not creating_new_map:
-            scroll_offset += pyray.get_mouse_wheel_move() * 20
+        block_button.update()
+        speedboost_button.update()
+        jumpboost_button.update()
+        player_button.update()
+        lavablock_button.update()
+        enemy_button.update()
 
-            pyray.begin_drawing()
-            pyray.clear_background(pyray.RAYWHITE)
-            pyray.draw_text("Select Map or Create New", int(width / 2 - 150), 100, 40, pyray.DARKGRAY)
+        if block_button.is_clicked:
+            current_block_type = "Block"
+        elif speedboost_button.is_clicked:
+            current_block_type = "SpeedBoostBlock"
+        elif jumpboost_button.is_clicked:
+            current_block_type = "JumpBoostBlock"
+        elif player_button.is_clicked:
+            current_block_type = "Player"
+        elif lavablock_button.is_clicked:
+            current_block_type = "LavaBlock"
+        elif enemy_button.is_clicked:
+            current_block_type = "Enemy"
 
-            for i, map_name in enumerate(maps):
-                if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + i * 60 + scroll_offset, 200, 50),
-                                    map_name):
-                    selected_map = map_name
+        blocks, enemies, player = handle_user_input(blocks, enemies, player, current_block_type, camera,
+                                                    [block_button, speedboost_button, jumpboost_button, player_button,
+                                                     lavablock_button, enemy_button])
 
-            if pyray.gui_button(pyray.Rectangle(width / 2 - 100, height / 2 + len(maps) * 60 + scroll_offset, 200, 50),
-                                "Create New Map"):
-                creating_new_map = True
-
-            pyray.end_drawing()
-        else:
-            if creating_new_map:
-                blocks = []
-                enemies = []  # Initialize enemies list
-                player = None
+        if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
+            if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_SHIFT) or selected_map is None or creating_new_map:
+                new_map_name = text_input_dialog("Save As", "Enter new map name:")
+                if new_map_name:
+                    save_map(os.path.join('maps', new_map_name + '.json'), blocks, player, enemies)
+                    selected_map = new_map_name + '.json'
+                    creating_new_map = False
+                    popup_message = "Map saved successfully!"
+                    popup_display_time = 2
             else:
-                map_data = load_map(os.path.join('maps', selected_map))
-                blocks = map_data['blocks']
-                enemies = map_data['enemies']  # Load enemies
-                player_data = map_data['player']
-                player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), None)
+                save_map(os.path.join('maps', selected_map), blocks, player, enemies)
+                popup_message = "Map saved successfully!"
+                popup_display_time = 2
 
-            while not pyray.window_should_close():
-                # Update buttons
-                block_button.update()
-                speedboost_button.update()
-                jumpboost_button.update()
-                player_button.update()
-                lavablock_button.update()
-                enemy_button.update()
+        update_camera(camera)
 
-                # Handle button clicks
-                if block_button.is_clicked:
-                    current_block_type = "Block"
-                elif speedboost_button.is_clicked:
-                    current_block_type = "SpeedBoostBlock"
-                elif jumpboost_button.is_clicked:
-                    current_block_type = "JumpBoostBlock"
-                elif player_button.is_clicked:
-                    current_block_type = "Player"
-                elif lavablock_button.is_clicked:
-                    current_block_type = "LavaBlock"
-                elif enemy_button.is_clicked:  # Handle Enemy button click
-                    current_block_type = "Enemy"
-                else:
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.RAYWHITE)
+        pyray.begin_mode_2d(camera)
 
-                    if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-                        mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                        x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                        if current_block_type == "Block":
-                            blocks.append(Block(50, 50, x, y, pyray.BLUE))
-                        elif current_block_type == "SpeedBoostBlock":
-                            blocks.append(SpeedBoostBlock(50, 50, x, y, pyray.GREEN, 800))
-                        elif current_block_type == "JumpBoostBlock":
-                            blocks.append(JumpBoostBlock(50, 50, x, y, pyray.YELLOW, 800))
-                        elif current_block_type == "Player":
-                            player = Player(50, 50, x, y, pyray.RED, None)
-                        elif current_block_type == "LavaBlock":
-                            blocks.append(LavaBlock(50, 50, x, y, pyray.ORANGE))
-                        elif current_block_type == "Enemy":
-                            enemies.append(Enemy(50, 50, x, y, pyray.RED, 100))
+        start_x = int(camera.target.x) // 50 * 50
+        end_x = int(camera.target.x + width + 50) // 50 * 50
+        start_y = int(camera.target.y) // 50 * 50
+        end_y = int(camera.target.y + height + 50) // 50 * 50
 
-                    if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_RIGHT):
-                        mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                        x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                        blocks = [block for block in blocks if not (block.x == x and block.y == y)]
-                        enemies = [enemy for enemy in enemies if not (enemy.x == x and enemy.y == y)]  # Remove enemies
-                        if player and player.x == x and player.y == y:
-                            player = None
+        for i in range(start_x, end_x + 50, 50):
+            pyray.draw_line(i, start_y, i, end_y, pyray.LIGHTGRAY)
+        for j in range(start_y, end_y + 50, 50):
+            pyray.draw_line(start_x, j, end_x, j, pyray.LIGHTGRAY)
 
-                    if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_MIDDLE):
-                        mouse_position = pyray.get_screen_to_world_2d(pyray.get_mouse_position(), camera)
-                        x, y = snap_to_grid(mouse_position.x, mouse_position.y)
-                        for block in blocks:
-                            if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
-                                edit_block_dialog(block)
-                                break
+        for block in blocks:
+            block.draw()
 
-                # Handle save shortcuts
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL) and pyray.is_key_pressed(pyray.KeyboardKey.KEY_S):
-                    if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_SHIFT) or selected_map is None or creating_new_map:
-                        # Save As
-                        new_map_name = text_input_dialog("Save As", "Enter new map name:")
-                        if new_map_name:
-                            save_map(os.path.join('maps', new_map_name + '.json'), blocks, player, enemies)  # Save enemies
-                            selected_map = new_map_name + '.json'
-                            creating_new_map = False
-                            popup_message = "Map saved successfully!"
-                            popup_display_time = 2  # Display for 2 seconds
-                    else:
-                        # Save
-                        save_map(os.path.join('maps', selected_map), blocks, player, enemies)  # Save enemies
-                        popup_message = "Map saved successfully!"
-                        popup_display_time = 2  # Display for 2 seconds
+        for enemy in enemies:
+            enemy.draw()
 
-                # Update camera position
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_RIGHT):
-                    camera.target.x += 10
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT):
-                    camera.target.x -= 10
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_DOWN):
-                    camera.target.y += 10
-                if pyray.is_key_down(pyray.KeyboardKey.KEY_UP):
-                    camera.target.y -= 10
+        if player:
+            player.draw(None)
 
-                # Start drawing
-                pyray.begin_drawing()
-                pyray.clear_background(pyray.RAYWHITE)
+        pyray.end_mode_2d()
+        draw_ui(block_button, speedboost_button, jumpboost_button, player_button, lavablock_button, enemy_button, current_block_type, width, height, popup_message, popup_display_time)
+        pyray.end_drawing()
 
-                pyray.begin_mode_2d(camera)
-
-                # Draw grid
-                start_x = int(camera.target.x) // 50 * 50
-                end_x = int(camera.target.x + width+50) // 50 * 50
-                start_y = int(camera.target.y) // 50 * 50
-                end_y = int(camera.target.y + height+50) // 50 * 50
-
-                for i in range(start_x, end_x + 50, 50):
-                    pyray.draw_line(i, start_y, i, end_y, pyray.LIGHTGRAY)
-                for j in range(start_y, end_y + 50, 50):
-                    pyray.draw_line(start_x, j, end_x, j, pyray.LIGHTGRAY)
-
-                # Draw each block
-                for block in blocks:
-                    block.draw()
-
-                # Draw each enemy
-                for enemy in enemies:
-                    enemy.draw()
-
-                # Draw player
-                if player:
-                    player.draw(None)
-
-                pyray.end_mode_2d()
-
-                # Draw UI
-                block_button.draw()
-                speedboost_button.draw()
-                jumpboost_button.draw()
-                player_button.draw()
-                lavablock_button.draw()
-                enemy_button.draw()  # Draw Enemy button
-
-                pyray.draw_text(f"Current Block Type: {current_block_type}", 10, 310, 20, pyray.DARKGRAY)
-
-                # Display popup message if needed
-                if popup_display_time > 0:
-                    pyray.draw_text(popup_message, width // 2 - 100, height // 2, 20, pyray.GREEN)
-                    popup_display_time -= pyray.get_frame_time()
-
-                # End drawing
-                pyray.end_drawing()
-
-            # Close the window
-            pyray.close_window()
-            break
+    pyray.close_window()
 
 if __name__ == "__main__":
     main()
