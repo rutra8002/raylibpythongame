@@ -26,10 +26,11 @@ class Enemy(GameObject):
             return True  # Enemy is dead
         return False  # Enemy is still alive
 
-    def movement(self, delta_time, blocks):
+    def movement(self, delta_time, blocks, player):
         self.grounded = False
         self.handle_collisions(blocks, delta_time)
-        self.apply_gravity_and_friction(delta_time, blocks)
+        self.move_towards_player(blocks, player)
+        self.apply_gravity_and_friction(delta_time)
         self.apply_movement(delta_time)
 
     def handle_collisions(self, blocks, delta_time):
@@ -51,25 +52,45 @@ class Enemy(GameObject):
             self.grounded = False
         else:
             self.grounded = True
-            if self.vy > 0:
-                self.vy = 0
 
     def handle_bottom_collision(self):
         if self.vy < 0:
             self.vy = 0
 
     def handle_side_collision(self, block, horizontal_collision):
+        if self.grounded:
+            if self.y - (self.height) < block.y:
+                self.x += 0.05 * -self.speed if horizontal_collision == "right" else 0.05 * self.speed
+                self.y = block.y - self.height
+
         if horizontal_collision == "left" and self.vx > 0:
             self.vx = 0
         elif horizontal_collision == "right" and self.vx < 0:
             self.vx = 0
 
-    def apply_gravity_and_friction(self, delta_time, blocks):
+    def move_towards_player(self, blocks, player):
+        if self.grounded:
+            if player.x < self.x:
+                if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
+                    self.vx -= 0.1 * self.speed
+            elif player.x > self.x:
+                if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
+                    self.vx += 0.1 * self.speed
+        elif not self.grounded:
+            if player.x < self.x:
+                if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
+                    self.vx -= 0.00025 * self.speed
+            elif player.x > self.x:
+                if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
+                    self.vx += 0.00025 * self.speed
+
+    def apply_gravity_and_friction(self, delta_time):
         if not self.grounded:
             self.vy += self.gravity * delta_time * self.mass
-            self.vx *= 0.99
+            self.vx *= 0.99977
         else:
             self.vx *= 0.9
+            self.vy = 0
 
     def apply_movement(self, delta_time):
         self.y += self.vy * delta_time
