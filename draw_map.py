@@ -48,8 +48,8 @@ def save_map(file_path, blocks, player, enemies):  # Add enemies parameter
             },
             "inventory": [
                 {"type": item.__class__.__name__, "range": item.range, "speed": item.speed, "ammo": item.ammo} if isinstance(item, GrapplingGun) else
-                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo} if isinstance(item, Gun) else
-                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo} if isinstance(item, DesertEagle) else
+                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo, "speed": item.speed} if isinstance(item, Gun) else
+                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo, "speed": item.speed} if isinstance(item, DesertEagle) else
                 {} for item in player.inventory.items
             ]
         }
@@ -156,7 +156,7 @@ def edit_inventory_dialog(player):
             player.inventory.add_item(GrapplingGun(500, 100))
             inventory_items.append("GrapplingGun")
         elif add_gun_button.is_clicked:
-            player.inventory.add_item(Gun(10, 300, 150, None))
+            player.inventory.add_item(Gun(10, 300, 1000, 150, None))
             inventory_items.append("Gun")
         elif add_desert_eagle_button.is_clicked:
             player.inventory.add_item(DesertEagle(None))
@@ -182,6 +182,8 @@ def edit_weapon_dialog(player, item_index, inventory_items):
         range_minus_button = Button(290, 70, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
         ammo_plus_button = Button(250, 100, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
         ammo_minus_button = Button(290, 100, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        speed_plus_button = Button(250, 130, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        speed_minus_button = Button(290, 130, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
 
     while not pyray.window_should_close():
         pyray.begin_drawing()
@@ -203,12 +205,15 @@ def edit_weapon_dialog(player, item_index, inventory_items):
             pyray.draw_text(f"Damage: {weapon.damage}", 10, 40, 20, pyray.DARKGRAY)
             pyray.draw_text(f"Range: {weapon.range}", 10, 70, 20, pyray.DARKGRAY)
             pyray.draw_text(f"Ammo: {weapon.ammo}", 10, 100, 20, pyray.DARKGRAY)
+            pyray.draw_text(f"Speed: {weapon.speed}", 10, 130, 20, pyray.DARKGRAY)
             damage_plus_button.draw()
             damage_minus_button.draw()
             range_plus_button.draw()
             range_minus_button.draw()
             ammo_plus_button.draw()
             ammo_minus_button.draw()
+            speed_plus_button.draw()
+            speed_minus_button.draw()
 
         range_plus_button.update()
         range_minus_button.update()
@@ -220,6 +225,8 @@ def edit_weapon_dialog(player, item_index, inventory_items):
         if isinstance(weapon, Gun):
             damage_plus_button.update()
             damage_minus_button.update()
+            speed_plus_button.update()
+            speed_minus_button.update()
 
         back_button.draw()
         delete_button.draw()
@@ -252,9 +259,9 @@ def edit_weapon_dialog(player, item_index, inventory_items):
                 weapon.ammo -= 1
         elif isinstance(weapon, Gun):
             if damage_plus_button.is_clicked:
-                weapon.damage += 1
+                weapon.damage += 10
             elif damage_minus_button.is_clicked:
-                weapon.damage -= 1
+                weapon.damage -= 10
             elif range_plus_button.is_clicked:
                 weapon.range += 10
             elif range_minus_button.is_clicked:
@@ -263,6 +270,10 @@ def edit_weapon_dialog(player, item_index, inventory_items):
                 weapon.ammo += 1
             elif ammo_minus_button.is_clicked:
                 weapon.ammo -= 1
+            elif speed_plus_button.is_clicked:
+                weapon.speed += 10
+            elif speed_minus_button.is_clicked:
+                weapon.speed -= 10
 
 def edit_block_dialog(block):
     width_input = str(block.width)
@@ -344,13 +355,18 @@ def load_or_create_map(selected_map, creating_new_map):
     if creating_new_map:
         blocks = []
         enemies = []
-        player = None
+        player = Player(50, 50, 0, 0, pyray.RED, None)
     else:
         map_data = load_map(os.path.join('maps', selected_map))
         blocks = map_data['blocks']
         enemies = map_data['enemies']
         player_data = map_data['player']
-        player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'], pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']), None)
+        player = Player(
+            player_data['width'], player_data['height'], player_data['x'], player_data['y'],
+            pyray.Color(player_data['color']['r'], player_data['color']['g'], player_data['color']['b'], player_data['color']['a']),
+            None,
+            inventory_data=player_data.get('inventory', [])
+        )
     return blocks, enemies, player
 
 def handle_user_input(blocks, enemies, player, current_block_type, camera, buttons):

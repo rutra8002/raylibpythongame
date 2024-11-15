@@ -30,7 +30,7 @@ class Player(GameObject):
                     self.inventory.add_item(GrapplingGun(item_data['range'], item_data['speed'], item_data['ammo']))
                 elif item_data['type'] == 'Gun':
                     self.inventory.add_item(
-                        Gun(item_data['damage'], item_data['range'], item_data['ammo'], particle_system))
+                        Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
                 elif item_data['type'] == 'DesertEagle':
                     self.inventory.add_item(DesertEagle(particle_system))
         else:
