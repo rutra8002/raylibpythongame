@@ -123,6 +123,147 @@ def text_input_dialog(title, message):
         elif key >= 32 and key <= 126:
             input_text += chr(key)
 
+def edit_inventory_dialog(player):
+    inventory_items = [item.__class__.__name__ for item in player.inventory.items]
+
+    add_grappling_gun_button = Button(10, 370, 200, 40, "Add Grappling Gun", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    add_gun_button = Button(220, 370, 200, 40, "Add Gun", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    add_desert_eagle_button = Button(430, 370, 200, 40, "Add Desert Eagle", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+
+    while not pyray.window_should_close():
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.LIGHTGRAY)
+        pyray.draw_text("Edit Inventory", 10, 10, 20, pyray.DARKGRAY)
+
+        for i, item_name in enumerate(inventory_items):
+            item_button = Button(10, 40 + i * 30, 200, 30, item_name, 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+            item_button.update()
+            item_button.draw()
+            if item_button.is_clicked:
+                edit_weapon_dialog(player, i, inventory_items)
+
+        add_grappling_gun_button.update()
+        add_gun_button.update()
+        add_desert_eagle_button.update()
+
+        add_grappling_gun_button.draw()
+        add_gun_button.draw()
+        add_desert_eagle_button.draw()
+
+        pyray.end_drawing()
+
+        if add_grappling_gun_button.is_clicked:
+            player.inventory.add_item(GrapplingGun(500, 100))
+            inventory_items.append("GrapplingGun")
+        elif add_gun_button.is_clicked:
+            player.inventory.add_item(Gun(10, 300, 150, None))
+            inventory_items.append("Gun")
+        elif add_desert_eagle_button.is_clicked:
+            player.inventory.add_item(DesertEagle(None))
+            inventory_items.append("DesertEagle")
+
+def edit_weapon_dialog(player, item_index, inventory_items):
+    weapon = player.inventory.items[item_index]
+    back_button = Button(10, 420, 200, 40, "Back", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    delete_button = Button(220, 420, 200, 40, "Delete", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+
+    # Define buttons for modifying weapon parameters
+    if isinstance(weapon, GrapplingGun):
+        range_plus_button = Button(250, 40, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        range_minus_button = Button(290, 40, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        speed_plus_button = Button(250, 70, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        speed_minus_button = Button(290, 70, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        ammo_plus_button = Button(250, 100, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        ammo_minus_button = Button(290, 100, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+    elif isinstance(weapon, Gun):
+        damage_plus_button = Button(250, 40, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        damage_minus_button = Button(290, 40, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        range_plus_button = Button(250, 70, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        range_minus_button = Button(290, 70, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        ammo_plus_button = Button(250, 100, 30, 30, "+", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+        ammo_minus_button = Button(290, 100, 30, 30, "-", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
+
+    while not pyray.window_should_close():
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.LIGHTGRAY)
+        pyray.draw_text(f"Edit {weapon.__class__.__name__}", 10, 10, 20, pyray.DARKGRAY)
+
+        # Display weapon parameters and allow editing
+        if isinstance(weapon, GrapplingGun):
+            pyray.draw_text(f"Range: {weapon.range}", 10, 40, 20, pyray.DARKGRAY)
+            pyray.draw_text(f"Speed: {weapon.speed}", 10, 70, 20, pyray.DARKGRAY)
+            pyray.draw_text(f"Ammo: {weapon.ammo}", 10, 100, 20, pyray.DARKGRAY)
+            range_plus_button.draw()
+            range_minus_button.draw()
+            speed_plus_button.draw()
+            speed_minus_button.draw()
+            ammo_plus_button.draw()
+            ammo_minus_button.draw()
+        elif isinstance(weapon, Gun):
+            pyray.draw_text(f"Damage: {weapon.damage}", 10, 40, 20, pyray.DARKGRAY)
+            pyray.draw_text(f"Range: {weapon.range}", 10, 70, 20, pyray.DARKGRAY)
+            pyray.draw_text(f"Ammo: {weapon.ammo}", 10, 100, 20, pyray.DARKGRAY)
+            damage_plus_button.draw()
+            damage_minus_button.draw()
+            range_plus_button.draw()
+            range_minus_button.draw()
+            ammo_plus_button.draw()
+            ammo_minus_button.draw()
+
+        range_plus_button.update()
+        range_minus_button.update()
+        if isinstance(weapon, GrapplingGun):
+            speed_plus_button.update()
+            speed_minus_button.update()
+        ammo_plus_button.update()
+        ammo_minus_button.update()
+        if isinstance(weapon, Gun):
+            damage_plus_button.update()
+            damage_minus_button.update()
+
+        back_button.draw()
+        delete_button.draw()
+
+        pyray.end_drawing()
+
+        back_button.update()
+        delete_button.update()
+
+        if back_button.is_clicked:
+            return
+        elif delete_button.is_clicked:
+            player.inventory.remove_item(weapon)
+            inventory_items.pop(item_index)
+            return
+
+        # Handle parameter button clicks
+        if isinstance(weapon, GrapplingGun):
+            if range_plus_button.is_clicked:
+                weapon.range += 10
+            elif range_minus_button.is_clicked:
+                weapon.range -= 10
+            elif speed_plus_button.is_clicked:
+                weapon.speed += 10
+            elif speed_minus_button.is_clicked:
+                weapon.speed -= 10
+            elif ammo_plus_button.is_clicked:
+                weapon.ammo += 1
+            elif ammo_minus_button.is_clicked:
+                weapon.ammo -= 1
+        elif isinstance(weapon, Gun):
+            if damage_plus_button.is_clicked:
+                weapon.damage += 1
+            elif damage_minus_button.is_clicked:
+                weapon.damage -= 1
+            elif range_plus_button.is_clicked:
+                weapon.range += 10
+            elif range_minus_button.is_clicked:
+                weapon.range -= 10
+            elif ammo_plus_button.is_clicked:
+                weapon.ammo += 1
+            elif ammo_minus_button.is_clicked:
+                weapon.ammo -= 1
+
 def edit_block_dialog(block):
     width_input = str(block.width)
     height_input = str(block.height)
@@ -250,6 +391,8 @@ def handle_user_input(blocks, enemies, player, current_block_type, camera, butto
                 if block.x <= x < block.x + block.width and block.y <= y < block.y + block.height:
                     edit_block_dialog(block)
                     break
+            if player and player.x <= x < player.x + player.width and player.y <= y < player.y + player.height:
+                edit_inventory_dialog(player)
 
     return blocks, enemies, player
 

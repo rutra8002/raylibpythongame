@@ -3,11 +3,12 @@ import images
 import math
 
 class Gun:
-    def __init__(self, damage, range, ammo, particle_system):
+    def __init__(self, damage, range, speed, ammo, particle_system):
         self.name = self.__class__.__name__
         self.damage = damage
         self.range = range
         self.ammo = ammo
+        self.speed = speed
         self.texture = images.load_texture_with_error_check(b"images/deagle.png")
         self.particle_system = particle_system
 
@@ -34,7 +35,7 @@ class Gun:
             particle_y += direction_y * offset_distance
 
             self.particle_system.add_particle(
-                particle_x, particle_y, direction_x, direction_y, 1000, 1, 5, (255, 255, 0, 255), 'circle', self.damage
+                particle_x, particle_y, direction_x, direction_y, self.speed, 1, 5, (255, 255, 0, 255), 'circle', self.damage
             )
             return True
         return False
@@ -61,6 +62,7 @@ class DesertEagle(Gun):
         super().__init__(
             damage=50,
             range=1000,
+            speed=369,
             ammo=7,
             particle_system=particle_system
         )

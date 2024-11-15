@@ -422,10 +422,30 @@
             "a": 255
         },
         "inventory": [
-            {"type": "GrapplingGun", "range": 500, "speed": 100, "ammo": 100},
-            {"type": "Gun", "damage": 10, "range": 300, "ammo": 150},
-            {"type": "DesertEagle"}
+            {
+                "type": "Gun",
+                "damage": 10,
+                "range": 300,
+                "ammo": 0
+            },
+            {
+                "type": "GrapplingGun",
+                "range": 500,
+                "speed": 100,
+                "ammo": 10
+            },
+            {
+                "type": "GrapplingGun",
+                "range": 500,
+                "speed": 100,
+                "ammo": 10
+            },
+            {
+                "type": "DesertEagle",
+                "damage": 50,
+                "range": 1000,
+                "ammo": 7
+            }
         ]
-
     }
 }
