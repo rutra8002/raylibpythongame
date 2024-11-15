@@ -271,9 +271,9 @@ def edit_weapon_dialog(player, item_index, inventory_items):
             elif ammo_minus_button.is_clicked:
                 weapon.ammo -= 1
             elif speed_plus_button.is_clicked:
-                weapon.speed += 10
+                weapon.speed += 50
             elif speed_minus_button.is_clicked:
-                weapon.speed -= 10
+                weapon.speed -= 50
 
 def edit_block_dialog(block):
     width_input = str(block.width)

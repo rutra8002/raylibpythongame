@@ -62,7 +62,7 @@ class DesertEagle(Gun):
         super().__init__(
             damage=50,
             range=1000,
-            speed=369,
+            speed=1000,
             ammo=7,
             particle_system=particle_system
         )
