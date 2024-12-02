@@ -1,5 +1,5 @@
 import pyray
-from button import Button
+from UI.button import Button
 
 class DeathMenu:
     def __init__(self, width, height):

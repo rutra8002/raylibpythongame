@@ -1,5 +1,5 @@
 import pyray
-from button import Button
+from UI.button import Button
 
 class PauseMenu:
     def __init__(self, width, height):
@@ -16,7 +16,9 @@ class PauseMenu:
         if self.is_visible:
             pyray.begin_drawing()
             pyray.clear_background(pyray.BLACK)
-            pyray.draw_text("Pause Menu", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
+            text = "Pause Menu"
+            text_width = pyray.measure_text(text, 40)
+            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
             self.resume_button.update()
             self.resume_button.draw()
             self.main_menu_button.update()

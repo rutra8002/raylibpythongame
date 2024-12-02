@@ -6,11 +6,11 @@ import raylib
 from player import Player
 from camera import Camera
 from particles import ParticleSystem
-from main_menu import MainMenu
-from pause_menu import PauseMenu
-from death_menu import DeathMenu
+from UI.main_menu import MainMenu
+from UI.pause_menu import PauseMenu
+from UI.death_menu import DeathMenu
 from map_loader import load_map
-from enemy import Enemy
+
 
 class Game:
     def __init__(self, width=1366, height=768, fps=60):

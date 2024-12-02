@@ -2,7 +2,7 @@ import sys
 
 import pyray
 import os
-from button import Button
+from UI.button import Button
 from particles import ParticleSystem
 import random
 
@@ -47,7 +47,9 @@ class MainMenu:
             )
 
         if self.show_menu:
-            pyray.draw_text("Main Menu", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
+            text = "Main Menu"
+            text_width = pyray.measure_text(text, 40)
+            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
 
             self.start_button.update()
             self.start_button.draw()
@@ -61,7 +63,9 @@ class MainMenu:
                 pyray.close_window()
                 sys.exit()
         elif self.show_map_selection:
-            pyray.draw_text("Select Map", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
+            text = "Select Map"
+            text_width = pyray.measure_text(text, 40)
+            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
 
             columns = 3
             button_width = 200
@@ -75,14 +79,17 @@ class MainMenu:
                 row = i // columns
                 x = start_x + col * (button_width + padding)
                 y = start_y + row * (button_height + padding)
-                map_button = Button(x, y, button_width, button_height, map_name, 20, pyray.WHITE, pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
+                map_button = Button(x, y, button_width, button_height, map_name, 20, pyray.WHITE, pyray.DARKGRAY,
+                                    pyray.GRAY, pyray.LIGHTGRAY)
                 map_button.update()
                 map_button.draw()
                 if map_button.is_clicked:
                     self.selected_map = map_name
                     self.show_map_selection = False
 
-            back_button = Button(self.width / 2 - 100, start_y + (len(self.maps) // columns + 1) * (button_height + padding), 200, 50, "Back", 20,
+            back_button = Button(self.width / 2 - 100,
+                                 start_y + (len(self.maps) // columns + 1) * (button_height + padding), 200, 50, "Back",
+                                 20,
                                  pyray.WHITE, pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
             back_button.update()
             back_button.draw()
