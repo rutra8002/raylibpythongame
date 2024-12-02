@@ -84,7 +84,7 @@ class Player(GameObject):
             if isinstance(block, LavaBlock):
                 if (self.x + self.width > block.x and self.x < block.x + block.width and
                         self.y + self.height > block.y and self.y < block.y + block.height):
-                    if self.time_since_last_damage >= 0.5:
+                    if self.time_since_last_damage >= 0.1:
                         self.take_damage(10)
                         self.time_since_last_damage = 0
                     return True
