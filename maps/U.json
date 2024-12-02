@@ -428,6 +428,12 @@
                 "range": 300,
                 "ammo": 6995,
                 "speed": 1200
+            },
+            {
+                "type": "GrapplingGun",
+                "range": 500,
+                "speed": 100,
+                "ammo": 10
             }
         ]
     }

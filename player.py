@@ -151,8 +151,8 @@ class Player(GameObject):
         if not self.grounded:
             self.sliding = False
             if self.is_inside_lava(blocks):
-                self.vy *= 0.995
-                self.vx *= 0.99
+                self.vy -= 0.05 * self.vy
+                self.vx -= 0.05 * self.vx
             else:
                 self.vy += self.gravity * delta_time * self.mass
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
@@ -161,14 +161,14 @@ class Player(GameObject):
             if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
                     self.vx += 0.00025 * -self.speed
-            self.vx *= 0.99977
+            self.vx -= 0.0001 * self.vx
         else:
             if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL):
                 self.sliding = True
-                self.vx *= 0.9999
+                self.vx -= 0.0001 * self.vx
             else:
                 self.sliding = False
-                self.vx *= 0.9
+                self.vx -= 0.1 * self.vx
             if not self.sliding:
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
                     if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
