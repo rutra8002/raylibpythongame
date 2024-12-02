@@ -16,7 +16,9 @@ class DeathMenu:
         if self.is_visible:
             pyray.begin_drawing()
             pyray.clear_background(pyray.BLACK)
-            pyray.draw_text("You Died", int(self.width / 2 - 100), 100, 40, pyray.WHITE)
+            text = "You Died"
+            text_width = pyray.measure_text(text, 40)
+            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
             self.retry_button.update()
             self.retry_button.draw()
             self.main_menu_button.update()
