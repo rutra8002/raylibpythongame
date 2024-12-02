@@ -357,7 +357,7 @@ def load_or_create_map(selected_map, creating_new_map):
         enemies = []
         player = Player(50, 50, 0, 0, pyray.RED, None)
     else:
-        map_data = load_map(os.path.join('../maps', selected_map))
+        map_data = load_map(os.path.join('maps', selected_map))
         blocks = map_data['blocks']
         enemies = map_data['enemies']
         player_data = map_data['player']
@@ -482,13 +482,13 @@ def main():
             if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_SHIFT) or selected_map is None or creating_new_map:
                 new_map_name = text_input_dialog("Save As", "Enter new map name:")
                 if new_map_name:
-                    save_map(os.path.join('../maps', new_map_name + '.json'), blocks, player, enemies)
+                    save_map(os.path.join('maps', new_map_name + '.json'), blocks, player, enemies)
                     selected_map = new_map_name + '.json'
                     creating_new_map = False
                     popup_message = "Map saved successfully!"
                     popup_display_time = 2
             else:
-                save_map(os.path.join('../maps', selected_map), blocks, player, enemies)
+                save_map(os.path.join('maps', selected_map), blocks, player, enemies)
                 popup_message = "Map saved successfully!"
                 popup_display_time = 2
 
