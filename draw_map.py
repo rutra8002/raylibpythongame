@@ -159,7 +159,7 @@ def edit_inventory_dialog(player):
             player.inventory.add_item(Gun(10, 300, 1000, 150, None))
             inventory_items.append("Gun")
         elif add_desert_eagle_button.is_clicked:
-            player.inventory.add_item(DesertEagle(None))
+            player.inventory.add_item(DesertEagle(50, 1000, 1000, 7, None))
             inventory_items.append("DesertEagle")
 
 def edit_weapon_dialog(player, item_index, inventory_items):

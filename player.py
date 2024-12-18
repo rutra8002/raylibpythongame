@@ -32,7 +32,7 @@ class Player(GameObject):
                     self.inventory.add_item(
                         Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
                 elif item_data['type'] == 'DesertEagle':
-                    self.inventory.add_item(DesertEagle(particle_system))
+                    self.inventory.add_item(DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], particle_system))
         else:
             self.inventory.add_item(Gun(10, 300, 0, 0, particle_system))
         self.health = 100

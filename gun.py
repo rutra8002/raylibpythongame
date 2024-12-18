@@ -58,12 +58,12 @@ class Gun:
                                angle, pyray.WHITE)
 
 class DesertEagle(Gun):
-    def __init__(self, particle_system):
+    def __init__(self, damage, range, speed, ammo, particle_system):
         super().__init__(
-            damage=50,
-            range=1000,
-            speed=1000,
-            ammo=7,
+            damage=damage,
+            range=range,
+            speed=speed,
+            ammo=ammo,
             particle_system=particle_system
         )
         self.texture = images.load_texture_with_error_check(b"images/deagle.png")

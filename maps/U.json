@@ -434,6 +434,20 @@
                 "range": 500,
                 "speed": 100,
                 "ammo": 10
+            },
+            {
+                "type": "DesertEagle",
+                "damage": 100,
+                "range": 1000,
+                "ammo": 20,
+                "speed": 1000
+            },
+            {
+                "type": "DesertEagle",
+                "damage": 50,
+                "range": 1000,
+                "ammo": 7,
+                "speed": 1000
             }
         ]
     }
