@@ -11,6 +11,8 @@ from UI.pause_menu import PauseMenu
 from UI.death_menu import DeathMenu
 from map_loader import load_map
 
+import images
+
 
 class Game:
     def __init__(self, width=1366, height=768, fps=60):
@@ -34,6 +36,7 @@ class Game:
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
         pyray.set_exit_key(pyray.KeyboardKey.KEY_NULL)
+        images.load_textures()
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
             if pyray.is_key_pressed(pyray.KeyboardKey.KEY_ESCAPE):

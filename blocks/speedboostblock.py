@@ -1,16 +1,13 @@
 import os
 import pyray
 from blocks.block import Block
+import images
 
 class SpeedBoostBlock(Block):
     def __init__(self, height, width, x, y, color, speed_boost):
         super().__init__(height, width, x, y, color)
         self.speed_boost = speed_boost
-        texture_path = os.path.join(os.path.dirname(__file__), '../images/speeed.png')
-        print(f"Loading texture from: {texture_path}")  # Debug logging
-        self.texture = pyray.load_texture(texture_path.encode('utf-8'))
-        if self.texture.id == 0:
-            raise ValueError("Failed to load texture")
+        self.texture = images.textures["speed"]
 
     def check_vertical_collision(self, other):
         collision_side = super().check_vertical_collision(other)

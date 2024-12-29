@@ -8,7 +8,7 @@ from blocks.lavablock import LavaBlock
 class Enemy(GameObject):
     def __init__(self, height, width, x, y, color, health):
         super().__init__(height, width, x, y, color)
-        self.texture = images.load_texture_with_error_check(b"images/enemy.png")
+        self.texture = images.textures["enemy"]
         self.health = health
         self.vx = 0
         self.vy = 0

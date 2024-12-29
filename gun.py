@@ -9,7 +9,7 @@ class Gun:
         self.range = range
         self.ammo = ammo
         self.speed = speed
-        self.texture = images.load_texture_with_error_check(b"images/deagle.png")
+        self.texture = images.textures["deagle"]
         self.particle_system = particle_system
 
     def shoot(self, player_x, player_y, player_width, player_height, camera):
@@ -66,4 +66,4 @@ class DesertEagle(Gun):
             ammo=ammo,
             particle_system=particle_system
         )
-        self.texture = images.load_texture_with_error_check(b"images/deagle.png")
+        self.texture = images.textures["deagle"]

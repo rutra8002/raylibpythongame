@@ -1,7 +1,7 @@
 import pyray
 import os
 import json
-
+import images
 from grapplinggun import GrapplingGun
 from gun import Gun, DesertEagle
 from map_loader import load_map, list_maps
@@ -440,6 +440,9 @@ def main():
     camera = initialize_window(width, height)
     maps = list_maps('maps')
     selected_map, creating_new_map = handle_main_menu(width, height, maps)
+
+    images.load_textures()
+
     blocks, enemies, player = load_or_create_map(selected_map, creating_new_map)
 
     block_button = Button(10, 10, 150, 40, "Block", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)

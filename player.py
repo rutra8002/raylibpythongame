@@ -23,7 +23,7 @@ class Player(GameObject):
         self.grounded = False
         self.sliding = False
         self.can_jump = True
-        self.texture = images.load_texture_with_error_check(b"images/player.png")
+        self.texture = images.textures["player"]
         self.inventory = Inventory()
         if inventory_data:
             for item_data in inventory_data:
