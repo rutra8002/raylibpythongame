@@ -44,7 +44,7 @@ class ParticleSystem:
     def add_particle(self, x, y, vx, vy, speed, lifespan, size, color, shape, damage):
         self.particles.append(Particle(x, y, vx, vy, speed, lifespan, size, color, shape, damage))
 
-    def update(self, delta_time, player, enemies):
+    def update(self, delta_time, player, enemies, blocks):
         for particle in self.particles:
             particle.update(delta_time)
             if particle.lifespan <= 0:
@@ -59,6 +59,11 @@ class ParticleSystem:
                     for enemy in enemies:
                         if self.check_collision(particle, enemy):
                             enemy.take_damage(particle.damage)
+                            self.particles.remove(particle)
+                            break
+                if blocks is not None:
+                    for block in blocks:
+                        if self.check_collision(particle, block):
                             self.particles.remove(particle)
                             break
 

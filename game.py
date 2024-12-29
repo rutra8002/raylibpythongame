@@ -92,7 +92,7 @@ class Game:
         self.player.movement(delta_time, self.blocks, self.camera)
         for enemy in self.enemies:
             enemy.movement(delta_time, self.blocks, self.player)
-        self.weapon_particle_system.update(delta_time, self.player, self.enemies)
+        self.weapon_particle_system.update(delta_time, self.player, self.enemies, self.blocks)
         self.check_player_health()
         self.enemies = [enemy for enemy in self.enemies if not enemy.take_damage(0)]
 
