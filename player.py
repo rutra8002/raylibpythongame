@@ -3,7 +3,6 @@
 import pyray
 import math
 from gameobject import GameObject
-from blocks.jumpboostblock import JumpBoostBlock
 from grapplinggun import GrapplingGun
 from gun import *
 from inventory import Inventory
@@ -18,6 +17,7 @@ class Player(GameObject):
         self.gravity = 9.81
         self.base_speed = 400
         self.speed = 400
+        self.base_jump = 400
         self.jump = 400
         self.mass = mass
         self.grounded = False
@@ -112,15 +112,12 @@ class Player(GameObject):
             self.health = 0
 
     def handle_top_collision(self, block):
-        if isinstance(block, JumpBoostBlock):
+        self.grounded = True
+        self.can_jump = True
+        if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
+            self.vy = -self.jump
+            self.can_jump = False
             self.grounded = False
-        else:
-            self.grounded = True
-            self.can_jump = True
-            if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
-                self.vy = -self.jump
-                self.can_jump = False
-                self.grounded = False
 
     def handle_bottom_collision(self):
         if self.vy < 0:

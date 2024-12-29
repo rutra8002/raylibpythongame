@@ -2,7 +2,6 @@ import pyray
 import images
 import raylib
 from gameobject import GameObject
-from blocks.jumpboostblock import JumpBoostBlock
 from blocks.lavablock import LavaBlock
 
 class Enemy(GameObject):
@@ -15,7 +14,8 @@ class Enemy(GameObject):
         self.gravity = 9.81
         self.base_speed = 200
         self.speed = 200
-        self.jump = 300
+        self.base_jump = 400
+        self.jump = 400
         self.mass = 50
         self.grounded = False
         self.time_since_last_damage = 0
@@ -49,10 +49,7 @@ class Enemy(GameObject):
                 self.handle_side_collision(block, horizontal_collision)
 
     def handle_top_collision(self, block):
-        if isinstance(block, JumpBoostBlock):
-            self.grounded = False
-        else:
-            self.grounded = True
+        self.grounded = True
 
     def handle_bottom_collision(self):
         if self.vy < 0:

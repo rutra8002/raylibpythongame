@@ -28,20 +28,6 @@
             "speed": 800
         },
         {
-            "type": "JumpBoostBlock",
-            "width": 300,
-            "height": 50,
-            "x": 700.0,
-            "y": 250.0,
-            "color": {
-                "r": 253,
-                "g": 249,
-                "b": 0,
-                "a": 255
-            },
-            "jump": 800
-        },
-        {
             "type": "Block",
             "width": 50,
             "height": 50,
@@ -302,6 +288,20 @@
                 "b": 241,
                 "a": 255
             }
+        },
+        {
+            "type": "JumpBoostBlock",
+            "width": 250,
+            "height": 50,
+            "x": 700,
+            "y": 250,
+            "color": {
+                "r": 253,
+                "g": 249,
+                "b": 0,
+                "a": 255
+            },
+            "jump": 800
         }
     ],
     "enemies": [
