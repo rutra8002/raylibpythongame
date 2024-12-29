@@ -1,5 +1,3 @@
-import os
-import pyray
 from blocks.block import Block
 import images
 
@@ -16,8 +14,3 @@ class SpeedBoostBlock(Block):
         else:
             other.speed = other.base_speed
         return collision_side
-
-    def draw(self):
-        for i in range(0, self.width, self.texture.width):
-            for j in range(0, self.height, self.texture.height):
-                pyray.draw_texture(self.texture, int(self.x + i), int(self.y + j), pyray.WHITE)

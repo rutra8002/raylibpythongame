@@ -1,5 +1,4 @@
-import os
-import pyray
+import raylib
 from blocks.block import Block
 
 class LavaBlock(Block):
@@ -7,7 +6,7 @@ class LavaBlock(Block):
         super().__init__(height, width, x, y, color)
 
     def draw(self):
-        pyray.draw_rectangle(int(self.x), int(self.y), self.width, self.height, self.color)
+        raylib.DrawRectangle(int(self.x), int(self.y), self.width, self.height, self.color)
 
     def check_horizontal_collision(self, other):
         pass

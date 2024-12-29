@@ -1,4 +1,3 @@
-import os
 import raylib
 from gameobject import GameObject
 import images
