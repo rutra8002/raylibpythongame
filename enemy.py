@@ -13,6 +13,7 @@ class Enemy(GameObject):
         self.vx = 0
         self.vy = 0
         self.gravity = 9.81
+        self.base_speed = 200
         self.speed = 200
         self.jump = 300
         self.mass = 50

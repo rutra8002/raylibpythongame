@@ -15,12 +15,9 @@ class SpeedBoostBlock(Block):
     def check_vertical_collision(self, other):
         collision_side = super().check_vertical_collision(other)
         if collision_side:
-            if self.speed_boost > other.vx > 0:
-                other.vx += self.speed_boost
-            elif -self.speed_boost < other.vx < 0:
-                other.vx -= self.speed_boost
-            else:
-                pass
+            other.speed = self.speed_boost
+        else:
+            other.speed = other.base_speed
         return collision_side
 
     def draw(self):
