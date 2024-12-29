@@ -30,7 +30,7 @@ class Enemy(GameObject):
     def movement(self, delta_time, blocks, player):
         self.grounded = False
         self.handle_collisions(blocks, delta_time)
-        self.move_towards_player(blocks, player)
+        self.move_towards_player(delta_time, blocks, player)
         self.apply_gravity_and_friction(delta_time)
         self.apply_movement(delta_time)
 
@@ -69,28 +69,28 @@ class Enemy(GameObject):
         elif horizontal_collision == "right" and self.vx < 0:
             self.vx = 0
 
-    def move_towards_player(self, blocks, player):
+    def move_towards_player(self, delta_time, blocks, player):
         if self.grounded:
             if player.x < self.x:
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx -= 0.1 * self.speed
+                    self.vx -= 10 * self.speed * delta_time
             elif player.x > self.x:
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                    self.vx += 0.1 * self.speed
+                    self.vx += 10 * self.speed * delta_time
         elif not self.grounded:
             if player.x < self.x:
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx -= 0.00025 * self.speed
+                    self.vx -= 0.45 * self.speed * delta_time
             elif player.x > self.x:
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                    self.vx += 0.00025 * self.speed
+                    self.vx += 0.45 * self.speed * delta_time
 
     def apply_gravity_and_friction(self, delta_time):
         if not self.grounded:
             self.vy += self.gravity * delta_time * self.mass
-            self.vx *= 0.99977
+            self.vx -= 0.01 * self.vx * delta_time
         else:
-            self.vx *= 0.9
+            self.vx -= 10 * self.vx * delta_time
             self.vy = 0
 
     def apply_movement(self, delta_time):

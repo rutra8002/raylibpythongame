@@ -152,31 +152,34 @@ class Player(GameObject):
         if not self.grounded:
             self.sliding = False
             if self.is_inside_lava(blocks):
-                self.vy -= 0.05 * self.vy
-                self.vx -= 0.05 * self.vx
+                self.vy -= 5 * self.vy * delta_time
+                self.vx -= 5 * self.vx * delta_time
             else:
                 self.vy += self.gravity * delta_time * self.mass
+
             if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
                 if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                    self.vx += 0.00045 * self.speed
+                    self.vx += 0.45 * self.speed * delta_time
             if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
                 if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                    self.vx += 0.00045 * -self.speed
-            self.vx -= 0.0001 * self.vx
+                    self.vx += 0.45 * -self.speed * delta_time
+
+            self.vx -= 0.01 * self.vx * delta_time
         else:
             if pyray.is_key_down(pyray.KeyboardKey.KEY_LEFT_CONTROL):
                 self.sliding = True
-                self.vx -= 0.0001 * self.vx
+                self.vx -= 0.01 * self.vx * delta_time
             else:
                 self.sliding = False
-                self.vx -= 0.1 * self.vx
+                self.vx -= 10 * self.vx * delta_time
+
             if not self.sliding:
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_D):
                     if not any(block.check_horizontal_collision(self) == "left" for block in blocks):
-                        self.vx += 0.1 * self.speed
+                        self.vx += 10 * self.speed * delta_time
                 if pyray.is_key_down(pyray.KeyboardKey.KEY_A):
                     if not any(block.check_horizontal_collision(self) == "right" for block in blocks):
-                        self.vx += 0.1 * -self.speed
+                        self.vx += 10 * -self.speed * delta_time
             self.vy = 0
 
     def apply_movement(self, delta_time):
