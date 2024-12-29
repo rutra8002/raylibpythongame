@@ -6,6 +6,9 @@ from blocks.speedboostblock import SpeedBoostBlock
 from blocks.jumpboostblock import JumpBoostBlock
 from blocks.lavablock import LavaBlock
 from enemy import Enemy
+from gun import Gun
+from gun import DesertEagle
+from grapplinggun import GrapplingGun
 
 def load_map(file_path):
     with open(file_path, 'r') as file:
@@ -41,7 +44,9 @@ def load_map(file_path):
         color_data = item['color']
         color = pyray.Color(color_data['r'], color_data['g'], color_data['b'], color_data['a'])
         health = item['health']
-        enemies.append(Enemy(height, width, x, y, color, health))
+        inventory_data = item.get('inventory', [])
+        enemy = Enemy(height, width, x, y, color, health, inventory_data=inventory_data)
+        enemies.append(enemy)
 
     player_data = data['player']
     inventory_data = player_data.get('inventory', [])

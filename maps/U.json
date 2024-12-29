@@ -316,7 +316,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         },
         {
             "height": 50,
@@ -329,7 +330,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         },
         {
             "height": 50,
@@ -342,7 +344,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         },
         {
             "height": 50,
@@ -355,7 +358,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         },
         {
             "height": 50,
@@ -368,7 +372,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         },
         {
             "height": 50,
@@ -381,7 +386,29 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": [
+                {
+                    "type": "GrapplingGun",
+                    "range": 500,
+                    "speed": 100,
+                    "ammo": 10
+                },
+                {
+                    "type": "Gun",
+                    "damage": 10,
+                    "range": 300,
+                    "ammo": 1200,
+                    "speed": 10
+                },
+                {
+                    "type": "DesertEagle",
+                    "damage": 100,
+                    "range": 1000,
+                    "ammo": 1000,
+                    "speed": 20
+                }
+            ]
         },
         {
             "height": 50,
@@ -394,7 +421,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         },
         {
             "height": 50,
@@ -407,7 +435,8 @@
                 "b": 55,
                 "a": 255
             },
-            "health": 100
+            "health": 100,
+            "inventory": []
         }
     ],
     "player": {

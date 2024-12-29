@@ -3,9 +3,12 @@ import images
 import raylib
 from gameobject import GameObject
 from blocks.lavablock import LavaBlock
+from inventory import Inventory
+from gun import Gun, DesertEagle
+from grapplinggun import GrapplingGun
 
 class Enemy(GameObject):
-    def __init__(self, height, width, x, y, color, health):
+    def __init__(self, height, width, x, y, color, health, inventory_data=None):
         super().__init__(height, width, x, y, color)
         self.texture = images.textures["enemy"]
         self.health = health
@@ -19,6 +22,16 @@ class Enemy(GameObject):
         self.mass = 50
         self.grounded = False
         self.time_since_last_damage = 0
+        self.inventory = Inventory()
+        if inventory_data:
+            for item_data in inventory_data:
+                if item_data['type'] == 'GrapplingGun':
+                    self.inventory.add_item(GrapplingGun(item_data['range'], item_data['speed'], item_data['ammo']))
+                elif item_data['type'] == 'Gun':
+                    self.inventory.add_item(
+                        Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], None))
+                elif item_data['type'] == 'DesertEagle':
+                    self.inventory.add_item(DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], None))
 
     def take_damage(self, damage):
         self.health -= damage
@@ -99,6 +112,7 @@ class Enemy(GameObject):
             for j in range(0, self.height, self.texture.height):
                 raylib.DrawTexture(self.texture, int(self.x + i), int(self.y + j), raylib.WHITE)
         self.draw_health_bar()
+        self.draw_inventory()
 
     def draw_health_bar(self):
         bar_width = self.width
@@ -107,3 +121,6 @@ class Enemy(GameObject):
         health_bar_width = bar_width * health_percentage
         pyray.draw_rectangle(int(self.x), int(self.y) - 20, bar_width, bar_height, pyray.RED)
         pyray.draw_rectangle(int(self.x), int(self.y) - 20, int(health_bar_width), bar_height, pyray.GREEN)
+    def draw_inventory(self):
+        inventory_text = "Inventory: " + ", ".join([item.__class__.__name__ for item in self.inventory.items])
+        pyray.draw_text(inventory_text, int(self.x), int(self.y) - 40, 10, pyray.WHITE)

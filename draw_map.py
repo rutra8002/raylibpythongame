@@ -96,7 +96,13 @@ def save_map(file_path, blocks, player, enemies):  # Add enemies parameter
                 "b": color[2],
                 "a": color[3]
             },
-            "health": enemy.health
+            "health": enemy.health,
+            "inventory": [
+                {"type": item.__class__.__name__, "range": item.range, "speed": item.speed, "ammo": item.ammo} if isinstance(item, GrapplingGun) else
+                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo, "speed": item.speed} if isinstance(item, Gun) else
+                {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo, "speed": item.speed} if isinstance(item, DesertEagle) else
+                {} for item in enemy.inventory.items
+            ]
         }
         data["enemies"].append(enemy_data)
 
@@ -123,8 +129,8 @@ def text_input_dialog(title, message):
         elif key >= 32 and key <= 126:
             input_text += chr(key)
 
-def edit_inventory_dialog(player):
-    inventory_items = [item.__class__.__name__ for item in player.inventory.items]
+def edit_inventory_dialog(entity):
+    inventory_items = [item.__class__.__name__ for item in entity.inventory.items]
 
     add_grappling_gun_button = Button(10, 370, 200, 40, "Add Grappling Gun", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     add_gun_button = Button(220, 370, 200, 40, "Add Gun", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
@@ -140,7 +146,7 @@ def edit_inventory_dialog(player):
             item_button.update()
             item_button.draw()
             if item_button.is_clicked:
-                edit_weapon_dialog(player, i, inventory_items)
+                edit_weapon_dialog(entity, i, inventory_items)
 
         add_grappling_gun_button.update()
         add_gun_button.update()
@@ -153,17 +159,17 @@ def edit_inventory_dialog(player):
         pyray.end_drawing()
 
         if add_grappling_gun_button.is_clicked:
-            player.inventory.add_item(GrapplingGun(500, 100))
+            entity.inventory.add_item(GrapplingGun(500, 100, 10))
             inventory_items.append("GrapplingGun")
         elif add_gun_button.is_clicked:
-            player.inventory.add_item(Gun(10, 300, 1000, 150, None))
+            entity.inventory.add_item(Gun(10, 300, 10, 1200, None))
             inventory_items.append("Gun")
         elif add_desert_eagle_button.is_clicked:
-            player.inventory.add_item(DesertEagle(50, 1000, 1000, 7, None))
+            entity.inventory.add_item(DesertEagle(100, 1000, 20, 1000, None))
             inventory_items.append("DesertEagle")
 
-def edit_weapon_dialog(player, item_index, inventory_items):
-    weapon = player.inventory.items[item_index]
+def edit_weapon_dialog(entity, item_index, inventory_items):
+    weapon = entity.inventory.items[item_index]
     back_button = Button(10, 420, 200, 40, "Back", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
     delete_button = Button(220, 420, 200, 40, "Delete", 20, pyray.BLACK, pyray.LIGHTGRAY, pyray.GRAY, pyray.DARKGRAY)
 
@@ -239,7 +245,7 @@ def edit_weapon_dialog(player, item_index, inventory_items):
         if back_button.is_clicked:
             return
         elif delete_button.is_clicked:
-            player.inventory.remove_item(weapon)
+            entity.inventory.remove_item(weapon)
             inventory_items.pop(item_index)
             return
 
@@ -359,7 +365,15 @@ def load_or_create_map(selected_map, creating_new_map):
     else:
         map_data = load_map(os.path.join('maps', selected_map))
         blocks = map_data['blocks']
-        enemies = map_data['enemies']
+        enemies = []
+        for enemy_data in map_data['enemies']:
+            enemy = Enemy(
+                enemy_data['width'], enemy_data['height'], enemy_data['x'], enemy_data['y'],
+                pyray.Color(enemy_data['color']['r'], enemy_data['color']['g'], enemy_data['color']['b'], enemy_data['color']['a']),
+                enemy_data['health'],
+                inventory_data=enemy_data.get('inventory', [])
+            )
+            enemies.append(enemy)
         player_data = map_data['player']
         player = Player(
             player_data['width'], player_data['height'], player_data['x'], player_data['y'],
@@ -409,6 +423,10 @@ def handle_user_input(blocks, enemies, player, current_block_type, camera, butto
                     break
             if player and player.x <= x < player.x + player.width and player.y <= y < player.y + player.height:
                 edit_inventory_dialog(player)
+            for enemy in enemies:
+                if enemy.x <= mouse_position.x <= enemy.x + enemy.width and enemy.y <= mouse_position.y <= enemy.y + enemy.height:
+                    edit_inventory_dialog(enemy)
+                    break
 
     return blocks, enemies, player
 
