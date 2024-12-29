@@ -19,7 +19,7 @@ class GameLauncher(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Game Launcher')
+        self.setWindowTitle('Jeff the Grappler Launcher')
         self.setGeometry(100, 100, 300, 300)
 
         # Create tab widget
@@ -45,7 +45,7 @@ class GameLauncher(QMainWindow):
         layout = QVBoxLayout()
 
         # Add large label
-        game_label = QLabel('GAME', self)
+        game_label = QLabel('Jeff the Grappler', self)
         font = QFont()
         font.setPointSize(30)  # Set font size to 30
         game_label.setFont(font)
