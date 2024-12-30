@@ -105,7 +105,9 @@ class Game:
 
     def render(self):
         pyray.begin_drawing()
-        pyray.clear_background(pyray.BLACK)
+        pyray.draw_rectangle_gradient_v(0, 0, self.width, self.height, pyray.Color(0, 0, 88, 255),
+                                        pyray.Color(0, 0, 0, 255))
+
         self.camera.begin_mode()
         self.player.draw(self.camera)
         for block in self.blocks:
