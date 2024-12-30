@@ -38,6 +38,14 @@
             "g": 41,
             "b": 55,
             "a": 255
-        }
+        },
+        "inventory": [
+            {
+                "type": "GrapplingGun",
+                "range": 500,
+                "speed": 150,
+                "ammo": 10
+            }
+        ]
     }
 }
