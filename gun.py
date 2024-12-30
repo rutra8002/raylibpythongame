@@ -1,9 +1,10 @@
 import pyray
 import images
 import math
+import time
 
 class Gun:
-    def __init__(self, damage, range, speed, ammo, particle_system):
+    def __init__(self, damage, range, speed, ammo, particle_system, cooldown=0.5):
         self.name = self.__class__.__name__
         self.damage = damage
         self.range = range
@@ -11,10 +12,14 @@ class Gun:
         self.speed = speed
         self.texture = images.textures["deagle"]
         self.particle_system = particle_system
+        self.cooldown = cooldown
+        self.last_shot_time = 0
 
     def shoot(self, player_x, player_y, player_width, player_height, camera):
-        if self.ammo > 0:
+        current_time = time.time()
+        if self.ammo > 0 and (current_time - self.last_shot_time) >= self.cooldown:
             self.ammo -= 1
+            self.last_shot_time = current_time
 
             # Calculate the particle start position outside the player
             particle_x = player_x + player_width // 2
@@ -57,12 +62,13 @@ class Gun:
                                angle, pyray.WHITE)
 
 class DesertEagle(Gun):
-    def __init__(self, damage, range, speed, ammo, particle_system):
+    def __init__(self, damage, range, speed, ammo, particle_system, cooldown=0.5):
         super().__init__(
             damage=damage,
             range=range,
             speed=speed,
             ammo=ammo,
-            particle_system=particle_system
+            particle_system=particle_system,
+            cooldown=cooldown
         )
         self.texture = images.textures["deagle"]
