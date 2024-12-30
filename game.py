@@ -32,9 +32,12 @@ class Game:
         self.intro_zooming = True
         self.player_info = None
 
+
     def run(self):
         raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
         raylib.InitWindow(self.width, self.height, b"Jeff the Grappler")
+        self.render_texture = pyray.load_render_texture(self.width, self.height)
+        self.bloom_shader = pyray.load_shader("", "bloom.fs")
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
         pyray.set_exit_key(pyray.KeyboardKey.KEY_NULL)
@@ -104,7 +107,9 @@ class Game:
         self.enemies = [enemy for enemy in self.enemies if not enemy.take_damage(0)]
 
     def render(self):
-        pyray.begin_drawing()
+        # Render the scene to the texture
+        pyray.begin_texture_mode(self.render_texture)
+        pyray.clear_background(pyray.Color(0, 0, 0, 255))
         pyray.draw_rectangle_gradient_v(0, 0, self.width, self.height, pyray.Color(0, 0, 88, 255),
                                         pyray.Color(0, 0, 0, 255))
 
@@ -116,6 +121,17 @@ class Game:
             enemy.draw(self.player)
         self.weapon_particle_system.draw()
         self.camera.end_mode()
+
+        pyray.end_texture_mode()
+
+        # Apply bloom shader to the rendered texture
+        pyray.clear_background(pyray.Color(0, 0, 0, 255))
+        pyray.begin_shader_mode(self.bloom_shader)
+        pyray.draw_texture_rec(self.render_texture.texture, pyray.Rectangle(0, 0, self.width, -self.height),
+                               pyray.Vector2(0, 0), pyray.WHITE)
+        pyray.end_shader_mode()
+
+
         raylib.DrawFPS(10, 10)
         raylib.DrawText(b"Player", 10, 30, 10, raylib.RED)
         for parameter in self.player.__dict__:
@@ -124,6 +140,7 @@ class Game:
         self.player.inventory.render(self.width, self.height)
         if self.player_info:
             self.player_info.render(self.width, self.height)
+
         pyray.end_drawing()
 
     def check_player_health(self):
