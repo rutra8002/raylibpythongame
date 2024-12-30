@@ -7,6 +7,7 @@ from grapplinggun import GrapplingGun
 from gun import *
 from inventory import Inventory
 import images
+
 class Player(GameObject):
     def __init__(self, height, width, x, y, color, particle_system, inventory_data=None, mass=50):
         super().__init__(height, width, x, y, color)
@@ -38,7 +39,23 @@ class Player(GameObject):
         self.particle_system = particle_system
         self.time_since_last_damage = 0
 
+        # Animation properties
+        self.frame_width = self.texture.width // 8
+        self.frame_height = self.texture.height
+        self.current_frame = 0
+        self.frame_time = 0.1
+        self.time_since_last_frame = 0
+
+        self.direction = 0
+
+    def change_direction(self, vx):
+        if vx > 5:
+            self.direction = 1
+        elif vx < -5:
+            self.direction = -1
+
     def movement(self, delta_time, blocks, camera):
+        self.change_direction(self.vx)
         self.grounded = False
         self.handle_item_switching()
         selected_item = self.inventory.get_selected_item()
@@ -46,6 +63,7 @@ class Player(GameObject):
         self.handle_collisions(blocks, delta_time)
         self.apply_gravity_and_friction(delta_time, blocks)
         self.apply_movement(delta_time)
+        self.update_animation(delta_time)
 
 
     def handle_item_switching(self):
@@ -164,15 +182,23 @@ class Player(GameObject):
         self.y += self.vy * delta_time
         self.x += self.vx * delta_time
 
+    def update_animation(self, delta_time):
+        if abs(round(self.vx)) >= 5:
+            self.time_since_last_frame += delta_time
+            if self.time_since_last_frame >= self.frame_time:
+                self.current_frame = (self.current_frame + 1) % 8
+                self.time_since_last_frame = 0
+        else:
+            self.current_frame = 0
+
     def draw(self, camera):
         if camera is not None:
             angle = 0
-            draw_x = self.x
-            source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
-            dest_rect = pyray.Rectangle(draw_x, self.y, self.width, self.height)
+            source_rect = pyray.Rectangle(self.current_frame * self.frame_width, 0, self.frame_width, self.frame_height)
+            dest_rect = pyray.Rectangle(self.x, self.y, self.width, self.height)
 
             if self.vx < 0:
-                source_rect.width = -self.texture.width
+                source_rect.width = -self.frame_width
 
             pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
 
@@ -181,7 +207,7 @@ class Player(GameObject):
                 mouse_position = pyray.get_mouse_position()
                 world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
                 target_x, target_y = world_position.x, world_position.y
-                selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width // 1.5,
+                selected_item.draw(self.x + self.width // 2 + self.direction*20, self.y + ((self.height // 3)*2), self.width // 1.5,
                                    self.height // 1.5, angle,
                                    self.vx, camera, target_x, target_y)
 
