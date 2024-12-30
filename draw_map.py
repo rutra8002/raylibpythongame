@@ -162,10 +162,10 @@ def edit_inventory_dialog(entity):
             entity.inventory.add_item(GrapplingGun(500, 100, 10))
             inventory_items.append("GrapplingGun")
         elif add_gun_button.is_clicked:
-            entity.inventory.add_item(Gun(10, 300, 10, 1200, None))
+            entity.inventory.add_item(Gun(10, 300, 300, 10, None))
             inventory_items.append("Gun")
         elif add_desert_eagle_button.is_clicked:
-            entity.inventory.add_item(DesertEagle(100, 1000, 20, 1000, None))
+            entity.inventory.add_item(DesertEagle(100, 1000, 1000, 20, None))
             inventory_items.append("DesertEagle")
 
 def edit_weapon_dialog(entity, item_index, inventory_items):
