@@ -43,10 +43,9 @@ class Gun:
     def reload(self, ammo):
         self.ammo += ammo
 
-    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx, camera):
-        mouse_position = pyray.get_mouse_position()
-        world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-        angle = math.degrees(math.atan2(world_position.y - player_y, world_position.x - player_x))
+    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx, camera, target_x,
+             target_y):
+        angle = math.degrees(math.atan2(target_y - player_y, target_x - player_x))
 
         source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
         dest_rect = pyray.Rectangle(player_x, player_y, player_width, player_height)

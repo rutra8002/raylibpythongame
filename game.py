@@ -104,7 +104,7 @@ class Game:
         for block in self.blocks:
             block.draw()
         for enemy in self.enemies:
-            enemy.draw()
+            enemy.draw(self.player)
         self.weapon_particle_system.draw()
         self.camera.end_mode()
         raylib.DrawFPS(10, 10)

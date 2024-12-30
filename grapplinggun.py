@@ -62,17 +62,12 @@ class GrapplingGun:
         self.target_x = None
         self.target_y = None
 
-    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx, camera):
+    def draw(self, player_x, player_y, player_width, player_height, player_angle, player_vx, camera, target_x,
+             target_y):
         if self.is_grappling and self.target_x is not None and self.target_y is not None:
-            pyray.draw_line(int(player_x), int(player_y), int(self.target_x),
-                            int(self.target_y), pyray.RED)
+            pyray.draw_line(int(player_x), int(player_y), int(self.target_x), int(self.target_y), pyray.RED)
 
-        if self.is_grappling and self.target_x is not None and self.target_y is not None:
-            angle = math.degrees(math.atan2(self.target_y - player_y, self.target_x - player_x))
-        else:
-            mouse_position = pyray.get_mouse_position()
-            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-            angle = math.degrees(math.atan2(world_position.y - player_y, world_position.x - player_x))
+        angle = math.degrees(math.atan2(target_y - player_y, target_x - player_x))
 
         self.source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
         dest_rect = pyray.Rectangle(player_x, player_y, player_width, player_height)
@@ -80,8 +75,10 @@ class GrapplingGun:
         if player_vx < 0 and angle == player_angle or angle < -90 or angle > 90:
             self.source_rect.height = -self.texture.height
 
-        pyray.draw_texture_pro(self.texture, self.source_rect, dest_rect, pyray.Vector2(player_width / 2, player_height / 2),
+        pyray.draw_texture_pro(self.texture, self.source_rect, dest_rect,
+                               pyray.Vector2(player_width / 2, player_height / 2),
                                angle, pyray.WHITE)
+
 
     def update_position(self, player_x, player_y, vx, vy, delta_time):
         if self.is_grappling and self.target_x is not None and self.target_y is not None:

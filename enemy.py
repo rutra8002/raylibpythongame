@@ -107,12 +107,18 @@ class Enemy(GameObject):
         self.y += self.vy * delta_time
         self.x += self.vx * delta_time
 
-    def draw(self):
+    def draw(self, player):
         for i in range(0, self.width, self.texture.width):
             for j in range(0, self.height, self.texture.height):
                 raylib.DrawTexture(self.texture, int(self.x + i), int(self.y + j), raylib.WHITE)
         self.draw_health_bar()
         self.draw_inventory()
+
+        if self.inventory.items:
+            selected_item = max(self.inventory.items, key=lambda item: getattr(item, 'damage', 0))
+            if hasattr(selected_item, 'draw'):
+                target_x, target_y = player.x, player.y
+                selected_item.draw(self.x + self.width // 2, self.y + self.height // 2, self.width // 1.5, self.height // 1.5, 0, self.vx, None, target_x, target_y)
 
     def draw_health_bar(self):
         bar_width = self.width
@@ -121,6 +127,7 @@ class Enemy(GameObject):
         health_bar_width = bar_width * health_percentage
         pyray.draw_rectangle(int(self.x), int(self.y) - 20, bar_width, bar_height, pyray.RED)
         pyray.draw_rectangle(int(self.x), int(self.y) - 20, int(health_bar_width), bar_height, pyray.GREEN)
+
     def draw_inventory(self):
         inventory_text = "Inventory: " + ", ".join([item.__class__.__name__ for item in self.inventory.items])
         pyray.draw_text(inventory_text, int(self.x), int(self.y) - 40, 10, pyray.WHITE)

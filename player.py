@@ -184,7 +184,7 @@ class Player(GameObject):
         self.x += self.vx * delta_time
 
     def draw(self, camera):
-        if camera != None:
+        if camera is not None:
             angle = 0
             draw_x = self.x
             source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
@@ -197,8 +197,12 @@ class Player(GameObject):
 
             selected_item = self.inventory.get_selected_item()
             if selected_item and hasattr(selected_item, 'draw'):
-                selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width//1.5, self.height//1.5, angle,
-                                   self.vx, camera)
+                mouse_position = pyray.get_mouse_position()
+                world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+                target_x, target_y = world_position.x, world_position.y
+                selected_item.draw(draw_x + self.width // 2, self.y + self.height // 2, self.width // 1.5,
+                                   self.height // 1.5, angle,
+                                   self.vx, camera, target_x, target_y)
 
             self.draw_health_bar()
         else:
