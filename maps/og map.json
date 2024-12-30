@@ -460,11 +460,24 @@
         },
         "inventory": [
             {
+                "type": "GrapplingGun",
+                "range": 500,
+                "speed": 100,
+                "ammo": 10
+            },
+            {
+                "type": "DesertEagle",
+                "damage": 100,
+                "range": 1000,
+                "ammo": 20,
+                "speed": 1000
+            },
+            {
                 "type": "Gun",
                 "damage": 10,
                 "range": 300,
-                "ammo": 0,
-                "speed": 0
+                "ammo": 10,
+                "speed": 300
             }
         ]
     }
