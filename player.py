@@ -1,7 +1,4 @@
-# player.py
-
 import pyray
-import math
 from gameobject import GameObject
 from grapplinggun import GrapplingGun
 from gun import *
@@ -197,7 +194,7 @@ class Player(GameObject):
             source_rect = pyray.Rectangle(self.current_frame * self.frame_width, 0, self.frame_width, self.frame_height)
             dest_rect = pyray.Rectangle(self.x, self.y, self.width, self.height)
 
-            if self.vx < 0:
+            if self.direction == -1:
                 source_rect.width = -self.frame_width
 
             pyray.draw_texture_pro(self.texture, source_rect, dest_rect, pyray.Vector2(0, 0), angle, pyray.WHITE)
@@ -211,15 +208,5 @@ class Player(GameObject):
                                    self.height // 1.5, angle,
                                    self.vx, camera, target_x, target_y)
 
-            self.draw_health_bar()
         else:
             pyray.draw_rectangle(int(self.x), int(self.y), self.width, self.height, self.color)
-            self.draw_health_bar()
-
-    def draw_health_bar(self):
-        bar_width = self.width
-        bar_height = 10
-        health_percentage = self.health / 100
-        health_bar_width = bar_width * health_percentage
-        pyray.draw_rectangle(int(self.x), int(self.y) - 20, bar_width, bar_height, pyray.RED)
-        pyray.draw_rectangle(int(self.x), int(self.y) - 20, int(health_bar_width), bar_height, pyray.GREEN)
