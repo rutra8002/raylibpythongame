@@ -45,14 +45,16 @@ class Player(GameObject):
 
         self.direction = 0
 
-    def change_direction(self, vx):
-        if vx > 5:
+    def change_direction(self, camera):
+        mouse_position = pyray.get_mouse_position()
+        world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+        if world_position.x > self.x:
             self.direction = 1
-        elif vx < -5:
+        else:
             self.direction = -1
 
     def movement(self, delta_time, blocks, camera):
-        self.change_direction(self.vx)
+        self.change_direction(camera)
         self.grounded = False
         self.handle_item_switching()
         selected_item = self.inventory.get_selected_item()
