@@ -23,8 +23,8 @@ class Inventory:
         return None
 
     def render(self, screen_width, screen_height):
-        hotbar_width = screen_width//2
-        hotbar_height = screen_height//15
+        hotbar_width = screen_width // 2
+        hotbar_height = screen_height // 15
         item_width = hotbar_width // len(self.items)
         hotbar_x = (screen_width - hotbar_width) // 2
         hotbar_y = screen_height - hotbar_height - 10
@@ -33,11 +33,47 @@ class Inventory:
             item_x = hotbar_x + i * item_width
             item_y = hotbar_y
             color = pyray.GRAY if i == self.selected_index else pyray.DARKGRAY
-            pyray.draw_rectangle(item_x, item_y, item_width, hotbar_height, color)
-            pyray.draw_text(item.name, item_x + 10, item_y + 10, 20, pyray.WHITE)
+
+            pyray.draw_rectangle(item_x + 2, item_y + 2, item_width, hotbar_height, pyray.fade(pyray.BLACK, 0.5))
+            pyray.draw_rectangle_rounded(pyray.Rectangle(item_x, item_y, item_width, hotbar_height), 0.2, 10, color)
+
+            if hasattr(item, 'texture'):
+                max_texture_width = item_width // 2
+                max_texture_height = hotbar_height - 20
+                texture_aspect_ratio = item.texture.width / item.texture.height
+
+                if max_texture_width / texture_aspect_ratio <= max_texture_height:
+                    texture_width = max_texture_width
+                    texture_height = max_texture_width / texture_aspect_ratio
+                else:
+                    texture_height = max_texture_height
+                    texture_width = max_texture_height * texture_aspect_ratio
+
+                texture_x = item_x + 10
+                texture_y = item_y + (hotbar_height - texture_height) // 2
+
+                pyray.draw_texture_pro(
+                    item.texture,
+                    pyray.Rectangle(0, 0, item.texture.width, item.texture.height),
+                    pyray.Rectangle(texture_x, texture_y, texture_width, texture_height),
+                    pyray.Vector2(0, 0),
+                    0,
+                    pyray.WHITE
+                )
+
+                text_x = texture_x + texture_width + 10
+            else:
+                text_x = item_x + 10
+
+            pyray.draw_text(item.name, int(text_x), int(item_y) + 10, 20, pyray.WHITE)
 
             if hasattr(item, 'ammo'):
-                pyray.draw_text(f"Ammo: {item.ammo}", item_x + 10, item_y + 30, 20, pyray.RED)
+                ammo_text = f"Ammo: {item.ammo}"
+                ammo_text_x = text_x
+                pyray.draw_text(ammo_text, int(ammo_text_x), int(item_y) + 30, 20, pyray.RED)
 
+        for i, item in enumerate(self.items):
             if i == self.selected_index:
-                pyray.draw_rectangle_lines(item_x, item_y, item_width, hotbar_height, pyray.YELLOW)
+                item_x = hotbar_x + i * item_width
+                item_y = hotbar_y
+                pyray.draw_rectangle_rounded_lines_ex(pyray.Rectangle(item_x, item_y, item_width, hotbar_height), 0.2, 10, 4, pyray.YELLOW)
