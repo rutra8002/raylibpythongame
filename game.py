@@ -10,7 +10,7 @@ from UI.main_menu import MainMenu
 from UI.pause_menu import PauseMenu
 from UI.death_menu import DeathMenu
 from map_loader import load_map
-
+from player_info import PlayerInfo
 import images
 
 
@@ -29,6 +29,7 @@ class Game:
         self.death_menu = DeathMenu(width, height)
         self.main_menu.load_maps('maps')
         self.intro_zooming = True
+        self.player_info = None
 
     def run(self):
         raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
@@ -62,6 +63,8 @@ class Game:
                     self.death_menu.toggle()
                     self.main_menu.show_menu = True
             else:
+                if self.player:
+                    self.player_info = PlayerInfo(self.player)
                 if not self.blocks and self.main_menu.selected_map:
                     map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
                     self.blocks = map_data['blocks']
@@ -113,6 +116,8 @@ class Game:
             text = f"{parameter}: {self.player.__dict__[parameter]}".encode('utf-8')
             raylib.DrawText(text, 10, 40 + 10 * list(self.player.__dict__.keys()).index(parameter), 10, pyray.WHITE)
         self.player.inventory.render(self.width, self.height)
+        if self.player_info:
+            self.player_info.render(self.width, self.height)
         pyray.end_drawing()
 
     def check_player_health(self):

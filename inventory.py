@@ -28,6 +28,8 @@ class Inventory:
         item_width = hotbar_width // len(self.items)
         hotbar_x = (screen_width - hotbar_width) // 2
         hotbar_y = screen_height - hotbar_height - 10
+        font_size = int(screen_height * 0.03)
+        ammo_font_size = int(screen_height * 0.02)
 
         for i, item in enumerate(self.items):
             item_x = hotbar_x + i * item_width
@@ -65,12 +67,12 @@ class Inventory:
             else:
                 text_x = item_x + 10
 
-            pyray.draw_text(item.name, int(text_x), int(item_y) + 10, 20, pyray.WHITE)
+            pyray.draw_text(item.name, int(text_x), int(item_y) + int(screen_height * 0.005), font_size, pyray.WHITE)
 
             if hasattr(item, 'ammo'):
                 ammo_text = f"Ammo: {item.ammo}"
                 ammo_text_x = text_x
-                pyray.draw_text(ammo_text, int(ammo_text_x), int(item_y) + 30, 20, pyray.RED)
+                pyray.draw_text(ammo_text, int(ammo_text_x), int(item_y) + int(screen_height * 0.04), ammo_font_size, pyray.RED)
 
         for i, item in enumerate(self.items):
             if i == self.selected_index:
