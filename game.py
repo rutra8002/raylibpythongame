@@ -45,7 +45,6 @@ class Game:
         images.load_textures()
         pyray.play_music_stream(sounds.soundes["music"])
         while not pyray.window_should_close():
-            delta_time = pyray.get_frame_time()
             pyray.update_music_stream(sounds.soundes["music"])
             if pyray.is_key_pressed(pyray.KeyboardKey.KEY_ESCAPE):
                 self.pause_menu.toggle()
@@ -70,6 +69,7 @@ class Game:
                     self.death_menu.toggle()
                     self.main_menu.show_menu = True
             else:
+                delta_time = pyray.get_frame_time()
                 if self.player:
                     self.player_info = PlayerInfo(self.player)
                 if not self.blocks and self.main_menu.selected_map:
