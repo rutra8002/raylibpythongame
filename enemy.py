@@ -22,6 +22,7 @@ class Enemy(GameObject):
         self.mass = 50
         self.grounded = False
         self.time_since_last_damage = 0
+        self.has_seen_player = False
         self.inventory = Inventory()
         if inventory_data:
             for item_data in inventory_data:
@@ -41,11 +42,20 @@ class Enemy(GameObject):
         return False  # Enemy is still alive
 
     def movement(self, delta_time, blocks, player):
+        if not self.has_seen_player:
+            if self.can_see_player(player):
+                self.has_seen_player = True
+            else:
+                return
+
         self.grounded = False
         self.handle_collisions(blocks, delta_time)
         self.move_towards_player(delta_time, blocks, player)
         self.apply_gravity_and_friction(delta_time)
         self.apply_movement(delta_time)
+
+    def can_see_player(self, player):
+        return abs(self.x - player.x) < 500 and abs(self.y - player.y) < 500
 
     def handle_collisions(self, blocks, delta_time):
         self.time_since_last_damage += delta_time
