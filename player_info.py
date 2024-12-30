@@ -1,4 +1,3 @@
-
 import pyray
 
 class PlayerInfo:
@@ -19,11 +18,14 @@ class PlayerInfo:
         health_bar_fill_width = health_bar_width * health_percentage
 
         if health_percentage > 0.7:
-            health_color = pyray.GREEN
+            health_color_start = pyray.GREEN
+            health_color_end = pyray.DARKGREEN
         elif health_percentage > 0.4:
-            health_color = pyray.YELLOW
+            health_color_start = pyray.YELLOW
+            health_color_end = pyray.ORANGE
         else:
-            health_color = pyray.RED
+            health_color_start = pyray.RED
+            health_color_end = pyray.DARKBROWN
 
         pyray.draw_rectangle(int(info_x - padding), int(info_y - padding), int(info_width + 2 * padding), int(info_height + 2 * padding), pyray.fade(pyray.BLACK, 0.5))
         pyray.draw_rectangle_lines(int(info_x - padding), int(info_y - padding), int(info_width + 2 * padding), int(info_height + 2 * padding), pyray.WHITE)
@@ -32,7 +34,7 @@ class PlayerInfo:
         speed_text = f"Speed: {self.player.vx/50:.2f}mps, {self.player.vy/50:.2f}mps"
 
         pyray.draw_rectangle(int(info_x), int(info_y), int(health_bar_width), int(health_bar_height), pyray.GRAY)
-        pyray.draw_rectangle(int(info_x), int(info_y), int(health_bar_fill_width), int(health_bar_height), health_color)
+        pyray.draw_rectangle_gradient_h(int(info_x), int(info_y), int(health_bar_fill_width), int(health_bar_height), health_color_start, health_color_end)
         pyray.draw_rectangle_lines(int(info_x), int(info_y), int(health_bar_width), int(health_bar_height), pyray.WHITE)
         text_x = info_x + (health_bar_width - pyray.measure_text(health_text, font_size)) / 2
         text_y = info_y + (health_bar_height - font_size) / 2
