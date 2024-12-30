@@ -67,12 +67,12 @@ class Inventory:
             else:
                 text_x = item_x + 10
 
-            pyray.draw_text(item.name, int(text_x), int(item_y) + int(screen_height * 0.005), font_size, pyray.WHITE)
+            pyray.draw_text_ex(pyray.get_font_default(), item.name, pyray.Vector2(int(text_x), int(item_y) + int(screen_height * 0.005)), font_size, 2, pyray.WHITE)
 
             if hasattr(item, 'ammo'):
                 ammo_text = f"Ammo: {item.ammo}"
                 ammo_text_x = text_x
-                pyray.draw_text(ammo_text, int(ammo_text_x), int(item_y) + int(screen_height * 0.04), ammo_font_size, pyray.RED)
+                pyray.draw_text_ex(pyray.get_font_default(), ammo_text, pyray.Vector2(int(ammo_text_x), int(item_y) + int(screen_height * 0.04)), ammo_font_size, 2, pyray.RED)
 
         for i, item in enumerate(self.items):
             if i == self.selected_index:
