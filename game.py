@@ -40,10 +40,9 @@ class Game:
         pyray.set_exit_key(pyray.KeyboardKey.KEY_NULL)
         sounds.load_sounds()
         images.load_textures()
+        pyray.play_music_stream(sounds.soundes["music"])
         while not pyray.window_should_close():
             delta_time = pyray.get_frame_time()
-            if pyray.is_music_stream_playing(sounds.soundes["music"]) == False:
-                pyray.play_music_stream(sounds.soundes["music"])
             pyray.update_music_stream(sounds.soundes["music"])
             if pyray.is_key_pressed(pyray.KeyboardKey.KEY_ESCAPE):
                 self.pause_menu.toggle()
