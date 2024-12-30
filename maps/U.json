@@ -422,7 +422,15 @@
                 "a": 255
             },
             "health": 100,
-            "inventory": []
+            "inventory": [
+                {
+                    "type": "DesertEagle",
+                    "damage": 200,
+                    "range": 1000,
+                    "ammo": 1000,
+                    "speed": 20
+                }
+            ]
         },
         {
             "height": 50,
@@ -455,28 +463,8 @@
                 "type": "Gun",
                 "damage": 10,
                 "range": 300,
-                "ammo": 6995,
-                "speed": 1200
-            },
-            {
-                "type": "GrapplingGun",
-                "range": 500,
-                "speed": 100,
-                "ammo": 10
-            },
-            {
-                "type": "DesertEagle",
-                "damage": 100,
-                "range": 1000,
-                "ammo": 20,
-                "speed": 1000
-            },
-            {
-                "type": "DesertEagle",
-                "damage": 50,
-                "range": 1000,
-                "ammo": 7,
-                "speed": 1000
+                "ammo": 0,
+                "speed": 0
             }
         ]
     }

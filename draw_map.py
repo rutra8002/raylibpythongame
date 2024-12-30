@@ -367,6 +367,26 @@ def load_or_create_map(selected_map, creating_new_map):
         blocks = map_data['blocks']
         enemies = []
         for enemy_data in map_data['enemies']:
+            if isinstance(enemy_data, Enemy):
+                enemy_data = {
+                    'width': enemy_data.width,
+                    'height': enemy_data.height,
+                    'x': enemy_data.x,
+                    'y': enemy_data.y,
+                    'color': {
+                        'r': enemy_data.color.r,
+                        'g': enemy_data.color.g,
+                        'b': enemy_data.color.b,
+                        'a': enemy_data.color.a
+                    },
+                    'health': enemy_data.health,
+                    'inventory': [
+                        {"type": item.__class__.__name__, "range": item.range, "speed": item.speed, "ammo": item.ammo} if isinstance(item, GrapplingGun) else
+                        {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo, "speed": item.speed} if isinstance(item, Gun) else
+                        {"type": item.__class__.__name__, "damage": item.damage, "range": item.range, "ammo": item.ammo, "speed": item.speed} if isinstance(item, DesertEagle) else
+                        {} for item in enemy_data.inventory.items
+                    ]
+                }
             enemy = Enemy(
                 enemy_data['width'], enemy_data['height'], enemy_data['x'], enemy_data['y'],
                 pyray.Color(enemy_data['color']['r'], enemy_data['color']['g'], enemy_data['color']['b'], enemy_data['color']['a']),
@@ -424,7 +444,7 @@ def handle_user_input(blocks, enemies, player, current_block_type, camera, butto
             if player and player.x <= x < player.x + player.width and player.y <= y < player.y + player.height:
                 edit_inventory_dialog(player)
             for enemy in enemies:
-                if enemy.x <= mouse_position.x <= enemy.x + enemy.width and enemy.y <= mouse_position.y <= enemy.y + enemy.height:
+                if enemy.x <= x < enemy.x + enemy.width and enemy.y <= y < enemy.y + enemy.height:
                     edit_inventory_dialog(enemy)
                     break
 
@@ -532,11 +552,10 @@ def main():
         for block in blocks:
             block.draw()
 
-        for enemy in enemies:
-            enemy.draw()
-
         if player:
             player.draw(None)
+            for enemy in enemies:
+                enemy.draw(player)
 
         pyray.end_mode_2d()
         draw_ui(block_button, speedboost_button, jumpboost_button, player_button, lavablock_button, enemy_button, current_block_type, width, height, popup_message, popup_display_time)
