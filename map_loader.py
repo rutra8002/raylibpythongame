@@ -5,10 +5,8 @@ from blocks.block import Block
 from blocks.speedboostblock import SpeedBoostBlock
 from blocks.jumpboostblock import JumpBoostBlock
 from blocks.lavablock import LavaBlock
-from enemy import Enemy
-from gun import Gun
-from gun import DesertEagle
-from grapplinggun import GrapplingGun
+from entities.enemy import Enemy
+
 
 def load_map(file_path):
     with open(file_path, 'r') as file:

@@ -9,8 +9,8 @@ from blocks.block import Block
 from blocks.speedboostblock import SpeedBoostBlock
 from blocks.jumpboostblock import JumpBoostBlock
 from blocks.lavablock import LavaBlock
-from player import Player
-from enemy import Enemy  # Import Enemy
+from entities.player import Player
+from entities.enemy import Enemy  # Import Enemy
 from UI.button import Button
 
 # Define block types

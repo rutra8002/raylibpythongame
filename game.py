@@ -4,7 +4,7 @@ import time
 
 import pyray
 import raylib
-from player import Player
+from entities.player import Player
 from camera import Camera
 from particles import ParticleSystem
 from UI.main_menu import MainMenu
