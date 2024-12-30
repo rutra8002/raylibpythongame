@@ -35,7 +35,6 @@ class PlayerInfo:
 
         pyray.draw_rectangle(int(info_x), int(info_y), int(health_bar_width), int(health_bar_height), pyray.GRAY)
         pyray.draw_rectangle_gradient_h(int(info_x), int(info_y), int(health_bar_fill_width), int(health_bar_height), health_color_start, health_color_end)
-        pyray.draw_rectangle_lines(int(info_x), int(info_y), int(health_bar_width), int(health_bar_height), pyray.WHITE)
         text_x = info_x + (health_bar_width - pyray.measure_text(health_text, font_size)) / 2
         text_y = info_y + (health_bar_height - font_size) / 2
         pyray.draw_text_ex(pyray.get_font_default(), health_text, pyray.Vector2(int(text_x), int(text_y)), font_size, 2, pyray.WHITE)
