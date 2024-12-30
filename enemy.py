@@ -24,6 +24,7 @@ class Enemy(GameObject):
         self.time_since_last_damage = 0
         self.has_seen_player = False
         self.inventory = Inventory()
+        self.selected_item = None
         if inventory_data:
             for item_data in inventory_data:
                 if item_data['type'] == 'GrapplingGun':
@@ -33,6 +34,11 @@ class Enemy(GameObject):
                         Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], None))
                 elif item_data['type'] == 'DesertEagle':
                     self.inventory.add_item(DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], None))
+        self.select_item()
+
+    def select_item(self):
+        if self.inventory.items:
+            self.selected_item = max(self.inventory.items, key=lambda item: getattr(item, 'damage', 0))
 
     def take_damage(self, damage):
         self.health -= damage
@@ -124,11 +130,9 @@ class Enemy(GameObject):
         self.draw_health_bar()
         self.draw_inventory()
 
-        if self.inventory.items:
-            selected_item = max(self.inventory.items, key=lambda item: getattr(item, 'damage', 0))
-            if hasattr(selected_item, 'draw'):
-                target_x, target_y = player.x, player.y
-                selected_item.draw(self.x + self.width // 2, self.y + self.height // 2, self.width // 1.5, self.height // 1.5, 0, self.vx, None, target_x, target_y)
+        if self.selected_item and hasattr(self.selected_item, 'draw'):
+            target_x, target_y = player.x, player.y
+            self.selected_item.draw(self.x + self.width // 2, self.y + self.height // 2, self.width // 1.5, self.height // 1.5, 0, self.vx, None, target_x, target_y)
 
     def draw_health_bar(self):
         bar_width = self.width

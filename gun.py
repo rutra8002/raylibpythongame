@@ -4,10 +4,11 @@ import math
 import time
 
 class Gun:
-    def __init__(self, damage, range, speed, ammo, particle_system, cooldown=0.5):
+    def __init__(self, damage, range, speed, ammo, particle_system, angle=0, cooldown=0.5):
         self.name = self.__class__.__name__
         self.damage = damage
         self.range = range
+        self.angle = angle
         self.ammo = ammo
         self.speed = speed
         self.texture = images.textures["deagle"]
