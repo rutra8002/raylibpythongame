@@ -67,7 +67,11 @@ class GrapplingGun:
         if self.is_grappling and self.target_x is not None and self.target_y is not None:
             pyray.draw_line(int(player_x), int(player_y), int(self.target_x), int(self.target_y), pyray.RED)
 
-        angle = math.degrees(math.atan2(target_y - player_y, target_x - player_x))
+        if self.is_grappling and self.target_x is not None and self.target_y is not None:
+            angle = math.degrees(math.atan2(self.target_y - player_y, self.target_x - player_x))
+        else:
+
+            angle = math.degrees(math.atan2(target_y - player_y, target_x - player_x))
 
         self.source_rect = pyray.Rectangle(0, 0, self.texture.width, self.texture.height)
         dest_rect = pyray.Rectangle(player_x, player_y, player_width, player_height)
