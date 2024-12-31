@@ -12,6 +12,7 @@ from blocks.lavablock import LavaBlock
 from entities.player import Player
 from entities.enemy import Enemy  # Import Enemy
 from UI.button import Button
+import shaders
 
 # Define block types
 BLOCK_TYPES = {
@@ -480,6 +481,7 @@ def main():
     selected_map, creating_new_map = handle_main_menu(width, height, maps)
 
     images.load_textures()
+    shaders.load_shaders()
 
     blocks, enemies, player = load_or_create_map(selected_map, creating_new_map)
 

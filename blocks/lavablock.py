@@ -1,7 +1,7 @@
 import raylib
+import pyray
 from blocks.block import Block
 import shaders
-import pyray
 
 class LavaBlock(Block):
     def __init__(self, height, width, x, y, color):
@@ -14,7 +14,7 @@ class LavaBlock(Block):
         resolution_value = pyray.ffi.new("float[2]", [self.width, self.height])
         raylib.SetShaderValue(self.shader, raylib.GetShaderLocation(self.shader, b"time"), time_value, raylib.SHADER_UNIFORM_FLOAT)
         raylib.SetShaderValue(self.shader, raylib.GetShaderLocation(self.shader, b"resolution"), resolution_value, raylib.SHADER_UNIFORM_VEC2)
-        raylib.DrawRectangle(int(self.x), int(self.y), self.width, self.height, self.color)
+        raylib.DrawRectangle(int(self.x), int(self.y), self.width, self.height, pyray.WHITE)
         raylib.EndShaderMode()
 
     def check_vertical_collision(self, other):
