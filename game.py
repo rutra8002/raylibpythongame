@@ -111,26 +111,30 @@ class Game:
         self.check_player_health()
         self.enemies = [enemy for enemy in self.enemies if not enemy.take_damage(0)]
 
+
     def render(self):
         # Render the scene to the texture
         pyray.begin_texture_mode(self.render_texture)
         pyray.clear_background(pyray.Color(0, 0, 0, 255))
 
-        # Apply background shader
-        pyray.begin_shader_mode(shaders.shaders["background"])
+        if shaders.shaders_enabled:
+            pyray.begin_shader_mode(shaders.shaders["background"])
 
-        time_value = pyray.ffi.new("float *", raylib.GetTime())
-        raylib.SetShaderValue(shaders.shaders["background"],
-                              raylib.GetShaderLocation(shaders.shaders["background"], b"time"),
-                              time_value, raylib.SHADER_UNIFORM_FLOAT)
+            time_value = pyray.ffi.new("float *", raylib.GetTime())
+            raylib.SetShaderValue(shaders.shaders["background"],
+                                  raylib.GetShaderLocation(shaders.shaders["background"], b"time"),
+                                  time_value, raylib.SHADER_UNIFORM_FLOAT)
 
-        resolution_value = pyray.ffi.new("float[2]", [self.width, self.height])
-        raylib.SetShaderValue(shaders.shaders["background"],
-                              raylib.GetShaderLocation(shaders.shaders["background"], b"resolution"),
-                              resolution_value, raylib.SHADER_UNIFORM_VEC2)
+            resolution_value = pyray.ffi.new("float[2]", [self.width, self.height])
+            raylib.SetShaderValue(shaders.shaders["background"],
+                                  raylib.GetShaderLocation(shaders.shaders["background"], b"resolution"),
+                                  resolution_value, raylib.SHADER_UNIFORM_VEC2)
 
-        pyray.draw_rectangle(0, 0, self.width, self.height, pyray.WHITE)
-        pyray.end_shader_mode()
+            pyray.draw_rectangle(0, 0, self.width, self.height, pyray.WHITE)
+            pyray.end_shader_mode()
+        else:
+            pyray.draw_rectangle_gradient_v(0, 0, self.width, self.height, pyray.Color(0, 0, 88, 255),
+                                            pyray.Color(0, 0, 0, 255))
 
         self.camera.begin_mode()
         self.player.draw(self.camera)
@@ -148,11 +152,14 @@ class Game:
 
         # Apply bloom shader to the rendered texture
         pyray.clear_background(pyray.Color(0, 0, 0, 255))
-        pyray.begin_shader_mode(shaders.shaders["bloom"])
-        pyray.draw_texture_rec(self.render_texture.texture, pyray.Rectangle(0, 0, self.width, -self.height),
-                               pyray.Vector2(0, 0), pyray.WHITE)
-        pyray.end_shader_mode()
-
+        if shaders.shaders_enabled:
+            pyray.begin_shader_mode(shaders.shaders["bloom"])
+            pyray.draw_texture_rec(self.render_texture.texture, pyray.Rectangle(0, 0, self.width, -self.height),
+                                   pyray.Vector2(0, 0), pyray.WHITE)
+            pyray.end_shader_mode()
+        else:
+            pyray.draw_texture_rec(self.render_texture.texture, pyray.Rectangle(0, 0, self.width, -self.height),
+                                   pyray.Vector2(0, 0), pyray.WHITE)
 
         raylib.DrawFPS(10, 10)
         raylib.DrawText(b"Player", 10, 30, 10, raylib.RED)

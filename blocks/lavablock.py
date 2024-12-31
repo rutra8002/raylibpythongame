@@ -9,7 +9,7 @@ class LavaBlock(Block):
         self.shader = shaders.shaders["lava"]
 
     def draw(self, camera):
-        if camera is not None:
+        if camera is not None and shaders.shaders_enabled:
             raylib.BeginShaderMode(self.shader)
 
             # Time uniform

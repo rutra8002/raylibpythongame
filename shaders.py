@@ -2,6 +2,8 @@ import raylib
 
 shaders = {}
 
+shaders_enabled = True
+
 def load_shader_with_error_check(vs_path, fs_path):
     if fs_path not in shaders:
         shader = raylib.LoadShader(vs_path, fs_path)
@@ -17,3 +19,4 @@ def load_shaders():
         shaders["background"] = load_shader_with_error_check(b"", b"shaders/background.fs")
     except Exception as e:
         raise e
+
