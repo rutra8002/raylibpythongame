@@ -114,8 +114,22 @@ class Game:
         # Render the scene to the texture
         pyray.begin_texture_mode(self.render_texture)
         pyray.clear_background(pyray.Color(0, 0, 0, 255))
-        pyray.draw_rectangle_gradient_v(0, 0, self.width, self.height, pyray.Color(0, 0, 88, 255),
-                                        pyray.Color(0, 0, 0, 255))
+
+        # Apply background shader
+        pyray.begin_shader_mode(shaders.shaders["background"])
+
+        time_value = pyray.ffi.new("float *", raylib.GetTime())
+        raylib.SetShaderValue(shaders.shaders["background"],
+                              raylib.GetShaderLocation(shaders.shaders["background"], b"time"),
+                              time_value, raylib.SHADER_UNIFORM_FLOAT)
+
+        resolution_value = pyray.ffi.new("float[2]", [self.width, self.height])
+        raylib.SetShaderValue(shaders.shaders["background"],
+                              raylib.GetShaderLocation(shaders.shaders["background"], b"resolution"),
+                              resolution_value, raylib.SHADER_UNIFORM_VEC2)
+
+        pyray.draw_rectangle(0, 0, self.width, self.height, pyray.WHITE)
+        pyray.end_shader_mode()
 
         self.camera.begin_mode()
         self.player.draw(self.camera)
@@ -168,6 +182,7 @@ class Game:
         self.intro_zooming = True
         self.main_menu.show_menu = False
         self.death_menu.toggle()
+
 
 if __name__ == "__main__":
     game = Game()
