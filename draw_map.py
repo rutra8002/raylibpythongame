@@ -2,8 +2,8 @@ import pyray
 import os
 import json
 import images
-from grapplinggun import GrapplingGun
-from gun import Gun, DesertEagle
+from items.grapplinggun import GrapplingGun
+from items.gun import Gun, DesertEagle
 from map_loader import load_map, list_maps
 from blocks.block import Block
 from blocks.speedboostblock import SpeedBoostBlock

@@ -1,7 +1,6 @@
-import pyray
 from gameobject import GameObject
-from grapplinggun import GrapplingGun
-from gun import *
+from items.grapplinggun import GrapplingGun
+from items.gun import *
 from inventory import Inventory
 import images
 

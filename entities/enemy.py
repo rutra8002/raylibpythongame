@@ -2,10 +2,9 @@ import pyray
 import images
 import raylib
 from gameobject import GameObject
-from blocks.lavablock import LavaBlock
 from inventory import Inventory
-from gun import Gun, DesertEagle
-from grapplinggun import GrapplingGun
+from items.gun import Gun, DesertEagle
+from items.grapplinggun import GrapplingGun
 
 class Enemy(GameObject):
     def __init__(self, height, width, x, y, color, health, inventory_data=None):
