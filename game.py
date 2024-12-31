@@ -33,6 +33,7 @@ class Game:
         self.main_menu.load_maps('maps')
         self.intro_zooming = True
         self.player_info = None
+        self.show_settings_from_pause = False
 
     def run(self):
         raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
@@ -57,11 +58,21 @@ class Game:
                 self.pause_menu.render()
                 if self.pause_menu.resume_button.is_clicked:
                     self.pause_menu.toggle()
+                if self.pause_menu.settings_button.is_clicked:
+                    self.pause_menu.toggle()
+                    self.show_settings_from_pause = True
+                    self.main_menu.show_settings = True
+                    self.main_menu.opened_from_pause_menu = True  # Set flag
                 if self.pause_menu.main_menu_button.is_clicked:
                     self.blocks = []
                     self.player = None
                     self.pause_menu.toggle()
                     self.main_menu.show_menu = True
+            elif self.show_settings_from_pause:
+                self.main_menu.render()
+                if not self.main_menu.show_settings:
+                    self.show_settings_from_pause = False
+                    self.pause_menu.toggle()
             elif self.death_menu.is_visible:
                 self.death_menu.render()
                 if self.death_menu.retry_button.is_clicked:

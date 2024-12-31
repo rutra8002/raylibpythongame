@@ -25,6 +25,7 @@ class MainMenu:
         self.exit_button = Button(width / 2 - 100, height / 2 + 70, 200, 50, "Exit", 20, pyray.WHITE, pyray.DARKGRAY,
                                   pyray.GRAY, pyray.LIGHTGRAY)
         self.particle_system = ParticleSystem()
+        self.opened_from_pause_menu = False
 
     def load_maps(self, directory):
         self.maps = [f for f in os.listdir(directory) if f.endswith('.json')]
@@ -160,6 +161,10 @@ class MainMenu:
             back_button.draw()
             if back_button.is_clicked:
                 self.show_settings = False
-                self.show_menu = True
+                if self.opened_from_pause_menu:
+                    self.opened_from_pause_menu = False
+                    self.show_menu = False
+                else:
+                    self.show_menu = True
 
         pyray.end_drawing()
