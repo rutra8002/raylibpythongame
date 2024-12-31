@@ -98,6 +98,6 @@ class GrapplingGun:
                 return vx, vy, True
             else:
                 new_vx = vx + 8 * direction_x * move_distance
-                new_vy = vy + 8 * direction_y * move_distance
+                new_vy = vy + 16 * direction_y * move_distance
                 return new_vx, new_vy, False
         return vx, vy, False
