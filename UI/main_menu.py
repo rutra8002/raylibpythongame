@@ -13,11 +13,14 @@ class MainMenu:
         self.height = height
         self.show_menu = True
         self.show_map_selection = False
+        self.show_settings = False
         self.maps = []
         self.selected_map = None
         self.start_button = Button(width / 2 - 100, height / 2 - 50, 200, 50, "Start Game", 20, pyray.WHITE,
                                    pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
-        self.exit_button = Button(width / 2 - 100, height / 2 + 10, 200, 50, "Exit", 20, pyray.WHITE, pyray.DARKGRAY,
+        self.settings_button = Button(width / 2 - 100, height / 2 + 10, 200, 50, "Settings", 20, pyray.WHITE,
+                                      pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
+        self.exit_button = Button(width / 2 - 100, height / 2 + 70, 200, 50, "Exit", 20, pyray.WHITE, pyray.DARKGRAY,
                                   pyray.GRAY, pyray.LIGHTGRAY)
         self.particle_system = ParticleSystem()
 
@@ -57,6 +60,12 @@ class MainMenu:
                 self.show_menu = False
                 self.show_map_selection = True
 
+            self.settings_button.update()
+            self.settings_button.draw()
+            if self.settings_button.is_clicked:
+                self.show_menu = False
+                self.show_settings = True
+
             self.exit_button.update()
             self.exit_button.draw()
             if self.exit_button.is_clicked:
@@ -95,6 +104,18 @@ class MainMenu:
             back_button.draw()
             if back_button.is_clicked:
                 self.show_map_selection = False
+                self.show_menu = True
+        elif self.show_settings:
+            text = "Settings"
+            text_width = pyray.measure_text(text, 40)
+            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
+
+            back_button = Button(self.width / 2 - 100, self.height / 2 + 70, 200, 50, "Back", 20, pyray.WHITE,
+                                 pyray.DARKGRAY, pyray.GRAY, pyray.LIGHTGRAY)
+            back_button.update()
+            back_button.draw()
+            if back_button.is_clicked:
+                self.show_settings = False
                 self.show_menu = True
 
         pyray.end_drawing()
