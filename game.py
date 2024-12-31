@@ -14,6 +14,7 @@ from map_loader import load_map
 from player_info import PlayerInfo
 import images
 import sounds
+import shaders
 
 
 class Game:
@@ -38,12 +39,12 @@ class Game:
         raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
         raylib.InitWindow(self.width, self.height, b"Jeff the Grappler")
         self.render_texture = pyray.load_render_texture(self.width, self.height)
-        self.bloom_shader = pyray.load_shader("", "bloom.fs")
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
         pyray.set_exit_key(pyray.KeyboardKey.KEY_NULL)
         sounds.load_sounds()
         images.load_textures()
+        shaders.load_shaders()
         pyray.play_music_stream(sounds.soundes["music"])
         while not pyray.window_should_close():
             start_time = time.time()
@@ -129,7 +130,7 @@ class Game:
 
         # Apply bloom shader to the rendered texture
         pyray.clear_background(pyray.Color(0, 0, 0, 255))
-        pyray.begin_shader_mode(self.bloom_shader)
+        pyray.begin_shader_mode(shaders.shaders["bloom"])
         pyray.draw_texture_rec(self.render_texture.texture, pyray.Rectangle(0, 0, self.width, -self.height),
                                pyray.Vector2(0, 0), pyray.WHITE)
         pyray.end_shader_mode()
