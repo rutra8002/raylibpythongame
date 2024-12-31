@@ -35,6 +35,12 @@ class Game:
         self.player_info = None
         self.show_settings_from_pause = False
 
+    def show_loading_screen(self, message):
+        pyray.begin_drawing()
+        pyray.clear_background(pyray.Color(0, 0, 0, 255))
+        raylib.DrawText(message.encode('utf-8'), self.width // 2 - 100, self.height // 2, 20, raylib.WHITE)
+        pyray.end_drawing()
+
     def run(self):
         raylib.SetConfigFlags(raylib.FLAG_MSAA_4X_HINT)
         raylib.InitWindow(self.width, self.height, b"Jeff the Grappler")
@@ -42,9 +48,14 @@ class Game:
         if self.fps is not None:
             pyray.set_target_fps(self.fps)
         pyray.set_exit_key(pyray.KeyboardKey.KEY_NULL)
+
+        self.show_loading_screen("Compiling Sounds...")
         sounds.load_sounds()
+        self.show_loading_screen("Compiling Textures...")
         images.load_textures()
+        self.show_loading_screen("Compiling Shaders...")
         shaders.load_shaders()
+
         pyray.play_music_stream(sounds.soundes["music"])
         while not pyray.window_should_close():
             start_time = time.time()
