@@ -1,29 +1,30 @@
-// Lava Shader
 #version 330
 
 uniform float time;
-uniform vec2 resolution;
+uniform vec2 resolution;      // Screen resolution
+uniform vec2 camera_offset;   // Camera position offset
+uniform vec2 block_position;  // Position of the block
+uniform vec2 block_size;      // Size of the block
 
-// Noise generation function
+const float PATTERN_SIZE = 50.0; // Fixed pattern size
+
 float noise(vec2 p) {
     return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-// Smooth noise
 float smoothNoise(vec2 p) {
     vec2 i = floor(p);
     vec2 f = fract(p);
-    
+
     float a = noise(i);
     float b = noise(i + vec2(1.0, 0.0));
     float c = noise(i + vec2(0.0, 1.0));
     float d = noise(i + vec2(1.0, 1.0));
-    
+
     vec2 u = f * f * (3.0 - 2.0 * f);
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
-// Fractal Brownian Motion (fBm)
 float fbm(vec2 p) {
     float value = 0.0;
     float scale = 0.5;
@@ -37,13 +38,17 @@ float fbm(vec2 p) {
 
 void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
-    uv.x *= resolution.x / resolution.y;
 
-    // Lava turbulence
-    vec2 pos = uv * 3.0 - vec2(1.5);
+    // Scale UV by block dimensions
+    vec2 local_uv = (gl_FragCoord.xy - block_position) / block_size;
+
+    // Normalize to pattern grid
+    vec2 pattern_uv = local_uv * (block_size / PATTERN_SIZE);
+
+    // Offset pattern with camera
+    vec2 pos = (pattern_uv + camera_offset / PATTERN_SIZE) * 3.0 - vec2(1.5);
     float n = fbm(pos + time * 0.2);
 
-    // Color gradient for lava
     vec3 color = vec3(0.0);
     if (n > 0.6) {
         color = mix(vec3(1.0, 0.5, 0.0), vec3(1.0, 1.0, 0.0), smoothstep(0.6, 1.0, n));
@@ -53,7 +58,6 @@ void main() {
         color = vec3(0.2, 0.0, 0.0);
     }
 
-    // Add glow effect
     float glow = smoothstep(0.7, 1.0, n);
     color += glow * vec3(1.0, 0.3, 0.0);
 

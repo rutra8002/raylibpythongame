@@ -552,7 +552,10 @@ def main():
             pyray.draw_line(start_x, j, end_x, j, pyray.LIGHTGRAY)
 
         for block in blocks:
-            block.draw()
+            if block.__class__.__name__ == "LavaBlock":
+                block.draw(None)
+            else:
+                block.draw()
 
         if player:
             player.draw(None)

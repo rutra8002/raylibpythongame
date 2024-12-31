@@ -120,7 +120,10 @@ class Game:
         self.camera.begin_mode()
         self.player.draw(self.camera)
         for block in self.blocks:
-            block.draw()
+            if block.__class__.__name__ == "LavaBlock":
+                block.draw(self.camera)
+            else:
+                block.draw()
         for enemy in self.enemies:
             enemy.draw(self.player)
         self.weapon_particle_system.draw()
