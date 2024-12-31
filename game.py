@@ -11,7 +11,7 @@ from UI.main_menu import MainMenu
 from UI.pause_menu import PauseMenu
 from UI.death_menu import DeathMenu
 from map_loader import load_map
-from player_info import PlayerInfo
+from UI.player_info import PlayerInfo
 import images
 import sounds
 import shaders
