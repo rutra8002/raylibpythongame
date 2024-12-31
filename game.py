@@ -52,6 +52,7 @@ class Game:
                 self.pause_menu.toggle()
             if self.main_menu.show_menu or self.main_menu.show_map_selection or self.main_menu.show_settings:
                 self.main_menu.render()
+                self.update_resolution()
             elif self.pause_menu.is_visible:
                 self.pause_menu.render()
                 if self.pause_menu.resume_button.is_clicked:
@@ -94,6 +95,21 @@ class Game:
             delta_time = end_time - start_time
         pyray.close_window()
         sys.exit()
+
+    def update_resolution(self):
+        if self.width != pyray.get_screen_width() or self.height != pyray.get_screen_height():
+            self.width = pyray.get_screen_width()
+            self.height = pyray.get_screen_height()
+            self.render_texture = pyray.load_render_texture(self.width, self.height)
+            self.main_menu.width = self.width
+            self.main_menu.height = self.height
+            self.pause_menu.width = self.width
+            self.pause_menu.height = self.height
+            self.death_menu.width = self.width
+            self.death_menu.height = self.height
+            if self.camera:
+                self.camera.width = self.width
+                self.camera.height = self.height
 
     def update(self, delta_time):
         self.camera.update_target(self.player.x + self.player.width / 2, self.player.y + self.player.height / 2,

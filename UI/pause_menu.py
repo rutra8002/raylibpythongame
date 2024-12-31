@@ -18,9 +18,16 @@ class PauseMenu:
             pyray.clear_background(pyray.BLACK)
             text = "Pause Menu"
             text_width = pyray.measure_text(text, 40)
-            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
+            pyray.draw_text(text, int((self.width - text_width) / 2), int(self.height * 0.1), 40, pyray.WHITE)
+
+            self.resume_button.rect.x = self.width / 2 - self.resume_button.rect.width / 2
+            self.resume_button.rect.y = self.height / 2 - self.resume_button.rect.height - 10
             self.resume_button.update()
             self.resume_button.draw()
+
+            self.main_menu_button.rect.x = self.width / 2 - self.main_menu_button.rect.width / 2
+            self.main_menu_button.rect.y = self.height / 2 + self.main_menu_button.rect.height + 10
             self.main_menu_button.update()
             self.main_menu_button.draw()
+
             pyray.end_drawing()

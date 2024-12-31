@@ -54,20 +54,26 @@ class MainMenu:
         if self.show_menu:
             text = "Main Menu"
             text_width = pyray.measure_text(text, 40)
-            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
+            pyray.draw_text(text, int((self.width - text_width) / 2), int(self.height * 0.1), 40, pyray.WHITE)
 
+            self.start_button.rect.x = self.width / 2 - self.start_button.rect.width / 2
+            self.start_button.rect.y = self.height / 2 - self.start_button.rect.height - 10
             self.start_button.update()
             self.start_button.draw()
             if self.start_button.is_clicked:
                 self.show_menu = False
                 self.show_map_selection = True
 
+            self.settings_button.rect.x = self.width / 2 - self.settings_button.rect.width / 2
+            self.settings_button.rect.y = self.height / 2
             self.settings_button.update()
             self.settings_button.draw()
             if self.settings_button.is_clicked:
                 self.show_menu = False
                 self.show_settings = True
 
+            self.exit_button.rect.x = self.width / 2 - self.exit_button.rect.width / 2
+            self.exit_button.rect.y = self.height / 2 + self.exit_button.rect.height + 10
             self.exit_button.update()
             self.exit_button.draw()
             if self.exit_button.is_clicked:
@@ -76,7 +82,7 @@ class MainMenu:
         elif self.show_map_selection:
             text = "Select Map"
             text_width = pyray.measure_text(text, 40)
-            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
+            pyray.draw_text(text, int((self.width - text_width) / 2), int(self.height * 0.1), 40, pyray.WHITE)
 
             columns = 3
             button_width = 200
@@ -110,7 +116,7 @@ class MainMenu:
         elif self.show_settings:
             text = "Settings"
             text_width = pyray.measure_text(text, 40)
-            pyray.draw_text(text, int((self.width - text_width) / 2), 100, 40, pyray.WHITE)
+            pyray.draw_text(text, int((self.width - text_width) / 2), int(self.height * 0.1), 40, pyray.WHITE)
 
             shaders_text = "Shaders"
             pyray.draw_text(shaders_text, 50, 215, 20, pyray.WHITE)
