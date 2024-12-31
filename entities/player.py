@@ -48,7 +48,7 @@ class Player(GameObject):
     def change_direction(self, camera):
         mouse_position = pyray.get_mouse_position()
         world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-        if world_position.x > self.x:
+        if world_position.x > self.x+ self.width//2:
             self.direction = 1
         else:
             self.direction = -1
