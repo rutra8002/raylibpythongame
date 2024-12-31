@@ -1,3 +1,4 @@
+import raylib
 import sys
 import pyray
 import os
@@ -32,25 +33,43 @@ class MainMenu:
 
     def render(self):
         pyray.begin_drawing()
-        pyray.clear_background(pyray.BLACK)
+
+        if shaders.shaders_enabled:
+            pyray.begin_shader_mode(shaders.shaders["main_menu_background"])
+
+            time_value = pyray.ffi.new("float *", raylib.GetTime())
+            raylib.SetShaderValue(shaders.shaders["main_menu_background"],
+                                  raylib.GetShaderLocation(shaders.shaders["main_menu_background"], b"time"),
+                                  time_value, raylib.SHADER_UNIFORM_FLOAT)
+
+            resolution_value = pyray.ffi.new("float[2]", [self.width, self.height])
+            raylib.SetShaderValue(shaders.shaders["main_menu_background"],
+                                  raylib.GetShaderLocation(shaders.shaders["main_menu_background"], b"resolution"),
+                                  resolution_value, raylib.SHADER_UNIFORM_VEC2)
+
+            pyray.draw_rectangle(0, 0, self.width, self.height, pyray.WHITE)
+            pyray.end_shader_mode()
+        else:
+            pyray.clear_background(pyray.BLACK)
+            if random.randint(0, 10) > 8:
+                self.particle_system.add_particle(
+                    random.uniform(0, self.width),
+                    random.uniform(0, self.height),
+                    random.uniform(-1, 1),
+                    random.uniform(-1, 1),
+                    random.randint(10, 50),
+                    20,
+                    3,
+                    (random.randint(1, 150), random.randint(1, 150), random.randint(1, 150), random.randint(50, 200)),
+                    'circle',
+                    None
+                )
 
         # Update and draw particles
         self.particle_system.update(pyray.get_frame_time(), None, None, None)
         self.particle_system.draw()
 
-        if random.randint(0, 10) > 8:
-            self.particle_system.add_particle(
-                random.uniform(0, self.width),
-                random.uniform(0, self.height),
-                random.uniform(-1, 1),
-                random.uniform(-1, 1),
-                random.randint(10, 50),
-                20,
-                3,
-                (random.randint(1, 150), random.randint(1, 150), random.randint(1, 150), random.randint(50, 200)),
-                'circle',
-                None
-            )
+
 
         if self.show_menu:
             text = "Main Menu"

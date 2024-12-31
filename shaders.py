@@ -17,6 +17,7 @@ def load_shaders():
         shaders["bloom"] = load_shader_with_error_check(b"", b"shaders/bloom.fs")
         shaders["lava"] = load_shader_with_error_check(b"", b"shaders/lava.fs")
         shaders["background"] = load_shader_with_error_check(b"", b"shaders/background.fs")
+        shaders["main_menu_background"] = load_shader_with_error_check(b"", b"shaders/main_menu_background.fs")
     except Exception as e:
         raise e
 
