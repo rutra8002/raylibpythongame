@@ -5,6 +5,7 @@ uniform vec2 resolution;      // Screen resolution
 uniform vec2 camera_offset;   // Camera position offset
 uniform vec2 block_position;  // Position of the block
 uniform vec2 block_size;      // Size of the block
+uniform float camera_zoom;    // Camera zoom
 
 const float PATTERN_SIZE = 50.0; // Fixed pattern size
 
@@ -40,13 +41,13 @@ void main() {
     vec2 uv = gl_FragCoord.xy / resolution.xy;
 
     // Scale UV by block dimensions
-    vec2 local_uv = (gl_FragCoord.xy - block_position) / block_size;
+    vec2 local_uv = (gl_FragCoord.xy - block_position) / (block_size * camera_zoom);
 
     // Normalize to pattern grid
     vec2 pattern_uv = local_uv * (block_size / PATTERN_SIZE);
 
     // Offset pattern with camera
-    vec2 pos = (pattern_uv + camera_offset / PATTERN_SIZE) * 3.0 - vec2(1.5);
+    vec2 pos = (pattern_uv + camera_offset / PATTERN_SIZE) * 3.0 * camera_zoom - vec2(1.5);
     float n = fbm(pos + time * 0.2);
 
     vec3 color = vec3(0.0);

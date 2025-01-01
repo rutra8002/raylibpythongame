@@ -20,10 +20,7 @@ class Camera:
         self.camera.target.y += (target_y - self.camera.target.y) * self.smooth_factor * delta_time
 
     def adjust_zoom(self, player_speed, delta_time):
-        if abs(player_speed) > 400:
-            self.target_zoom = 400 / abs(player_speed) * self.calculate_target_zoom(self.camera.offset.x * 2, self.camera.offset.y * 2)
-        else:
-            self.target_zoom = self.calculate_target_zoom(self.camera.offset.x * 2, self.camera.offset.y * 2)
+        self.target_zoom = self.calculate_target_zoom(self.camera.offset.x * 2, self.camera.offset.y * 2)
         self.camera.zoom += (self.target_zoom - self.camera.zoom) * self.smooth_factor * delta_time
 
     def zoom_intro(self, delta_time):

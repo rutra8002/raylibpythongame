@@ -37,6 +37,11 @@ class LavaBlock(Block):
             raylib.SetShaderValue(self.shader, raylib.GetShaderLocation(self.shader, b"block_size"), block_size_value,
                                   raylib.SHADER_UNIFORM_VEC2)
 
+            # Camera zoom uniform
+            camera_zoom_value = pyray.ffi.new("float *", camera.camera.zoom)
+            raylib.SetShaderValue(self.shader, raylib.GetShaderLocation(self.shader, b"camera_zoom"), camera_zoom_value,
+                                  raylib.SHADER_UNIFORM_FLOAT)
+
             # Draw block
             raylib.DrawRectangle(int(self.x), int(self.y), self.width, self.height, pyray.WHITE)
             raylib.EndShaderMode()
