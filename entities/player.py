@@ -101,6 +101,11 @@ class Player(GameObject):
             vertical_collision = block.check_vertical_collision(self)
             horizontal_collision = block.check_horizontal_collision(self)
 
+            if vertical_collision:
+                print(vertical_collision)
+            if horizontal_collision:
+                print(horizontal_collision)
+
             if vertical_collision == "top":
                 self.handle_top_collision(block)
             elif vertical_collision == "bottom":
@@ -128,7 +133,6 @@ class Player(GameObject):
             self.vy += -2 * self.vy
 
     def handle_side_collision(self, block, horizontal_collision):
-        print(horizontal_collision)
         self.can_jump = True
         if pyray.is_key_down(pyray.KeyboardKey.KEY_SPACE) and self.can_jump:
             self.vy = -self.jump
