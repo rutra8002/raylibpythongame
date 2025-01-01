@@ -5,6 +5,7 @@ import time
 import pyray
 import raylib
 from entities.player import Player
+from entities.enemy import Enemy
 from camera import Camera
 from particles import ParticleSystem
 from UI.main_menu import MainMenu
@@ -100,6 +101,8 @@ class Game:
                     map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
                     self.blocks = map_data['blocks']
                     self.enemies = map_data['enemies']
+                    for enemy in self.enemies:
+                        enemy.particle_system = self.weapon_particle_system
                     player_data = map_data['player']
                     self.player = Player(
                         player_data['width'], player_data['height'], player_data['x'], player_data['y'],
@@ -218,6 +221,8 @@ class Game:
         map_data = load_map(os.path.join('maps', self.main_menu.selected_map))
         self.blocks = map_data['blocks']
         self.enemies = map_data['enemies']
+        for enemy in self.enemies:
+            enemy.particle_system = self.weapon_particle_system
         player_data = map_data['player']
         self.player = Player(player_data['width'], player_data['height'], player_data['x'], player_data['y'],
                              pyray.Color(player_data['color']['r'], player_data['color']['g'],

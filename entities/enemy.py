@@ -6,8 +6,9 @@ from inventory import Inventory
 from items.gun import Gun, DesertEagle
 from items.grapplinggun import GrapplingGun
 
+
 class Enemy(GameObject):
-    def __init__(self, height, width, x, y, color, health, inventory_data=None):
+    def __init__(self, height, width, x, y, color, health, particle_system, inventory_data=None):
         super().__init__(height, width, x, y, color)
         self.texture = images.textures["enemy"]
         self.health = health
@@ -22,6 +23,9 @@ class Enemy(GameObject):
         self.grounded = False
         self.time_since_last_damage = 0
         self.has_seen_player = False
+
+        self.particle_system = particle_system
+
         self.inventory = Inventory()
         self.selected_item = None
         if inventory_data:
@@ -30,9 +34,12 @@ class Enemy(GameObject):
                     self.inventory.add_item(GrapplingGun(item_data['range'], item_data['speed'], item_data['ammo']))
                 elif item_data['type'] == 'Gun':
                     self.inventory.add_item(
-                        Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], None))
+                        Gun(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'],
+                            self.particle_system))
                 elif item_data['type'] == 'DesertEagle':
-                    self.inventory.add_item(DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'], None))
+                    self.inventory.add_item(
+                        DesertEagle(item_data['damage'], item_data['range'], item_data['speed'], item_data['ammo'],
+                                    self.particle_system))
         self.select_item()
 
     def select_item(self):
@@ -58,6 +65,10 @@ class Enemy(GameObject):
         self.move_towards_player(delta_time, blocks, player)
         self.apply_gravity_and_friction(delta_time)
         self.apply_movement(delta_time)
+
+        if self.selected_item and isinstance(self.selected_item, Gun):
+            self.selected_item.particle_system = self.particle_system
+            self.selected_item.shoot(self.x, self.y, self.width, self.height, player.x, player.y)
 
     def can_see_player(self, player):
         return abs(self.x - player.x) < 500 and abs(self.y - player.y) < 500

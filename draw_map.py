@@ -391,7 +391,7 @@ def load_or_create_map(selected_map, creating_new_map):
             enemy = Enemy(
                 enemy_data['width'], enemy_data['height'], enemy_data['x'], enemy_data['y'],
                 pyray.Color(enemy_data['color']['r'], enemy_data['color']['g'], enemy_data['color']['b'], enemy_data['color']['a']),
-                enemy_data['health'],
+                enemy_data['health'], None,
                 inventory_data=enemy_data.get('inventory', [])
             )
             enemies.append(enemy)

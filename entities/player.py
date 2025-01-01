@@ -90,7 +90,10 @@ class Player(GameObject):
 
     def handle_gun(self, selected_item, camera):
         if pyray.is_mouse_button_pressed(pyray.MouseButton.MOUSE_BUTTON_LEFT):
-            selected_item.shoot(self.x, self.y, self.width, self.height, camera)
+            mouse_position = pyray.get_mouse_position()
+            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
+            target_x, target_y = world_position.x, world_position.y
+            selected_item.shoot(self.x, self.y, self.width, self.height, target_x, target_y)
 
     def handle_collisions(self, blocks, delta_time):
         self.time_since_last_damage += delta_time

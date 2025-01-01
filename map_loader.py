@@ -43,7 +43,7 @@ def load_map(file_path):
         color = pyray.Color(color_data['r'], color_data['g'], color_data['b'], color_data['a'])
         health = item['health']
         inventory_data = item.get('inventory', [])
-        enemy = Enemy(height, width, x, y, color, health, inventory_data=inventory_data)
+        enemy = Enemy(height, width, x, y, color, health, None, inventory_data=inventory_data)
         enemies.append(enemy)
 
     player_data = data['player']

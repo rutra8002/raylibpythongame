@@ -16,27 +16,23 @@ class Gun:
         self.cooldown = cooldown
         self.last_shot_time = 0
 
-    def shoot(self, player_x, player_y, player_width, player_height, camera):
+    def shoot(self, shooter_x, shooter_y, shooter_width, shooter_height, target_x, target_y):
         current_time = time.time()
         if self.ammo > 0 and (current_time - self.last_shot_time) >= self.cooldown:
             self.ammo -= 1
             self.last_shot_time = current_time
 
-            # Calculate the particle start position outside the player
-            particle_x = player_x + player_width // 2
-            particle_y = player_y + player_height // 2
+            # Calculate the particle start position outside the shooter
+            particle_x = shooter_x + shooter_width // 2
+            particle_y = shooter_y + shooter_height // 2
 
-            mouse_position = pyray.get_mouse_position()
-            world_position = pyray.get_screen_to_world_2d(mouse_position, camera.camera)
-            mouse_x, mouse_y = world_position.x, world_position.y
-
-            direction_x = mouse_x - particle_x
-            direction_y = mouse_y - particle_y
+            direction_x = target_x - particle_x
+            direction_y = target_y - particle_y
             length = math.sqrt(direction_x ** 2 + direction_y ** 2)
             direction_x /= length
             direction_y /= length
 
-            offset_distance = player_width
+            offset_distance = shooter_width
             particle_x += direction_x * offset_distance
             particle_y += direction_y * offset_distance
 
